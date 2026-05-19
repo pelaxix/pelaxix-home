@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hamilton-harbour",
+    "name": "Hamilton Harbour",
+    "category": "Urban shore",
+    "lat": 43.2787,
+    "lng": -79.8627,
+    "species": ["Bass", "Pike", "Carp"],
+    "access": "Shore access varies by area. Check local signs before fishing.",
+    "notes": "Placeholder spot for testing the map. Replace with your real preferred access point later.",
+    "bestTime": "Morning or evening",
+    "privacy": "general"
+  },
+  {
+    "id": "bayfront-park",
+    "name": "Bayfront Park Area",
+    "category": "Park shore",
+    "lat": 43.2696,
+    "lng": -79.8714,
+    "species": ["Carp", "Panfish"],
+    "access": "Public park area. Confirm permitted fishing areas and local rules.",
+    "notes": "Easy test marker near Hamilton waterfront. Good example of a spot with access notes.",
+    "bestTime": "Evening",
+    "privacy": "general"
+  },
+  {
+    "id": "valens-lake",
+    "name": "Valens Lake",
+    "category": "Conservation area",
+    "lat": 43.3837,
+    "lng": -80.1489,
+    "species": ["Pike", "Bass", "Panfish"],
+    "access": "Conservation area access may require fees or passes.",
+    "notes": "Example out-of-town spot. Useful for testing zoom and category filters.",
+    "bestTime": "Weekend mornings",
+    "privacy": "general"
+  }
+]
