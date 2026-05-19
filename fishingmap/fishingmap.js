@@ -1,13 +1,33 @@
 const DEFAULT_CENTER = [43.2557, -79.8711];
 const DEFAULT_ZOOM = 10;
 
+const baseLayers = {
+  "Modern light": L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  }),
+  "Classic OSM": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }),
+  "Topographic": L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri'
+  }),
+  "Imagery": L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri'
+  })
+};
+
 const map = L.map("map", {
-  scrollWheelZoom: true
+  scrollWheelZoom: true,
+  layers: [baseLayers["Modern light"]]
 }).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+L.control.layers(baseLayers, null, {
+  collapsed: true,
+  position: "topright"
 }).addTo(map);
 
 const markersLayer = L.layerGroup().addTo(map);
