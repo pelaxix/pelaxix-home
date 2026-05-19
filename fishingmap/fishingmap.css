@@ -223,11 +223,17 @@ select:focus {
 }
 
 #map {
-  height: min(68vh, 660px);
-  min-height: 420px;
+  height: clamp(420px, 62vh, 660px);
+  width: 100%;
   overflow: hidden;
   border-radius: 22px;
   background: var(--surface-soft);
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
 }
 
 .leaflet-popup-content-wrapper,
@@ -314,6 +320,10 @@ select:focus {
 }
 
 @media (max-width: 900px) {
+  .app-shell {
+    width: min(100% - 24px, 1180px);
+  }
+
   .site-header,
   .hero,
   .split-panel {
@@ -328,6 +338,21 @@ select:focus {
   .toolbar,
   .spot-list {
     grid-template-columns: 1fr;
+  }
+
+  .map-panel {
+    padding: 12px;
+    border-radius: 24px;
+  }
+
+  #map {
+    height: 430px;
+    min-height: 430px;
+    border-radius: 18px;
+  }
+
+  .leaflet-container {
+    border-radius: 18px;
   }
 
   h1 {
