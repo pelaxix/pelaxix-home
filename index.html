@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Pelaxix is a personal corner of the internet for experiments, notes, projects, and things built while learning."
+    />
+    <title>Pelaxix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#projects">Projects</a>
+          <a href="#notes">Notes</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Personal site. Coding lab. Weird little corner.</p>
+          <h1>A home base for whatever Pelaxix becomes.</h1>
+          <p class="hero-copy">
+            This site starts simple on purpose: a place to test ideas, learn by building,
+            and slowly turn random experiments into something real.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">See the first sections</a>
+            <a class="button secondary" href="#notes">Read the vibe</a>
+          </div>
+        </section>
+
+        <section id="projects" class="section-grid">
+          <div class="section-intro">
+            <p class="eyebrow">Projects</p>
+            <h2>Starting small, on purpose.</h2>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Main site</h3>
+              <p>The first version of pelaxix.com. Static, simple, and easy to change.</p>
+            </article>
+            <article class="card">
+              <h3>Experiments</h3>
+              <p>A future home for tiny tools, tests, prototypes, and half-baked ideas.</p>
+            </article>
+            <article class="card">
+              <h3>Learning log</h3>
+              <p>A place to keep track of what gets built, broken, fixed, and understood.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="notes" class="split-section">
+          <div>
+            <p class="eyebrow">Notes</p>
+            <h2>Not a portfolio. Not yet.</h2>
+          </div>
+          <p>
+            For now, this is a playground. The goal is to make changes by describing them,
+            ship those changes through GitHub, and let the site evolve one iteration at a time.
+          </p>
+        </section>
+
+        <section id="contact" class="contact-panel">
+          <p class="eyebrow">Contact</p>
+          <h2>More soon.</h2>
+          <p>
+            This section will eventually become a real contact area. For now, it is just here
+            so the site has a complete first shape.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
