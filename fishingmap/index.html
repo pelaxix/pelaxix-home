@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A personal fishing map for saving spots, notes, species, access details, and fishing conditions."
+    />
+    <title>Fishing Map | Pelaxix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIINfQKdz4lRmkQ2hY4pBLOXJw3fP4xQ4TA="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="fishingmap.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="#spots">Spots</a>
+          <a href="#how-it-works">How it works</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Tiny tool</p>
+            <h1>Fishing Map</h1>
+            <p class="hero-copy">
+              A personal map for fishing spots, access notes, target species, and reminders.
+              First version uses static points, so it stays free and simple.
+            </p>
+          </div>
+          <div class="hero-card">
+            <span id="spotCount">0</span>
+            <p>spots mapped</p>
+          </div>
+        </section>
+
+        <section class="map-panel">
+          <div class="toolbar">
+            <input id="searchInput" type="search" placeholder="Search by name, species, notes..." aria-label="Search fishing spots" />
+            <select id="categoryFilter" aria-label="Filter by category">
+              <option value="all">All categories</option>
+            </select>
+            <button id="resetButton" class="button secondary" type="button">Reset map</button>
+          </div>
+          <div id="map" aria-label="Fishing spots map"></div>
+        </section>
+
+        <section class="panel" id="spots">
+          <div class="section-heading">
+            <p class="eyebrow">Saved spots</p>
+            <h2>Spot list</h2>
+          </div>
+          <div id="spotList" class="spot-list"></div>
+        </section>
+
+        <section class="panel split-panel" id="how-it-works">
+          <div>
+            <p class="eyebrow">How it works</p>
+            <h2>No database yet.</h2>
+          </div>
+          <p>
+            Spots currently live in a simple JSON file in GitHub. That means everyone can view the map,
+            but adding spots is done by updating the file and letting Cloudflare redeploy the site.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="fishingmap.js"></script>
+  </body>
+</html>
