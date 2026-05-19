@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A simple local BBQ grill log for tracking cooks, temperatures, notes, and what to change next time."
+    />
+    <title>BBQ Grill Log | Pelaxix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="bbq.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="#log-form">Add cook</a>
+          <a href="#entries">Entries</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Tiny tool</p>
+          <h1>BBQ Grill Log</h1>
+          <p class="hero-copy">
+            Track what you cooked, how you cooked it, what worked, and what you would change next time.
+            Entries save only in this browser for now.
+          </p>
+        </section>
+
+        <section class="dashboard" aria-label="BBQ log summary">
+          <article class="stat-card">
+            <span id="totalCooks">0</span>
+            <p>Total cooks</p>
+          </article>
+          <article class="stat-card">
+            <span id="favoriteProtein">-</span>
+            <p>Most logged</p>
+          </article>
+          <article class="stat-card">
+            <span id="averageRating">-</span>
+            <p>Average rating</p>
+          </article>
+        </section>
+
+        <section class="panel form-panel" id="log-form">
+          <div class="section-heading">
+            <p class="eyebrow">New entry</p>
+            <h2>Add a cook</h2>
+          </div>
+
+          <form id="cookForm" class="cook-form">
+            <label>
+              Cook name
+              <input id="cookName" name="cookName" type="text" placeholder="Ribs, burgers, brisket..." required />
+            </label>
+
+            <label>
+              Date
+              <input id="cookDate" name="cookDate" type="date" required />
+            </label>
+
+            <label>
+              Protein / item
+              <select id="protein" name="protein" required>
+                <option value="">Choose one</option>
+                <option>Beef</option>
+                <option>Pork</option>
+                <option>Chicken</option>
+                <option>Fish</option>
+                <option>Vegetables</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label>
+              Method
+              <select id="method" name="method" required>
+                <option value="">Choose one</option>
+                <option>Charcoal</option>
+                <option>Gas</option>
+                <option>Pellet</option>
+                <option>Smoker</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label>
+              Grill temp
+              <input id="grillTemp" name="grillTemp" type="text" placeholder="275°F" />
+            </label>
+
+            <label>
+              Internal temp
+              <input id="internalTemp" name="internalTemp" type="text" placeholder="203°F" />
+            </label>
+
+            <label>
+              Cook time
+              <input id="cookTime" name="cookTime" type="text" placeholder="4 hours" />
+            </label>
+
+            <label>
+              Wood / seasoning
+              <input id="flavour" name="flavour" type="text" placeholder="Hickory, salt/pepper/garlic..." />
+            </label>
+
+            <label class="wide">
+              Notes
+              <textarea id="notes" name="notes" rows="4" placeholder="What happened? What worked? What was annoying?"></textarea>
+            </label>
+
+            <label class="wide">
+              Next time
+              <textarea id="nextTime" name="nextTime" rows="3" placeholder="Wrap earlier, lower temp, more smoke, less sauce..."></textarea>
+            </label>
+
+            <label>
+              Rating
+              <select id="rating" name="rating" required>
+                <option value="">Choose rating</option>
+                <option value="5">5 - excellent</option>
+                <option value="4">4 - good</option>
+                <option value="3">3 - okay</option>
+                <option value="2">2 - rough</option>
+                <option value="1">1 - disaster</option>
+              </select>
+            </label>
+
+            <button class="button primary" type="submit">Save cook</button>
+          </form>
+        </section>
+
+        <section class="panel" id="entries">
+          <div class="entries-topline">
+            <div>
+              <p class="eyebrow">Saved locally</p>
+              <h2>Cook entries</h2>
+            </div>
+            <div class="entry-actions">
+              <input id="searchInput" type="search" placeholder="Search cooks..." aria-label="Search cooks" />
+              <button class="button secondary" id="exportButton" type="button">Export JSON</button>
+              <button class="button danger" id="clearButton" type="button">Clear all</button>
+            </div>
+          </div>
+
+          <div id="emptyState" class="empty-state">
+            No cooks logged yet. Add one above and it will show up here.
+          </div>
+
+          <div id="entriesList" class="entries-list" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="bbq.js"></script>
+  </body>
+</html>
