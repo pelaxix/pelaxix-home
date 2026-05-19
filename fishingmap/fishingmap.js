@@ -21,6 +21,11 @@ let spots = [];
 let visibleSpots = [];
 
 loadSpots();
+forceMapResize();
+
+window.addEventListener("load", forceMapResize);
+window.addEventListener("resize", debounce(forceMapResize, 150));
+window.addEventListener("orientationchange", () => setTimeout(forceMapResize, 350));
 
 searchInput.addEventListener("input", render);
 categoryFilter.addEventListener("change", render);
@@ -30,6 +35,7 @@ resetButton.addEventListener("click", () => {
   categoryFilter.value = "all";
   render();
   map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+  forceMapResize();
 });
 
 spotList.addEventListener("click", (event) => {
@@ -40,6 +46,7 @@ spotList.addEventListener("click", (event) => {
   if (!spot) return;
 
   map.setView([spot.lat, spot.lng], 14);
+  forceMapResize();
   const marker = markersLayer.getLayers().find((layer) => layer.options.spotId === spot.id);
   if (marker) marker.openPopup();
 });
@@ -50,6 +57,7 @@ async function loadSpots() {
     spots = await response.json();
     populateCategories();
     render();
+    forceMapResize();
   } catch (error) {
     console.error("Could not load fishing spots", error);
     spotList.innerHTML = `<p class="error">Could not load fishing spots.</p>`;
@@ -98,10 +106,12 @@ function renderMarkers() {
   markersLayer.clearLayers();
 
   visibleSpots.forEach((spot) => {
-    const marker = L.marker([spot.lat, spot.lng], { spotId: spot.id })
+    L.marker([spot.lat, spot.lng], { spotId: spot.id })
       .bindPopup(createPopup(spot))
       .addTo(markersLayer);
   });
+
+  forceMapResize();
 
   if (visibleSpots.length > 0) {
     const group = L.featureGroup(markersLayer.getLayers());
@@ -145,6 +155,21 @@ function createSpotCard(spot) {
       <button class="button secondary" type="button" data-spot-id="${spot.id}">View on map</button>
     </article>
   `;
+}
+
+function forceMapResize() {
+  requestAnimationFrame(() => {
+    map.invalidateSize(true);
+    setTimeout(() => map.invalidateSize(true), 250);
+  });
+}
+
+function debounce(callback, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => callback(...args), delay);
+  };
 }
 
 function escapeHtml(value) {
