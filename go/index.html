@@ -18,70 +18,48 @@
         <nav class="nav-links" aria-label="Main navigation">
           <a href="/">Home</a>
           <a href="#tracker">Tracker</a>
-          <a href="#live">Live status</a>
           <a href="#details">Details</a>
         </nav>
       </header>
 
       <main>
-        <section class="hero">
+        <section class="hero compact-hero">
           <p class="eyebrow">Commute tool</p>
           <h1>GO Train Tracker</h1>
-          <p class="hero-copy">A single-purpose tracker for GO train 1960 from West Harbour GO to Union Station. The public page calls a Cloudflare Function, so the GO API key can stay hidden as a Cloudflare secret.</p>
+          <p class="hero-copy">West Harbour GO to Union Station. One route, one train, one answer.</p>
         </section>
 
-        <section class="tracker-panel" id="tracker">
-          <div class="route-card">
-            <p class="eyebrow">Saved train</p>
+        <section class="tracker-panel focused-tracker" id="tracker">
+          <div class="route-card main-route-card">
+            <p class="eyebrow">Saved trip</p>
             <div class="route-line"><span>West Harbour GO</span><strong>→</strong><span>Union Station</span></div>
-            <p class="route-subtitle">Lakeshore West · train 1960 · departure 7:54 AM · arrival 9:04 AM</p>
+            <p class="route-subtitle">Lakeshore West · scheduled 7:54 AM to 9:04 AM</p>
           </div>
-          <div class="countdown-card">
-            <p class="eyebrow">Countdown</p>
-            <div id="countdown" class="countdown">--:--:--</div>
-            <p id="countdownLabel" class="countdown-label">Calculating next target departure...</p>
+
+          <div id="statusCard" class="status-hero not-checked">
+            <p class="eyebrow">Live status</p>
+            <div id="liveDelay" class="big-status">NOT CHECKED</div>
+            <p id="apiStatus" class="status-message">Tap the button to check the current delay status.</p>
+            <form id="apiForm" class="single-train-form">
+              <button class="button primary" type="submit">Check status</button>
+            </form>
           </div>
-          <div class="status-grid">
-            <article class="status-card"><span id="todayDeparture">7:54 AM</span><p>Target departure</p></article>
-            <article class="status-card"><span id="serviceDay">-</span><p>Service day</p></article>
-            <article class="status-card"><span id="timeWindow">-</span><p>Current window</p></article>
+
+          <div class="status-grid summary-grid">
+            <article class="status-card"><span>7:54 AM</span><p>Target departure</p></article>
+            <article class="status-card"><span>9:04 AM</span><p>Target arrival</p></article>
+            <article class="status-card"><span id="liveUpdated">-</span><p>Last checked</p></article>
           </div>
         </section>
 
-        <section class="panel live-panel" id="live">
-          <div class="section-heading">
-            <p class="eyebrow">Official GO data</p>
-            <h2>Live status for train 1960</h2>
-            <p>This checks <code>/api/go-delay</code> for the one train we care about. Set <code>GO_API_KEY</code> as a Cloudflare Pages environment variable first.</p>
-          </div>
-          <form id="apiForm" class="single-train-form">
-            <button class="button primary" type="submit">Check train 1960</button>
-          </form>
-          <div id="apiStatus" class="api-status">Ready to check train 1960.</div>
-          <div class="live-grid">
-            <article class="status-card"><span id="liveTripNumber">1960</span><p>Train</p></article>
-            <article class="status-card"><span id="liveDelay">-</span><p>Live delay</p></article>
-            <article class="status-card"><span id="liveUpdated">-</span><p>Last updated</p></article>
-          </div>
-          <div id="liveDetails" class="live-details"></div>
-        </section>
-
-        <section class="panel" id="details">
-          <div class="section-heading"><p class="eyebrow">Trip notes</p><h2>How this identifies the train</h2></div>
-          <div class="detail-grid">
-            <article class="detail-card"><h3>Schedule ID</h3><p>The static schedule rows show date-specific trip IDs like 20260519-LW-1960, all sharing the same train pattern: LW-1960.</p></article>
-            <article class="detail-card"><h3>Train number</h3><p>The tracker uses 1960 as the stable target. It does not search other routes.</p></article>
-            <article class="detail-card"><h3>Live delay</h3><p>The function checks the GO in-service train feed and tries to match 1960, LW-1960, or a date-prefixed trip ending in 1960.</p></article>
-          </div>
-        </section>
-
-        <section class="panel actions-panel">
-          <div><p class="eyebrow">Setup</p><h2>Need an API key?</h2><p>Metrolinx says GO API access is free but requires registration for an API key.</p></div>
-          <div class="button-row">
-            <a class="button primary" href="https://api.openmetrolinx.com/OpenDataAPI/" target="_blank" rel="noreferrer">Register for GO API</a>
-            <a class="button secondary" href="https://api.openmetrolinx.com/OpenDataAPI/Help" target="_blank" rel="noreferrer">Open API docs</a>
-            <a class="button secondary" href="https://www.gotransit.com/en/plan-your-trip" target="_blank" rel="noreferrer">Official trip planner</a>
-          </div>
+        <section class="panel details-panel" id="details">
+          <details>
+            <summary>Technical details</summary>
+            <p>
+              This page checks GO train 1960 through <code>/api/go-delay</code>. The API key should be stored as the <code>GO_API_KEY</code> Cloudflare Pages environment variable.
+            </p>
+            <div id="liveDetails" class="live-details"></div>
+          </details>
         </section>
       </main>
     </div>
