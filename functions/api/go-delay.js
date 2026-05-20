@@ -68,7 +68,7 @@ async function findTrainStatus({ apiKey, tripNumber }) {
   const url = `${API_BASE}/ServiceataGlance/Trains/All?key=${encodeURIComponent(apiKey)}`;
   const data = await fetchJson(url);
   const trains = findArray(data);
-  const target = String(tripNumber).trim().toLowerCase();
+  const target = normalizeTripId(tripNumber);
 
   return trains.find((train) => {
     const possibleIds = [
@@ -78,9 +78,9 @@ async function findTrainStatus({ apiKey, tripNumber }) {
       train.TripId,
       train.Trip,
       train.ServiceNumber
-    ].map((value) => String(value || "").trim().toLowerCase());
+    ].map(normalizeTripId);
 
-    return possibleIds.includes(target);
+    return possibleIds.some((candidate) => isTripMatch(candidate, target));
   }) || null;
 }
 
@@ -109,12 +109,12 @@ function findArray(value) {
 
 function scoreJourney(journey) {
   const text = JSON.stringify(journey).toLowerCase();
-  const hasTargetTime = text.includes("7:54") || text.includes("0754");
+  const hasTargetTime = text.includes("7:54") || text.includes("0754") || text.includes("7:53") || text.includes("0753");
   const hasUnion = text.includes("union");
   const hasWestHarbour = text.includes("west harbour") || text.includes("westharbour");
 
   let score = 100;
-  if (hasTargetTime) score -= 70;
+  if (hasTargetTime) score -= 50;
   if (hasUnion) score -= 10;
   if (hasWestHarbour) score -= 10;
   return score;
@@ -126,6 +126,26 @@ function extractTripNumber(journey) {
   const keys = ["TripNumber", "TrainNumber", "TripID", "TripId", "Trip", "ServiceNumber"];
   const found = findFirstKey(journey, keys);
   return found ? String(found) : "";
+}
+
+function normalizeTripId(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function isTripMatch(candidate, target) {
+  if (!candidate || !target) return false;
+  if (candidate === target) return true;
+
+  const candidateParts = candidate.split("-").filter(Boolean);
+  const targetParts = target.split("-").filter(Boolean);
+  const candidateLast = candidateParts[candidateParts.length - 1];
+  const targetLast = targetParts[targetParts.length - 1];
+
+  if (candidateLast && targetLast && candidateLast === targetLast) return true;
+  if (candidate.endsWith(`-${target}`)) return true;
+  if (target.endsWith(`-${candidate}`)) return true;
+
+  return false;
 }
 
 function findFirstKey(value, keys) {
