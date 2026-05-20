@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Reorder or delete PDF pages locally in your browser and download one new PDF." />
+    <title>Reorder / Delete Pages | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="/pdf/pdf.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <a class="back-link" href="/pdf/">← Back to PDF Tools</a>
+          <h1>Reorder / Delete Pages</h1>
+          <p class="hero-copy">Arrange the pages you want in a new PDF. Your original file is not changed.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Files are processed locally.</h2>
+          <p>Your PDF stays in this browser. It is not uploaded to Pelaxix, Cloudflare, or any third-party service.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">How this tool works</p>
+          <h2>Edit the output, not the original.</h2>
+          <p>Move pages up or down to reorder them. Tap <strong>×</strong> once to arm delete, then tap <strong>Delete?</strong> to remove that page from the new PDF. Use Reset to original if you want to start over.</p>
+        </section>
+
+        <section class="merge-panel">
+          <div id="dropZone" class="drop-zone">
+            <div>
+              <h2>Add one PDF</h2>
+              <p class="helper-text">Drag and drop a PDF here, or choose one from your device.</p>
+              <div class="button-row">
+                <label class="button primary" for="pdfInput">Choose PDF</label>
+                <input id="pdfInput" class="file-input" type="file" accept="application/pdf,.pdf" />
+              </div>
+            </div>
+          </div>
+          <p id="statusMessage" class="status-message">No PDF selected yet.</p>
+        </section>
+
+        <section class="file-list-panel">
+          <h2>Output pages</h2>
+          <div class="selected-file-card">
+            <p class="eyebrow">Selected file</p>
+            <p id="fileName" class="file-name">No file selected.</p>
+            <p id="fileMeta" class="file-meta">Choose a PDF to see the page count.</p>
+          </div>
+          <ul id="pageList" class="file-list page-list"></ul>
+          <div class="button-row">
+            <button id="downloadButton" class="button primary" type="button" disabled>Download new PDF</button>
+            <button id="resetButton" class="button secondary" type="button" disabled>Reset to original</button>
+            <button id="clearButton" class="button danger" type="button" disabled>Clear</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="reorder.js"></script>
+  </body>
+</html>
