@@ -110,7 +110,7 @@ p {
 }
 
 h1 {
-  max-width: 850px;
+  max-width: 100%;
   margin-bottom: 22px;
   color: var(--text-strong);
   font-size: clamp(3rem, 9vw, 7.4rem);
@@ -133,7 +133,7 @@ h3 {
 }
 
 .hero-copy {
-  max-width: 680px;
+  max-width: 900px;
   margin-bottom: 32px;
   color: var(--muted);
   font-size: clamp(1.05rem, 2vw, 1.3rem);
@@ -193,7 +193,7 @@ h3 {
 }
 
 .section-intro {
-  max-width: 720px;
+  max-width: 900px;
   margin-bottom: 28px;
 }
 
