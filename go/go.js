@@ -26,7 +26,7 @@ async function checkTrain1960() {
     if (!lookupFinished) {
       lookupFinished = true;
       controller.abort();
-      liveUpdated.textContent = new Date().toLocaleTimeString();
+      liveUpdated.textContent = formatTime(new Date());
       setStatusState("error", "TIMEOUT", "The live lookup took too long. Refresh to try again.");
     }
   }, LOOKUP_TIMEOUT_MS);
@@ -55,7 +55,7 @@ async function checkTrain1960() {
       throw new Error(data.error || `HTTP ${response.status}`);
     }
 
-    liveUpdated.textContent = data.checkedAt ? new Date(data.checkedAt).toLocaleTimeString() : new Date().toLocaleTimeString();
+    liveUpdated.textContent = data.checkedAt ? formatTime(new Date(data.checkedAt)) : formatTime(new Date());
 
     if (!data.trainStatus) {
       setStatusState("not-checked", "NOT LISTED", "No live in-service record found for this train yet. Try refreshing closer to departure.");
@@ -73,7 +73,7 @@ async function checkTrain1960() {
 
     lookupFinished = true;
     clearTimeout(visibleTimeoutId);
-    liveUpdated.textContent = new Date().toLocaleTimeString();
+    liveUpdated.textContent = formatTime(new Date());
 
     if (error.name === "AbortError") {
       setStatusState("error", "TIMEOUT", "The live lookup took too long. Refresh to try again.");
@@ -93,6 +93,13 @@ function formatDelay(seconds) {
   const padded = String(minutes).padStart(2, "0");
 
   return parsed > 0 ? `${padded} MINUTES DELAYED` : `${padded} MINUTES EARLY`;
+}
+
+function formatTime(date) {
+  return date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit"
+  });
 }
 
 function getDelayState(seconds) {
