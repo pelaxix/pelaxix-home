@@ -43,14 +43,11 @@
 }
 
 @media (max-width: 850px) {
-  .nav-menu {
-    width: 100%;
+  .nav-links {
+    margin-left: auto;
   }
 
   .nav-dropdown {
-    position: static;
-    margin-top: 10px;
-    min-width: 100%;
-    box-shadow: none;
+    min-width: 170px;
   }
 }
