@@ -27,7 +27,7 @@
         <section class="hero">
           <p class="eyebrow">Commute tool</p>
           <h1>GO Train Tracker</h1>
-          <p class="hero-copy">A personal tracker for the morning Lakeshore West trip from West Harbour GO to Union Station. It can use the official GO Open Data API once you add your own API key.</p>
+          <p class="hero-copy">A personal tracker for the morning Lakeshore West trip from West Harbour GO to Union Station. The public page calls a Cloudflare Function, so the GO API key can stay hidden as a Cloudflare secret.</p>
         </section>
 
         <section class="tracker-panel" id="tracker">
@@ -52,16 +52,16 @@
           <div class="section-heading">
             <p class="eyebrow">Official GO data</p>
             <h2>Live delay lookup</h2>
-            <p>Paste your GO API key here. It is saved only in this browser. The app will try to find the matching journey and then check live train delay data.</p>
+            <p>This calls <code>/api/go-delay</code>. Set <code>GO_API_KEY</code> as a Cloudflare Pages environment variable before relying on it.</p>
           </div>
-          <form id="apiForm" class="api-form">
-            <label>GO API key<input id="apiKey" type="password" placeholder="Paste your Open Metrolinx API key" /></label>
+          <form id="apiForm" class="api-form no-key-form">
             <label>From stop code<input id="fromStopCode" type="text" value="WR" /></label>
             <label>To stop code<input id="toStopCode" type="text" value="UN" /></label>
             <label>Search start time<input id="startTime" type="text" value="0700" inputmode="numeric" /></label>
+            <label>Trip number, optional<input id="tripNumber" type="text" placeholder="Use once known" /></label>
             <button class="button primary" type="submit">Check live delay</button>
           </form>
-          <div id="apiStatus" class="api-status">Add an API key and check the live delay. If WR is not the correct West Harbour stop code, change it here and try again.</div>
+          <div id="apiStatus" class="api-status">Ready to check. If WR is not the correct West Harbour stop code, change it here and try again.</div>
           <div class="live-grid">
             <article class="status-card"><span id="liveTripNumber">-</span><p>Matched trip</p></article>
             <article class="status-card"><span id="liveDelay">-</span><p>Live delay</p></article>
@@ -73,9 +73,9 @@
         <section class="panel" id="details">
           <div class="section-heading"><p class="eyebrow">Trip notes</p><h2>How this identifies the train</h2></div>
           <div class="detail-grid">
-            <article class="detail-card"><h3>Journey lookup</h3><p>The app asks the GO API for journeys from West Harbour to Union starting around 7:00 AM and looks for the closest trip to 7:54 AM.</p></article>
-            <article class="detail-card"><h3>Trip number</h3><p>Once it finds a matching journey, it extracts the GO trip number. That is the identifier we can use for live matching.</p></article>
-            <article class="detail-card"><h3>Live delay</h3><p>The app checks the GO in-service train feed and compares the matched trip number against live delay seconds, position, and update time.</p></article>
+            <article class="detail-card"><h3>Journey lookup</h3><p>The app asks your Cloudflare Function to find journeys from West Harbour to Union starting around 7:00 AM and looks for the closest trip to 7:54 AM.</p></article>
+            <article class="detail-card"><h3>Trip number</h3><p>Once the real trip number is known, we can enter or hardcode it so the lookup goes directly to that train.</p></article>
+            <article class="detail-card"><h3>Live delay</h3><p>The function checks the GO in-service train feed and compares the matched trip number against live delay data.</p></article>
           </div>
         </section>
 
