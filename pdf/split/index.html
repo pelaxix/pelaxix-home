@@ -38,13 +38,19 @@
         <section class="hero">
           <a class="back-link" href="/pdf/">← Back to PDF Tools</a>
           <h1>Split PDF</h1>
-          <p class="hero-copy">Split one PDF into separate PDF files or PNG images, then download everything in a ZIP.</p>
+          <p class="hero-copy">Split one PDF into separate files. Each selected page becomes its own PDF or PNG, and everything downloads together in a ZIP.</p>
         </section>
 
         <section class="privacy-banner">
           <p class="eyebrow">Privacy first</p>
           <h2>Files are processed locally.</h2>
           <p>Your PDF stays in this browser. It is not uploaded to Pelaxix, Cloudflare, or any third-party service.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">How this tool works</p>
+          <h2>Split means one file per page.</h2>
+          <p>If you enter <strong>3-7</strong>, this tool creates separate files for pages 3, 4, 5, 6, and 7. If you want one combined PDF containing pages 3-7, use the planned Extract Pages tool instead.</p>
         </section>
 
         <section class="merge-panel">
@@ -72,49 +78,50 @@
 
           <div class="option-grid">
             <fieldset class="option-card">
-              <legend>Pages</legend>
+              <legend>Pages to split out</legend>
               <label class="radio-row">
                 <input type="radio" name="splitMode" value="all" checked />
-                <span>Every page</span>
+                <span>Every page becomes its own file</span>
               </label>
               <label class="radio-row">
                 <input type="radio" name="splitMode" value="selected" />
-                <span>Selected pages</span>
+                <span>Only selected pages become separate files</span>
               </label>
             </fieldset>
 
             <fieldset class="option-card">
-              <legend>Output</legend>
+              <legend>Output format</legend>
               <label class="radio-row">
                 <input type="radio" name="outputFormat" value="pdf" checked />
-                <span>PDF files</span>
+                <span>Separate PDF files</span>
               </label>
               <label class="radio-row">
                 <input type="radio" name="outputFormat" value="png" />
-                <span>PNG images</span>
+                <span>Separate PNG images</span>
               </label>
             </fieldset>
           </div>
 
           <div id="selectedPagesArea" class="selected-pages-area" hidden>
             <label>
-              Pages to include
+              Pages to split out
               <input id="pageRangeInput" type="text" placeholder="Example: 1-3, 7, 10-12" />
             </label>
             <div class="format-help-card">
               <p class="eyebrow">Page number format</p>
               <h2>Use commas and ranges.</h2>
-              <p>Write single pages with commas, or use a dash for a range. Spaces are okay.</p>
+              <p>Write single pages with commas, or use a dash for a range. Spaces are okay. The selected pages are exported as separate files, not one combined PDF.</p>
               <ul>
-                <li><strong>1, 3, 5</strong> exports pages 1, 3, and 5.</li>
-                <li><strong>1-4</strong> exports pages 1 through 4.</li>
-                <li><strong>1-3, 7, 10-12</strong> exports pages 1, 2, 3, 7, 10, 11, and 12.</li>
+                <li><strong>1, 3, 5</strong> creates separate files for pages 1, 3, and 5.</li>
+                <li><strong>1-4</strong> creates separate files for pages 1, 2, 3, and 4.</li>
+                <li><strong>1-3, 7, 10-12</strong> creates separate files for pages 1, 2, 3, 7, 10, 11, and 12.</li>
+                <li>Pages export in the order you type them. <strong>1, 2, 4, 3</strong> keeps page 4 before page 3.</li>
               </ul>
             </div>
           </div>
 
           <div class="button-row">
-            <button id="splitButton" class="button primary" type="button" disabled>Split and download ZIP</button>
+            <button id="splitButton" class="button primary" type="button" disabled>Split into separate files</button>
             <button id="clearButton" class="button danger" type="button" disabled>Clear</button>
           </div>
         </section>
