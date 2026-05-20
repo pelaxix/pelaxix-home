@@ -97,7 +97,7 @@ select {
   grid-template-columns: minmax(0, 1fr) 220px;
   align-items: end;
   gap: 24px;
-  padding: 52px 0 34px;
+  padding: 34px 0 28px;
 }
 
 .eyebrow {
@@ -424,6 +424,10 @@ select:focus {
 
   .site-header {
     flex-direction: column;
+  }
+
+  .hero {
+    padding: 30px 0 24px;
   }
 
   .toolbar,
