@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Network Check shows your public IP address and basic connection details for troubleshooting." />
+    <title>Network Check | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="ip.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <h1>Network Check</h1>
+          <p class="hero-copy">A quick troubleshooting snapshot for your public IP, approximate location, network, browser, and device.</p>
+        </section>
+
+        <section class="ip-hero-card" aria-live="polite">
+          <p class="eyebrow">Public IP</p>
+          <div id="ipAddress" class="ip-address">Checking...</div>
+          <p id="statusMessage" class="status-message">Loading connection details.</p>
+        </section>
+
+        <section class="card-grid" aria-label="Network details">
+          <article class="detail-card">
+            <h2>Location</h2>
+            <dl>
+              <div><dt>Country</dt><dd id="country">-</dd></div>
+              <div><dt>Region</dt><dd id="region">-</dd></div>
+              <div><dt>City</dt><dd id="city">-</dd></div>
+              <div><dt>Postal code</dt><dd id="postalCode">-</dd></div>
+              <div><dt>IP timezone</dt><dd id="ipTimezone">-</dd></div>
+            </dl>
+          </article>
+
+          <article class="detail-card">
+            <h2>Network</h2>
+            <dl>
+              <div><dt>Provider / organization</dt><dd id="organization">-</dd></div>
+              <div><dt>ASN</dt><dd id="asn">-</dd></div>
+              <div><dt>Cloudflare edge</dt><dd id="colo">-</dd></div>
+              <div><dt>Coordinates</dt><dd id="coordinates">-</dd></div>
+            </dl>
+          </article>
+
+          <article class="detail-card">
+            <h2>Browser</h2>
+            <dl>
+              <div><dt>Browser timezone</dt><dd id="browserTimezone">-</dd></div>
+              <div><dt>Language</dt><dd id="language">-</dd></div>
+              <div><dt>Screen</dt><dd id="screenSize">-</dd></div>
+              <div><dt>Platform</dt><dd id="platform">-</dd></div>
+            </dl>
+          </article>
+        </section>
+
+        <section class="detail-card troubleshooting-card">
+          <h2>Troubleshooting notes</h2>
+          <p id="troubleshootingNotes">Checking for obvious mismatches.</p>
+          <p class="small-note">Location is approximate and based on network routing, not GPS. VPNs, mobile networks, and corporate networks can make this look different from your real location.</p>
+        </section>
+      </main>
+    </div>
+
+    <script src="ip.js"></script>
+  </body>
+</html>
