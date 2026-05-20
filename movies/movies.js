@@ -44,10 +44,14 @@ function renderMovies(items) {
 
     return `
       <article class="movie-card">
-        <a class="poster-wrap" href="${escapeHtml(item.link)}" target="_blank" rel="noreferrer">${poster}</a>
-        <div class="movie-content">
-          <h3>${escapeHtml(item.movieTitle || item.title)}</h3>
-          <div class="movie-meta">${rating}${date}</div>
+        <div class="movie-topline">
+          <a class="poster-wrap" href="${escapeHtml(item.link)}" target="_blank" rel="noreferrer">${poster}</a>
+          <div class="movie-header">
+            <h3>${escapeHtml(item.movieTitle || item.title)}</h3>
+            <div class="movie-meta">${rating}${date}</div>
+          </div>
+        </div>
+        <div class="movie-body">
           ${description}
           <a class="movie-link" href="${escapeHtml(item.link)}" target="_blank" rel="noreferrer">Open on Letterboxd</a>
         </div>
