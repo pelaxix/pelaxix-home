@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Rotate PDF pages locally in your browser and download one corrected PDF." />
+    <title>Rotate PDF | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="/pdf/pdf.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <a class="back-link" href="/pdf/">← Back to PDF Tools</a>
+          <h1>Rotate PDF</h1>
+          <p class="hero-copy">Rotate all pages or selected pages, then download one corrected PDF.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Files are processed locally.</h2>
+          <p>Your PDF stays in this browser. It is not uploaded to Pelaxix, Cloudflare, or any third-party service.</p>
+        </section>
+
+        <section class="merge-panel">
+          <div id="dropZone" class="drop-zone">
+            <div>
+              <h2>Add one PDF</h2>
+              <p class="helper-text">Drag and drop a PDF here, or choose one from your device.</p>
+              <div class="button-row">
+                <label class="button primary" for="pdfInput">Choose PDF</label>
+                <input id="pdfInput" class="file-input" type="file" accept="application/pdf,.pdf" />
+              </div>
+            </div>
+          </div>
+          <p id="statusMessage" class="status-message">No PDF selected yet.</p>
+        </section>
+
+        <section class="file-list-panel split-options-panel">
+          <h2>Rotate options</h2>
+
+          <div class="selected-file-card">
+            <p class="eyebrow">Selected file</p>
+            <p id="fileName" class="file-name">No file selected.</p>
+            <p id="fileMeta" class="file-meta">Choose a PDF to see the page count.</p>
+          </div>
+
+          <div class="option-grid">
+            <fieldset class="option-card">
+              <legend>Pages to rotate</legend>
+              <label class="radio-row">
+                <input type="radio" name="pageMode" value="all" checked />
+                <span>All pages</span>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="pageMode" value="selected" />
+                <span>Selected pages only</span>
+              </label>
+            </fieldset>
+
+            <fieldset class="option-card">
+              <legend>Rotation</legend>
+              <label class="radio-row">
+                <input type="radio" name="rotation" value="90" checked />
+                <span>90° right (clockwise)</span>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="rotation" value="270" />
+                <span>90° left (counterclockwise)</span>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="rotation" value="180" />
+                <span>180° (upside down)</span>
+              </label>
+            </fieldset>
+          </div>
+
+          <div id="selectedPagesArea" class="selected-pages-area" hidden>
+            <label>
+              Pages to rotate
+              <input id="pageRangeInput" type="text" placeholder="Example: 1-3, 7, 10-12" />
+            </label>
+            <div class="format-help-card">
+              <p class="eyebrow">Page number format</p>
+              <h2>Use commas and ranges.</h2>
+              <p>Write single pages with commas, or use a dash for a range. Spaces are okay. Only the selected pages will rotate. All other pages stay as they are.</p>
+              <ul>
+                <li><strong>1, 3, 5</strong> rotates pages 1, 3, and 5.</li>
+                <li><strong>1-4</strong> rotates pages 1 through 4.</li>
+                <li><strong>1-3, 7, 10-12</strong> rotates pages 1, 2, 3, 7, 10, 11, and 12.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button id="rotateButton" class="button primary" type="button" disabled>Rotate and download PDF</button>
+            <button id="clearButton" class="button danger" type="button" disabled>Clear</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="rotate.js"></script>
+  </body>
+</html>
