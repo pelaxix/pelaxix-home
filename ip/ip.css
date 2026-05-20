@@ -93,7 +93,7 @@ h2 {
   letter-spacing: -0.03em;
 }
 
-.hero-copy, .status-message, dd, .small-note, .troubleshooting-card p {
+.hero-copy, .status-message, .ip-version, dd, .small-note, .troubleshooting-card p {
   color: var(--muted);
   line-height: 1.6;
 }
@@ -134,8 +134,13 @@ h2 {
   line-height: 0.95;
 }
 
+.ip-version {
+  margin: 12px 0 0;
+  font-weight: 800;
+}
+
 .status-message {
-  margin: 16px 0 0;
+  margin: 10px 0 0;
 }
 
 .card-grid {
@@ -186,10 +191,26 @@ dd {
 @media (max-width: 850px) {
   .app-shell { width: min(100% - 28px, 1120px); }
   .site-header { padding: 18px 0; }
-  .hero { padding: 22px 0 22px; }
-  h1 { letter-spacing: -0.06em; }
-  .ip-hero-card, .detail-card { border-radius: 22px; }
-  .ip-hero-card { padding: 22px; }
-  .card-grid { grid-template-columns: 1fr; }
-  .detail-card { padding: 20px; }
+  .hero { padding: 14px 0 14px; }
+  h1 { margin-bottom: 10px; letter-spacing: -0.06em; font-size: clamp(2.7rem, 12vw, 4.6rem); }
+  h2 { margin-bottom: 10px; font-size: 1rem; }
+  .hero-copy { font-size: 1rem; line-height: 1.45; }
+  .ip-hero-card, .detail-card { border-radius: 20px; }
+  .ip-hero-card { margin-bottom: 10px; padding: 16px; }
+  .eyebrow { margin-bottom: 8px; font-size: 0.68rem; }
+  .ip-address { font-size: clamp(1.9rem, 10vw, 3.1rem); letter-spacing: -0.05em; }
+  .ip-version { margin-top: 8px; font-size: 0.9rem; }
+  .status-message { margin-top: 6px; font-size: 0.85rem; line-height: 1.35; }
+  .card-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
+  .detail-card { padding: 14px; }
+  dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+  dt { font-size: 0.62rem; }
+  dd { font-size: 0.9rem; line-height: 1.25; }
+  .troubleshooting-card { margin-bottom: 36px; }
+  .troubleshooting-card p { font-size: 0.9rem; line-height: 1.4; }
+  .small-note { font-size: 0.8rem; }
+}
+
+@media (max-width: 420px) {
+  dl { grid-template-columns: 1fr; }
 }
