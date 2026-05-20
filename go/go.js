@@ -1,28 +1,18 @@
-const TARGET_DEPARTURE = {
-  hour: 7,
-  minute: 54,
-  label: "7:54 AM"
-};
-
 const TRAIN_NUMBER = "1960";
 const FROM_STOP = "WR";
 const TO_STOP = "UN";
 const START_TIME = "0700";
 
-const apiForm = document.querySelector("#apiForm");
 const apiStatus = document.querySelector("#apiStatus");
 const statusCard = document.querySelector("#statusCard");
 const liveDelay = document.querySelector("#liveDelay");
 const liveUpdated = document.querySelector("#liveUpdated");
 const liveDetails = document.querySelector("#liveDetails");
 
-apiForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  await checkTrain1960();
-});
+document.addEventListener("DOMContentLoaded", checkTrain1960);
 
 async function checkTrain1960() {
-  setStatusState("checking", "CHECKING...", "Checking GO live data through Cloudflare...");
+  setStatusState("checking", "CHECKING...", "Checking the current delay status.");
   liveUpdated.textContent = "-";
   liveDetails.innerHTML = "";
 
@@ -44,7 +34,7 @@ async function checkTrain1960() {
     liveUpdated.textContent = data.checkedAt ? new Date(data.checkedAt).toLocaleTimeString() : new Date().toLocaleTimeString();
 
     if (!data.trainStatus) {
-      setStatusState("not-checked", "NOT LISTED", "No live in-service record found for this train yet. Try again closer to departure.");
+      setStatusState("not-checked", "NOT LISTED", "No live in-service record found for this train yet. Try refreshing closer to departure.");
     } else {
       const delayText = formatDelay(data.delaySeconds);
       const state = getDelayState(data.delaySeconds);
