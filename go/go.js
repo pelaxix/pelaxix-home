@@ -4,11 +4,10 @@ const TARGET_DEPARTURE = {
   label: "7:54 AM"
 };
 
-const API_BASE = "https://api.openmetrolinx.com/OpenDataAPI/api/V1";
-const SAVED_KEY = "pelaxix-go-api-key";
 const SAVED_FROM = "pelaxix-go-from-stop";
 const SAVED_TO = "pelaxix-go-to-stop";
 const SAVED_START = "pelaxix-go-start-time";
+const SAVED_TRIP = "pelaxix-go-trip-number";
 
 const countdown = document.querySelector("#countdown");
 const countdownLabel = document.querySelector("#countdownLabel");
@@ -17,10 +16,10 @@ const serviceDay = document.querySelector("#serviceDay");
 const timeWindow = document.querySelector("#timeWindow");
 
 const apiForm = document.querySelector("#apiForm");
-const apiKeyInput = document.querySelector("#apiKey");
 const fromStopCodeInput = document.querySelector("#fromStopCode");
 const toStopCodeInput = document.querySelector("#toStopCode");
 const startTimeInput = document.querySelector("#startTime");
+const tripNumberInput = document.querySelector("#tripNumber");
 const apiStatus = document.querySelector("#apiStatus");
 const liveTripNumber = document.querySelector("#liveTripNumber");
 const liveDelay = document.querySelector("#liveDelay");
@@ -28,10 +27,10 @@ const liveUpdated = document.querySelector("#liveUpdated");
 const liveDetails = document.querySelector("#liveDetails");
 
 todayDeparture.textContent = TARGET_DEPARTURE.label;
-apiKeyInput.value = localStorage.getItem(SAVED_KEY) || "";
 fromStopCodeInput.value = localStorage.getItem(SAVED_FROM) || fromStopCodeInput.value;
 toStopCodeInput.value = localStorage.getItem(SAVED_TO) || toStopCodeInput.value;
 startTimeInput.value = localStorage.getItem(SAVED_START) || startTimeInput.value;
+tripNumberInput.value = localStorage.getItem(SAVED_TRIP) || tripNumberInput.value;
 
 updateTracker();
 setInterval(updateTracker, 1000);
@@ -39,160 +38,58 @@ setInterval(updateTracker, 1000);
 apiForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const apiKey = apiKeyInput.value.trim();
   const fromStop = fromStopCodeInput.value.trim().toUpperCase();
   const toStop = toStopCodeInput.value.trim().toUpperCase();
   const startTime = startTimeInput.value.trim();
+  const tripNumber = tripNumberInput.value.trim();
 
-  localStorage.setItem(SAVED_KEY, apiKey);
   localStorage.setItem(SAVED_FROM, fromStop);
   localStorage.setItem(SAVED_TO, toStop);
   localStorage.setItem(SAVED_START, startTime);
+  localStorage.setItem(SAVED_TRIP, tripNumber);
 
-  if (!apiKey) {
-    setStatus("Add your GO API key first.", true);
-    return;
-  }
-
-  setStatus("Checking GO Open Data...", false);
+  setStatus("Checking GO live data through Cloudflare...", false);
   liveTripNumber.textContent = "-";
   liveDelay.textContent = "-";
   liveUpdated.textContent = "-";
   liveDetails.innerHTML = "";
 
   try {
-    const journey = await findTargetJourney({ apiKey, fromStop, toStop, startTime });
-    if (!journey) {
-      setStatus("Could not find a matching journey. Try changing the from stop code, to stop code, or start time.", true);
-      return;
+    const params = new URLSearchParams({ fromStop, toStop, startTime });
+    if (tripNumber) params.set("tripNumber", tripNumber);
+
+    const response = await fetch(`/api/go-delay?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || `HTTP ${response.status}`);
     }
 
-    const tripNumber = extractTripNumber(journey);
-    liveTripNumber.textContent = tripNumber || "found";
-    liveDetails.innerHTML = `<strong>Matched journey:</strong><br>${escapeHtml(JSON.stringify(simplifyJourney(journey), null, 2))}`;
+    liveTripNumber.textContent = data.matchedTripNumber || "not found";
+    liveDelay.textContent = formatDelay(data.delaySeconds);
+    liveUpdated.textContent = data.checkedAt ? new Date(data.checkedAt).toLocaleTimeString() : new Date().toLocaleTimeString();
 
-    const trainStatus = tripNumber ? await findTrainStatus({ apiKey, tripNumber }) : null;
-    if (!trainStatus) {
-      setStatus("Journey matched, but no live train delay record was found yet. It may appear closer to departure.", false);
-      liveDelay.textContent = "not listed";
-      liveUpdated.textContent = new Date().toLocaleTimeString();
-      return;
+    if (!data.matchedTripNumber) {
+      setStatus("No matching GO trip number found. Try a different stop code or start time.", true);
+    } else if (!data.trainStatus) {
+      setStatus("Trip found, but no in-service live train record was found. It may appear closer to departure.", false);
+    } else {
+      setStatus("Live GO lookup completed.", false);
     }
 
-    const delaySeconds = Number(trainStatus.DelaySeconds || trainStatus.delaySeconds || trainStatus.Delay || 0);
-    liveDelay.textContent = formatDelay(delaySeconds);
-    liveUpdated.textContent = new Date().toLocaleTimeString();
-    setStatus("Live GO lookup completed.", false);
-    liveDetails.innerHTML += `<br><br><strong>Live train record:</strong><br>${escapeHtml(JSON.stringify(trainStatus, null, 2))}`;
+    liveDetails.innerHTML = `<strong>Function response:</strong><br>${escapeHtml(JSON.stringify(data, null, 2))}`;
   } catch (error) {
     console.error(error);
     setStatus(`Live lookup failed: ${error.message}`, true);
   }
 });
 
-async function findTargetJourney({ apiKey, fromStop, toStop, startTime }) {
-  const url = `${API_BASE}/Stop/NextService/${encodeURIComponent(fromStop)}/${encodeURIComponent(toStop)}/${encodeURIComponent(startTime)}?key=${encodeURIComponent(apiKey)}`;
-  const data = await fetchJson(url);
-  const journeys = findArray(data);
-  if (!journeys.length) return null;
-
-  return journeys
-    .map((journey) => ({ journey, score: scoreJourney(journey) }))
-    .sort((a, b) => a.score - b.score)[0].journey;
-}
-
-async function findTrainStatus({ apiKey, tripNumber }) {
-  const url = `${API_BASE}/ServiceataGlance/Trains/All?key=${encodeURIComponent(apiKey)}`;
-  const data = await fetchJson(url);
-  const trains = findArray(data);
-  const target = String(tripNumber).trim().toLowerCase();
-
-  return trains.find((train) => {
-    const possibleIds = [
-      train.TripNumber,
-      train.TrainNumber,
-      train.TripID,
-      train.TripId,
-      train.Trip,
-      train.ServiceNumber
-    ].map((value) => String(value || "").trim().toLowerCase());
-
-    return possibleIds.includes(target);
-  });
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url, { headers: { Accept: "application/json" } });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  return response.json();
-}
-
-function findArray(value) {
-  if (Array.isArray(value)) return value;
-  if (!value || typeof value !== "object") return [];
-
-  for (const item of Object.values(value)) {
-    if (Array.isArray(item)) return item;
-    const nested = findArray(item);
-    if (nested.length) return nested;
-  }
-
-  return [];
-}
-
-function scoreJourney(journey) {
-  const text = JSON.stringify(journey).toLowerCase();
-  const hasTargetTime = text.includes("7:54") || text.includes("0754");
-  const hasUnion = text.includes("union");
-  const hasWestHarbour = text.includes("west harbour") || text.includes("westharbour");
-
-  let score = 100;
-  if (hasTargetTime) score -= 70;
-  if (hasUnion) score -= 10;
-  if (hasWestHarbour) score -= 10;
-  return score;
-}
-
-function extractTripNumber(journey) {
-  const keys = ["TripNumber", "TrainNumber", "TripID", "TripId", "Trip", "ServiceNumber"];
-  const found = findFirstKey(journey, keys);
-  return found ? String(found) : "";
-}
-
-function findFirstKey(value, keys) {
-  if (!value || typeof value !== "object") return null;
-
-  for (const key of keys) {
-    if (Object.prototype.hasOwnProperty.call(value, key) && value[key]) {
-      return value[key];
-    }
-  }
-
-  for (const child of Object.values(value)) {
-    if (typeof child === "object") {
-      const found = findFirstKey(child, keys);
-      if (found) return found;
-    }
-  }
-
-  return null;
-}
-
-function simplifyJourney(journey) {
-  const text = JSON.stringify(journey);
-  if (text.length < 900) return journey;
-  return {
-    note: "Large GO API response trimmed for display. Full object is available in the browser console.",
-    possibleTripNumber: extractTripNumber(journey)
-  };
-}
-
 function formatDelay(seconds) {
-  if (!Number.isFinite(seconds) || seconds === 0) return "on time";
-  const minutes = Math.round(Math.abs(seconds) / 60);
-  return seconds > 0 ? `${minutes} min late` : `${minutes} min early`;
+  if (seconds === null || seconds === undefined || Number.isNaN(Number(seconds))) return "not listed";
+  const parsed = Number(seconds);
+  if (parsed === 0) return "on time";
+  const minutes = Math.round(Math.abs(parsed) / 60);
+  return parsed > 0 ? `${minutes} min late` : `${minutes} min early`;
 }
 
 function setStatus(message, isError) {
