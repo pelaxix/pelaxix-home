@@ -10,22 +10,34 @@ const liveDelay = document.querySelector("#liveDelay");
 const liveUpdated = document.querySelector("#liveUpdated");
 const liveDetails = document.querySelector("#liveDetails");
 
+let lookupFinished = false;
+
 document.addEventListener("DOMContentLoaded", checkTrain1960);
 
 async function checkTrain1960() {
+  lookupFinished = false;
   setStatusState("checking", "CHECKING...", "Checking the current delay status.");
   liveUpdated.textContent = "-";
   liveDetails.innerHTML = "";
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
+
+  const visibleTimeoutId = setTimeout(() => {
+    if (!lookupFinished) {
+      lookupFinished = true;
+      controller.abort();
+      liveUpdated.textContent = new Date().toLocaleTimeString();
+      setStatusState("error", "TIMEOUT", "The live lookup took too long. Refresh to try again.");
+    }
+  }, LOOKUP_TIMEOUT_MS);
 
   try {
     const params = new URLSearchParams({
       fromStop: FROM_STOP,
       toStop: TO_STOP,
       startTime: START_TIME,
-      tripNumber: TRAIN_NUMBER
+      tripNumber: TRAIN_NUMBER,
+      ts: Date.now().toString()
     });
 
     const response = await fetch(`/api/go-delay?${params.toString()}`, {
@@ -34,6 +46,10 @@ async function checkTrain1960() {
     });
 
     const data = await response.json();
+
+    if (lookupFinished) return;
+    lookupFinished = true;
+    clearTimeout(visibleTimeoutId);
 
     if (!response.ok || !data.ok) {
       throw new Error(data.error || `HTTP ${response.status}`);
@@ -52,6 +68,11 @@ async function checkTrain1960() {
     liveDetails.innerHTML = `<strong>Function response:</strong><br>${escapeHtml(JSON.stringify(data, null, 2))}`;
   } catch (error) {
     console.error(error);
+
+    if (lookupFinished && error.name === "AbortError") return;
+
+    lookupFinished = true;
+    clearTimeout(visibleTimeoutId);
     liveUpdated.textContent = new Date().toLocaleTimeString();
 
     if (error.name === "AbortError") {
@@ -59,8 +80,6 @@ async function checkTrain1960() {
     } else {
       setStatusState("error", "ERROR", `Live lookup failed: ${error.message}`);
     }
-  } finally {
-    clearTimeout(timeoutId);
   }
 }
 
