@@ -90,7 +90,7 @@ a {
 .hero {
   display: grid;
   align-content: start;
-  padding: 76px 0 72px;
+  padding: 58px 0 38px;
 }
 
 .eyebrow {
@@ -133,8 +133,9 @@ h3 {
 }
 
 .hero-copy {
-  max-width: 900px;
-  margin-bottom: 32px;
+  width: 100%;
+  max-width: none;
+  margin-bottom: 0;
   color: var(--muted);
   font-size: clamp(1.05rem, 2vw, 1.3rem);
   line-height: 1.7;
@@ -255,7 +256,7 @@ h3 {
   }
 
   .hero {
-    padding: 42px 0 48px;
+    padding: 42px 0 30px;
   }
 
   .card-grid {
