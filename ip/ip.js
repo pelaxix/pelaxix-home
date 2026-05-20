@@ -1,6 +1,7 @@
 const statusMessage = document.querySelector("#statusMessage");
 const fields = {
   ipAddress: document.querySelector("#ipAddress"),
+  ipVersion: document.querySelector("#ipVersion"),
   country: document.querySelector("#country"),
   region: document.querySelector("#region"),
   city: document.querySelector("#city"),
@@ -35,6 +36,7 @@ async function loadNetworkCheck() {
   } catch (error) {
     console.error(error);
     fields.ipAddress.textContent = "Unavailable";
+    fields.ipVersion.textContent = "IP version unavailable";
     statusMessage.textContent = `Could not load network details: ${error.message}`;
     fields.troubleshootingNotes.textContent = "The browser details below may still be useful, but the network lookup did not return data.";
   }
@@ -43,8 +45,15 @@ async function loadNetworkCheck() {
 function renderNetworkDetails(data) {
   const location = data.location || {};
   const network = data.network || {};
+  const ip = data.ip || "Unavailable";
+  const version = getIpVersion(ip);
 
-  fields.ipAddress.textContent = data.ip || "Unavailable";
+  fields.ipAddress.textContent = ip;
+  fields.ipVersion.textContent = version === "IPv6"
+    ? "IPv6 connection detected"
+    : version === "IPv4"
+      ? "IPv4 connection detected"
+      : "IP version unavailable";
   fields.country.textContent = clean(location.country);
   fields.region.textContent = clean(location.region);
   fields.city.textContent = clean(location.city);
@@ -57,7 +66,7 @@ function renderNetworkDetails(data) {
     ? `${location.latitude}, ${location.longitude}`
     : "Unavailable";
 
-  fields.troubleshootingNotes.textContent = buildTroubleshootingNote(location);
+  fields.troubleshootingNotes.textContent = buildTroubleshootingNote(location, version);
 }
 
 function setBrowserDetails() {
@@ -68,19 +77,31 @@ function setBrowserDetails() {
   fields.platform.textContent = navigator.platform || "Unavailable";
 }
 
-function buildTroubleshootingNote(location) {
+function buildTroubleshootingNote(location, ipVersion) {
   const ipTimezone = location.timezone;
   const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const versionNote = ipVersion === "IPv6"
+    ? " This device reached the site over IPv6, so an IPv4 address will not appear here unless the connection uses IPv4."
+    : ipVersion === "IPv4"
+      ? " This device reached the site over IPv4. Another device on the same network may still use IPv6 depending on its network settings."
+      : "";
 
   if (ipTimezone && browserTimezone && ipTimezone !== browserTimezone && ipTimezone !== "Unavailable") {
-    return `Your IP timezone is ${ipTimezone}, but your browser timezone is ${browserTimezone}. That can happen with VPNs, mobile networks, corporate networks, or remote desktop sessions.`;
+    return `Your IP timezone is ${ipTimezone}, but your browser timezone is ${browserTimezone}. That can happen with VPNs, mobile networks, corporate networks, or remote desktop sessions.${versionNote}`;
   }
 
   if (location.city && location.region && location.country) {
-    return `Your connection appears to route through ${location.city}, ${location.region}, ${location.country}. If that does not match where you are, a VPN, proxy, mobile carrier, or ISP routing may be involved.`;
+    return `Your connection appears to route through ${location.city}, ${location.region}, ${location.country}. If that does not match where you are, a VPN, proxy, mobile carrier, or ISP routing may be involved.${versionNote}`;
   }
 
-  return "No obvious timezone mismatch detected. Location is still approximate and may not reflect your exact physical location.";
+  return `No obvious timezone mismatch detected. Location is still approximate and may not reflect your exact physical location.${versionNote}`;
+}
+
+function getIpVersion(value) {
+  const ip = String(value || "");
+  if (ip.includes(":")) return "IPv6";
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(ip)) return "IPv4";
+  return "Unknown";
 }
 
 function clean(value) {
