@@ -2,6 +2,7 @@ const TRAIN_NUMBER = "1960";
 const FROM_STOP = "WR";
 const TO_STOP = "UN";
 const START_TIME = "0700";
+const LOOKUP_TIMEOUT_MS = 10000;
 
 const apiStatus = document.querySelector("#apiStatus");
 const statusCard = document.querySelector("#statusCard");
@@ -16,6 +17,9 @@ async function checkTrain1960() {
   liveUpdated.textContent = "-";
   liveDetails.innerHTML = "";
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
+
   try {
     const params = new URLSearchParams({
       fromStop: FROM_STOP,
@@ -24,7 +28,11 @@ async function checkTrain1960() {
       tripNumber: TRAIN_NUMBER
     });
 
-    const response = await fetch(`/api/go-delay?${params.toString()}`);
+    const response = await fetch(`/api/go-delay?${params.toString()}`, {
+      signal: controller.signal,
+      cache: "no-store"
+    });
+
     const data = await response.json();
 
     if (!response.ok || !data.ok) {
@@ -45,7 +53,14 @@ async function checkTrain1960() {
   } catch (error) {
     console.error(error);
     liveUpdated.textContent = new Date().toLocaleTimeString();
-    setStatusState("error", "ERROR", `Live lookup failed: ${error.message}`);
+
+    if (error.name === "AbortError") {
+      setStatusState("error", "TIMEOUT", "The live lookup took too long. Refresh to try again.");
+    } else {
+      setStatusState("error", "ERROR", `Live lookup failed: ${error.message}`);
+    }
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
