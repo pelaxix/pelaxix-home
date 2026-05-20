@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A Letterboxd-powered movie shelf for Pelaxix." />
+    <title>Movie Shelf | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="movies.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <h1>Movie Shelf</h1>
+          <p class="hero-copy">Recent Letterboxd activity, pulled into Pelaxix and styled like the rest of the site.</p>
+        </section>
+
+        <section class="panel controls-panel">
+          <label>
+            Letterboxd username
+            <div class="username-row">
+              <input id="usernameInput" type="text" value="pelaxix" autocomplete="off" />
+              <button id="loadButton" class="button primary" type="button">Load shelf</button>
+            </div>
+          </label>
+          <p id="statusMessage" class="status-message">Loading recent activity...</p>
+        </section>
+
+        <section class="panel shelf-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Recent watches</p>
+            <h2>From Letterboxd</h2>
+          </div>
+          <div id="movieGrid" class="movie-grid" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="movies.js"></script>
+  </body>
+</html>
