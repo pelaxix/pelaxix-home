@@ -96,7 +96,7 @@ textarea {
 }
 
 .hero {
-  padding: 62px 0 42px;
+  padding: 34px 0 30px;
 }
 
 .eyebrow {
@@ -389,6 +389,10 @@ textarea:focus {
   .entries-topline {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .hero {
+    padding: 30px 0 26px;
   }
 
   .dashboard,
