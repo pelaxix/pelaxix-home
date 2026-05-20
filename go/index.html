@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A simple GO commute tracker for the West Harbour to Union Station morning train."
+    />
+    <title>GO Commute Tracker | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="go.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="#tracker">Tracker</a>
+          <a href="#details">Details</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Commute tool</p>
+          <h1>GO Train Tracker</h1>
+          <p class="hero-copy">
+            A personal tracker for the morning Lakeshore West trip from West Harbour GO to Union Station.
+            First version is schedule-based while we figure out the real GTFS/API path.
+          </p>
+        </section>
+
+        <section class="tracker-panel" id="tracker">
+          <div class="route-card">
+            <p class="eyebrow">Saved commute</p>
+            <div class="route-line">
+              <span>West Harbour GO</span>
+              <strong>→</strong>
+              <span>Union Station</span>
+            </div>
+            <p class="route-subtitle">Lakeshore West · target departure around 7:54 AM</p>
+          </div>
+
+          <div class="countdown-card">
+            <p class="eyebrow">Countdown</p>
+            <div id="countdown" class="countdown">--:--:--</div>
+            <p id="countdownLabel" class="countdown-label">Calculating next target departure...</p>
+          </div>
+
+          <div class="status-grid">
+            <article class="status-card">
+              <span id="todayDeparture">7:54 AM</span>
+              <p>Target departure</p>
+            </article>
+            <article class="status-card">
+              <span id="serviceDay">-</span>
+              <p>Service day</p>
+            </article>
+            <article class="status-card">
+              <span id="timeWindow">-</span>
+              <p>Current window</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="details">
+          <div class="section-heading">
+            <p class="eyebrow">Trip notes</p>
+            <h2>What this does right now</h2>
+          </div>
+          <div class="detail-grid">
+            <article class="detail-card">
+              <h3>Schedule-based</h3>
+              <p>
+                This first version counts down to the target weekday departure time. It does not yet read GO live status.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h3>Target train</h3>
+              <p>
+                The app treats the commute as West Harbour GO to Union Station on Lakeshore West, around 7:54 AM.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h3>Next upgrade</h3>
+              <p>
+                The proper version should use GTFS/GTFS-Realtime data to match the actual trip ID and delay updates.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel actions-panel">
+          <div>
+            <p class="eyebrow">Useful links</p>
+            <h2>Check the official source</h2>
+            <p>
+              Until live data is wired in, use the official GO site or app before depending on this tracker.
+            </p>
+          </div>
+          <div class="button-row">
+            <a class="button primary" href="https://www.gotransit.com/en/plan-your-trip" target="_blank" rel="noreferrer">Open GO trip planner</a>
+            <a class="button secondary" href="https://www.gotransit.com/en/see-schedules" target="_blank" rel="noreferrer">Open GO schedules</a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="go.js"></script>
+  </body>
+</html>
