@@ -4,10 +4,10 @@ const TARGET_DEPARTURE = {
   label: "7:54 AM"
 };
 
-const SAVED_FROM = "pelaxix-go-from-stop";
-const SAVED_TO = "pelaxix-go-to-stop";
-const SAVED_START = "pelaxix-go-start-time";
-const SAVED_TRIP = "pelaxix-go-trip-number";
+const TRAIN_NUMBER = "1960";
+const FROM_STOP = "WR";
+const TO_STOP = "UN";
+const START_TIME = "0700";
 
 const countdown = document.querySelector("#countdown");
 const countdownLabel = document.querySelector("#countdownLabel");
@@ -16,10 +16,6 @@ const serviceDay = document.querySelector("#serviceDay");
 const timeWindow = document.querySelector("#timeWindow");
 
 const apiForm = document.querySelector("#apiForm");
-const fromStopCodeInput = document.querySelector("#fromStopCode");
-const toStopCodeInput = document.querySelector("#toStopCode");
-const startTimeInput = document.querySelector("#startTime");
-const tripNumberInput = document.querySelector("#tripNumber");
 const apiStatus = document.querySelector("#apiStatus");
 const liveTripNumber = document.querySelector("#liveTripNumber");
 const liveDelay = document.querySelector("#liveDelay");
@@ -27,36 +23,30 @@ const liveUpdated = document.querySelector("#liveUpdated");
 const liveDetails = document.querySelector("#liveDetails");
 
 todayDeparture.textContent = TARGET_DEPARTURE.label;
-fromStopCodeInput.value = localStorage.getItem(SAVED_FROM) || fromStopCodeInput.value;
-toStopCodeInput.value = localStorage.getItem(SAVED_TO) || toStopCodeInput.value;
-startTimeInput.value = localStorage.getItem(SAVED_START) || startTimeInput.value;
-tripNumberInput.value = localStorage.getItem(SAVED_TRIP) || tripNumberInput.value;
+liveTripNumber.textContent = TRAIN_NUMBER;
 
 updateTracker();
 setInterval(updateTracker, 1000);
 
 apiForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  await checkTrain1960();
+});
 
-  const fromStop = fromStopCodeInput.value.trim().toUpperCase();
-  const toStop = toStopCodeInput.value.trim().toUpperCase();
-  const startTime = startTimeInput.value.trim();
-  const tripNumber = tripNumberInput.value.trim();
-
-  localStorage.setItem(SAVED_FROM, fromStop);
-  localStorage.setItem(SAVED_TO, toStop);
-  localStorage.setItem(SAVED_START, startTime);
-  localStorage.setItem(SAVED_TRIP, tripNumber);
-
+async function checkTrain1960() {
   setStatus("Checking GO live data through Cloudflare...", false);
-  liveTripNumber.textContent = "-";
+  liveTripNumber.textContent = TRAIN_NUMBER;
   liveDelay.textContent = "-";
   liveUpdated.textContent = "-";
   liveDetails.innerHTML = "";
 
   try {
-    const params = new URLSearchParams({ fromStop, toStop, startTime });
-    if (tripNumber) params.set("tripNumber", tripNumber);
+    const params = new URLSearchParams({
+      fromStop: FROM_STOP,
+      toStop: TO_STOP,
+      startTime: START_TIME,
+      tripNumber: TRAIN_NUMBER
+    });
 
     const response = await fetch(`/api/go-delay?${params.toString()}`);
     const data = await response.json();
@@ -65,16 +55,14 @@ apiForm.addEventListener("submit", async (event) => {
       throw new Error(data.error || `HTTP ${response.status}`);
     }
 
-    liveTripNumber.textContent = data.matchedTripNumber || "not found";
+    liveTripNumber.textContent = data.matchedTripNumber || TRAIN_NUMBER;
     liveDelay.textContent = formatDelay(data.delaySeconds);
     liveUpdated.textContent = data.checkedAt ? new Date(data.checkedAt).toLocaleTimeString() : new Date().toLocaleTimeString();
 
-    if (!data.matchedTripNumber) {
-      setStatus("No matching GO trip number found. Try a different stop code or start time.", true);
-    } else if (!data.trainStatus) {
-      setStatus("Trip found, but no in-service live train record was found. It may appear closer to departure.", false);
+    if (!data.trainStatus) {
+      setStatus("No live in-service record found for train 1960. It may appear closer to departure, or the live feed may use a different ID format.", false);
     } else {
-      setStatus("Live GO lookup completed.", false);
+      setStatus("Live GO lookup completed for train 1960.", false);
     }
 
     liveDetails.innerHTML = `<strong>Function response:</strong><br>${escapeHtml(JSON.stringify(data, null, 2))}`;
@@ -82,7 +70,7 @@ apiForm.addEventListener("submit", async (event) => {
     console.error(error);
     setStatus(`Live lookup failed: ${error.message}`, true);
   }
-});
+}
 
 function formatDelay(seconds) {
   if (seconds === null || seconds === undefined || Number.isNaN(Number(seconds))) return "not listed";
@@ -133,7 +121,7 @@ function formatDuration(ms) {
 function buildCountdownLabel(now, target) {
   const today = now.toDateString() === target.toDateString();
   const dayLabel = today ? "today" : "tomorrow";
-  return `Next target departure is ${TARGET_DEPARTURE.label} ${dayLabel}. Confirm live status with GO before relying on it.`;
+  return `Next target departure is train ${TRAIN_NUMBER} at ${TARGET_DEPARTURE.label} ${dayLabel}.`;
 }
 
 function getServiceDayLabel(date) {
