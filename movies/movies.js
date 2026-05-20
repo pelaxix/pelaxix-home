@@ -39,7 +39,8 @@ function renderMovies(items) {
       : `<div class="poster-placeholder">No poster</div>`;
 
     const rating = item.rating ? `<span class="pill">${escapeHtml(item.rating)}</span>` : "";
-    const date = item.dateLabel ? `<span class="pill">${escapeHtml(item.dateLabel)}</span>` : "";
+    const datePrefix = item.dateType || "Watched";
+    const date = item.dateLabel ? `<span class="pill">${escapeHtml(datePrefix)} ${escapeHtml(item.dateLabel)}</span>` : "";
     const description = item.description ? `<p class="movie-description">${escapeHtml(item.description)}</p>` : "";
 
     return `
