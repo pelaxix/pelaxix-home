@@ -9,24 +9,12 @@ const FROM_STOP = "WR";
 const TO_STOP = "UN";
 const START_TIME = "0700";
 
-const countdown = document.querySelector("#countdown");
-const countdownLabel = document.querySelector("#countdownLabel");
-const todayDeparture = document.querySelector("#todayDeparture");
-const serviceDay = document.querySelector("#serviceDay");
-const timeWindow = document.querySelector("#timeWindow");
-
 const apiForm = document.querySelector("#apiForm");
 const apiStatus = document.querySelector("#apiStatus");
-const liveTripNumber = document.querySelector("#liveTripNumber");
+const statusCard = document.querySelector("#statusCard");
 const liveDelay = document.querySelector("#liveDelay");
 const liveUpdated = document.querySelector("#liveUpdated");
 const liveDetails = document.querySelector("#liveDetails");
-
-todayDeparture.textContent = TARGET_DEPARTURE.label;
-liveTripNumber.textContent = TRAIN_NUMBER;
-
-updateTracker();
-setInterval(updateTracker, 1000);
 
 apiForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -34,9 +22,7 @@ apiForm.addEventListener("submit", async (event) => {
 });
 
 async function checkTrain1960() {
-  setStatus("Checking GO live data through Cloudflare...", false);
-  liveTripNumber.textContent = TRAIN_NUMBER;
-  liveDelay.textContent = "-";
+  setStatusState("checking", "CHECKING...", "Checking GO live data through Cloudflare...");
   liveUpdated.textContent = "-";
   liveDetails.innerHTML = "";
 
@@ -55,90 +41,46 @@ async function checkTrain1960() {
       throw new Error(data.error || `HTTP ${response.status}`);
     }
 
-    liveTripNumber.textContent = data.matchedTripNumber || TRAIN_NUMBER;
-    liveDelay.textContent = formatDelay(data.delaySeconds);
     liveUpdated.textContent = data.checkedAt ? new Date(data.checkedAt).toLocaleTimeString() : new Date().toLocaleTimeString();
 
     if (!data.trainStatus) {
-      setStatus("No live in-service record found for train 1960. It may appear closer to departure, or the live feed may use a different ID format.", false);
+      setStatusState("not-checked", "NOT LISTED", "No live in-service record found for this train yet. Try again closer to departure.");
     } else {
-      setStatus("Live GO lookup completed for train 1960.", false);
+      const delayText = formatDelay(data.delaySeconds);
+      const state = getDelayState(data.delaySeconds);
+      setStatusState(state, delayText, "Live GO status checked for the West Harbour to Union trip.");
     }
 
     liveDetails.innerHTML = `<strong>Function response:</strong><br>${escapeHtml(JSON.stringify(data, null, 2))}`;
   } catch (error) {
     console.error(error);
-    setStatus(`Live lookup failed: ${error.message}`, true);
+    liveUpdated.textContent = new Date().toLocaleTimeString();
+    setStatusState("error", "ERROR", `Live lookup failed: ${error.message}`);
   }
 }
 
 function formatDelay(seconds) {
-  if (seconds === null || seconds === undefined || Number.isNaN(Number(seconds))) return "not listed";
+  if (seconds === null || seconds === undefined || Number.isNaN(Number(seconds))) return "NOT LISTED";
+
   const parsed = Number(seconds);
-  if (parsed === 0) return "on time";
+  if (parsed <= 60 && parsed >= -60) return "ON TIME";
+
   const minutes = Math.round(Math.abs(parsed) / 60);
-  return parsed > 0 ? `${minutes} min late` : `${minutes} min early`;
+  const padded = String(minutes).padStart(2, "0");
+
+  return parsed > 0 ? `${padded} MINUTES DELAYED` : `${padded} MINUTES EARLY`;
 }
 
-function setStatus(message, isError) {
+function getDelayState(seconds) {
+  if (seconds === null || seconds === undefined || Number.isNaN(Number(seconds))) return "not-checked";
+  return Number(seconds) > 60 ? "delayed" : "on-time";
+}
+
+function setStatusState(state, statusText, message) {
+  statusCard.classList.remove("not-checked", "checking", "on-time", "delayed", "error");
+  statusCard.classList.add(state);
+  liveDelay.textContent = statusText;
   apiStatus.textContent = message;
-  apiStatus.classList.toggle("error", Boolean(isError));
-}
-
-function updateTracker() {
-  const now = new Date();
-  const target = getNextTargetDeparture(now);
-  const diffMs = target - now;
-
-  countdown.textContent = formatDuration(diffMs);
-  countdownLabel.textContent = buildCountdownLabel(now, target);
-  serviceDay.textContent = getServiceDayLabel(now);
-  timeWindow.textContent = getTimeWindow(now, target);
-}
-
-function getNextTargetDeparture(now) {
-  const target = new Date(now);
-  target.setHours(TARGET_DEPARTURE.hour, TARGET_DEPARTURE.minute, 0, 0);
-
-  if (target <= now) {
-    target.setDate(target.getDate() + 1);
-  }
-
-  return target;
-}
-
-function formatDuration(ms) {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return [hours, minutes, seconds]
-    .map((value) => String(value).padStart(2, "0"))
-    .join(":");
-}
-
-function buildCountdownLabel(now, target) {
-  const today = now.toDateString() === target.toDateString();
-  const dayLabel = today ? "today" : "tomorrow";
-  return `Next target departure is train ${TRAIN_NUMBER} at ${TARGET_DEPARTURE.label} ${dayLabel}.`;
-}
-
-function getServiceDayLabel(date) {
-  const day = date.getDay();
-  if (day === 0) return "Sunday";
-  if (day === 6) return "Saturday";
-  return "Weekday";
-}
-
-function getTimeWindow(now, target) {
-  const diffMinutes = Math.round((target - now) / 60000);
-
-  if (diffMinutes <= 0) return "Departing now";
-  if (diffMinutes <= 15) return "Leave now";
-  if (diffMinutes <= 45) return "Getting close";
-  if (diffMinutes <= 120) return "This morning";
-  return "Later";
 }
 
 function escapeHtml(value) {
