@@ -139,13 +139,18 @@ h2 {
 
 .movie-card {
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
+  gap: 14px;
   border: 1px solid var(--line);
   border-radius: 22px;
   padding: 14px;
   background: linear-gradient(180deg, rgba(219, 238, 233, 0.68), rgba(255, 253, 248, 0.96));
+}
+
+.movie-topline {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
 }
 
 .poster-wrap {
@@ -172,7 +177,7 @@ h2 {
   padding: 8px;
 }
 
-.movie-content {
+.movie-header, .movie-body {
   display: grid;
   gap: 9px;
   min-width: 0;
@@ -201,11 +206,7 @@ h2 {
 }
 
 .movie-description {
-  display: -webkit-box;
-  overflow: hidden;
   margin: 0;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 
 .movie-link {
@@ -219,12 +220,8 @@ h2 {
   .hero { padding: 22px 0 22px; }
   h1 { letter-spacing: -0.06em; }
   .panel { padding: 18px; }
-  .movie-card {
+  .movie-topline {
     grid-template-columns: 86px minmax(0, 1fr);
     gap: 12px;
-    padding: 12px;
-  }
-  .movie-description {
-    -webkit-line-clamp: 2;
   }
 }
