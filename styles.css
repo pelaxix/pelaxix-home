@@ -89,9 +89,8 @@ a {
 
 .hero {
   display: grid;
-  min-height: 68vh;
-  align-content: center;
-  padding: 70px 0 92px;
+  align-content: start;
+  padding: 76px 0 72px;
 }
 
 .eyebrow {
@@ -253,6 +252,10 @@ h3 {
 
   .site-header {
     flex-direction: column;
+  }
+
+  .hero {
+    padding: 42px 0 48px;
   }
 
   .card-grid {
