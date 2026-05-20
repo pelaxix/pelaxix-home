@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Remove common PDF document metadata locally in your browser." />
+    <title>Remove Metadata | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="/pdf/pdf.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <a class="back-link" href="/pdf/">← Back to PDF Tools</a>
+          <h1>Remove Metadata</h1>
+          <p class="hero-copy">Create a new PDF copy with common document metadata cleared where possible.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Files are processed locally.</h2>
+          <p>Your PDF stays in this browser. It is not uploaded to Pelaxix, Cloudflare, or any third-party service.</p>
+        </section>
+
+        <section class="privacy-banner warning-banner">
+          <p class="eyebrow">Important limitation</p>
+          <h2>This is not forensic cleanup.</h2>
+          <p>This tool attempts to clear common PDF document metadata such as title, author, subject, keywords, creator, producer, and document dates. It does not guarantee removal of all hidden data, embedded content, annotations, comments, signatures, tracked redactions, or traces added by other software.</p>
+        </section>
+
+        <section class="merge-panel">
+          <div id="dropZone" class="drop-zone">
+            <div>
+              <h2>Add one PDF</h2>
+              <p class="helper-text">Drag and drop a PDF here, or choose one from your device.</p>
+              <div class="button-row">
+                <label class="button primary" for="pdfInput">Choose PDF</label>
+                <input id="pdfInput" class="file-input" type="file" accept="application/pdf,.pdf" />
+              </div>
+            </div>
+          </div>
+          <p id="statusMessage" class="status-message">No PDF selected yet.</p>
+        </section>
+
+        <section class="file-list-panel">
+          <h2>Document metadata</h2>
+          <div class="selected-file-card">
+            <p class="eyebrow">Selected file</p>
+            <p id="fileName" class="file-name">No file selected.</p>
+            <p id="fileMeta" class="file-meta">Choose a PDF to inspect common metadata.</p>
+          </div>
+
+          <dl class="metadata-list">
+            <div><dt>Title</dt><dd id="metaTitle">-</dd></div>
+            <div><dt>Author</dt><dd id="metaAuthor">-</dd></div>
+            <div><dt>Subject</dt><dd id="metaSubject">-</dd></div>
+            <div><dt>Keywords</dt><dd id="metaKeywords">-</dd></div>
+            <div><dt>Creator</dt><dd id="metaCreator">-</dd></div>
+            <div><dt>Producer</dt><dd id="metaProducer">-</dd></div>
+            <div><dt>Creation date</dt><dd id="metaCreationDate">-</dd></div>
+            <div><dt>Modification date</dt><dd id="metaModificationDate">-</dd></div>
+          </dl>
+
+          <div class="button-row">
+            <button id="cleanButton" class="button primary" type="button" disabled>Create cleaned copy</button>
+            <button id="clearButton" class="button danger" type="button" disabled>Clear</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="remove-metadata.js"></script>
+  </body>
+</html>
