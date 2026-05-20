@@ -1,36 +1,16 @@
-const DEFAULT_USERNAME = "pelaxix";
-const USERNAME_STORAGE_KEY = "pelaxix-letterboxd-username";
+const LETTERBOXD_USERNAME = "pelaxix";
 
-const usernameInput = document.querySelector("#usernameInput");
-const loadButton = document.querySelector("#loadButton");
 const statusMessage = document.querySelector("#statusMessage");
 const movieGrid = document.querySelector("#movieGrid");
 
-usernameInput.value = localStorage.getItem(USERNAME_STORAGE_KEY) || DEFAULT_USERNAME;
+loadShelf();
 
-loadButton.addEventListener("click", () => {
-  loadShelf(usernameInput.value.trim());
-});
-
-usernameInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    loadShelf(usernameInput.value.trim());
-  }
-});
-
-loadShelf(usernameInput.value.trim());
-
-async function loadShelf(username) {
-  const cleanUsername = sanitizeUsername(username || DEFAULT_USERNAME);
-  usernameInput.value = cleanUsername;
-  localStorage.setItem(USERNAME_STORAGE_KEY, cleanUsername);
-
-  setStatus(`Loading recent Letterboxd activity for ${cleanUsername}...`);
+async function loadShelf() {
+  setStatus("Loading recent Letterboxd activity...");
   movieGrid.innerHTML = "";
 
   try {
-    const response = await fetch(`/api/letterboxd?username=${encodeURIComponent(cleanUsername)}&ts=${Date.now()}`, {
+    const response = await fetch(`/api/letterboxd?username=${encodeURIComponent(LETTERBOXD_USERNAME)}&ts=${Date.now()}`, {
       cache: "no-store"
     });
     const data = await response.json();
@@ -74,14 +54,6 @@ function renderMovies(items) {
       </article>
     `;
   }).join("");
-}
-
-function sanitizeUsername(value) {
-  return String(value || "")
-    .trim()
-    .replace(/^@/, "")
-    .replace(/[^a-zA-Z0-9_-]/g, "")
-    .slice(0, 40) || DEFAULT_USERNAME;
 }
 
 function setStatus(message) {
