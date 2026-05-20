@@ -318,6 +318,21 @@ select:focus {
   color: var(--text);
 }
 
+.leaflet-control-attribution {
+  margin: 0 8px 8px 0;
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.76) !important;
+  color: rgba(11, 47, 51, 0.72);
+  font-size: 0.68rem;
+  line-height: 1.4;
+  padding: 3px 8px;
+  box-shadow: 0 8px 18px rgba(35, 54, 54, 0.1);
+}
+
+.leaflet-control-attribution a {
+  color: rgba(11, 47, 51, 0.8);
+}
+
 .popup-title {
   margin: 0 0 6px;
   color: var(--text-strong);
@@ -429,6 +444,13 @@ select:focus {
 
   .leaflet-container {
     border-radius: 18px;
+  }
+
+  .leaflet-control-attribution {
+    max-width: calc(100% - 16px);
+    margin: 0 6px 6px 0;
+    font-size: 0.58rem;
+    opacity: 0.78;
   }
 
   h1 {
