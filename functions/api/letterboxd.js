@@ -21,7 +21,9 @@ export async function onRequestGet(context) {
     }
 
     const xml = await response.text();
-    const items = parseItems(xml).slice(0, 5);
+    const items = parseItems(xml)
+      .sort((a, b) => getSortableDate(b) - getSortableDate(a))
+      .slice(0, 10);
 
     return jsonResponse({
       ok: true,
@@ -56,18 +58,23 @@ function parseItems(xml) {
     const title = decodeXml(getTag(itemXml, "title"));
     const link = decodeXml(getTag(itemXml, "link"));
     const pubDate = decodeXml(getTag(itemXml, "pubDate"));
+    const watchedDate = decodeXml(getTag(itemXml, "letterboxd:watchedDate")) || extractWatchedDateFromDescription(getTag(itemXml, "description"));
     const description = decodeXml(getTag(itemXml, "description"));
     const poster = extractFirstImage(description);
     const cleanDescription = stripHtml(description).replace(/\s+/g, " ").trim();
     const rating = extractRating(title, cleanDescription);
-    const movieTitle = cleanMovieTitle(title);
+    const movieTitle = decodeXml(getTag(itemXml, "letterboxd:filmTitle")) || cleanMovieTitle(title);
+    const filmYear = decodeXml(getTag(itemXml, "letterboxd:filmYear"));
 
     return {
       title,
       movieTitle,
+      filmYear,
       link,
       pubDate,
-      dateLabel: formatDate(pubDate),
+      watchedDate,
+      dateLabel: watchedDate ? formatDate(watchedDate) : formatDate(pubDate),
+      dateType: watchedDate ? "Watched" : "Posted",
       description: cleanDescription,
       rating,
       poster
@@ -84,6 +91,16 @@ function getTag(xml, tagName) {
 function extractFirstImage(html) {
   const match = String(html || "").match(/<img[^>]+src=["']([^"']+)["']/i);
   return match ? decodeXml(match[1]) : "";
+}
+
+function extractWatchedDateFromDescription(description) {
+  const text = decodeXml(stripHtml(description));
+  const match = text.match(/Watched\s+on\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})/i);
+  if (!match) return "";
+
+  const date = new Date(match[1]);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
 }
 
 function extractRating(title, description) {
@@ -113,6 +130,11 @@ function decodeXml(value) {
     .replaceAll("&quot;", '"')
     .replaceAll("&#39;", "'")
     .replaceAll("&#039;", "'");
+}
+
+function getSortableDate(item) {
+  const date = new Date(item.watchedDate || item.pubDate);
+  return Number.isNaN(date.getTime()) ? 0 : date.getTime();
 }
 
 function formatDate(value) {
