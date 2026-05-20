@@ -21,7 +21,7 @@ export async function onRequestGet(context) {
     }
 
     const xml = await response.text();
-    const items = parseItems(xml).slice(0, 12);
+    const items = parseItems(xml).slice(0, 5);
 
     return jsonResponse({
       ok: true,
