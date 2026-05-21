@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Scan QR codes locally in your browser using an uploaded image or camera." />
+    <title>QR Scanner | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="/qr/qr.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+              <a href="/qr/">QR Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <a class="back-link" href="/qr/">← Back to QR Tools</a>
+          <h1>QR Scanner</h1>
+          <p class="hero-copy">Decode a QR code from an uploaded image or your camera.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Scanning happens locally.</h2>
+          <p>Images and camera frames are processed in your browser. They are not uploaded to Pelaxix, Cloudflare, or a third-party QR service.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Camera permission</p>
+          <h2>The camera only starts when you click Start camera.</h2>
+          <p>Your browser may ask for camera permission. You can stop the scanner at any time.</p>
+        </section>
+
+        <section class="builder-grid">
+          <div class="qr-panel">
+            <h2>Scan options</h2>
+            <div class="form-grid">
+              <label>
+                Upload QR image
+                <input id="imageInput" type="file" accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.svg" />
+                <span>Upload an image that contains a QR code.</span>
+              </label>
+
+              <div class="button-row">
+                <button id="startCameraButton" class="button primary" type="button">Start camera</button>
+                <button id="stopCameraButton" class="button secondary" type="button" disabled>Stop camera</button>
+              </div>
+
+              <div id="reader" class="scanner-box"></div>
+            </div>
+            <p id="statusMessage" class="status-message">Upload a QR image or start the camera.</p>
+          </div>
+
+          <aside class="preview-panel">
+            <h2>Result</h2>
+            <div class="result-box">
+              <textarea id="resultText" rows="10" readonly placeholder="Decoded QR text will appear here..."></textarea>
+              <div class="button-row">
+                <button id="copyButton" class="button secondary" type="button" disabled>Copy result</button>
+                <a id="openLinkButton" class="button primary" href="#" target="_blank" rel="noopener noreferrer" hidden>Open link</a>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="scanner.js"></script>
+  </body>
+</html>
