@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Create multiple QR codes locally in your browser and download them in a ZIP." />
+    <title>Batch QR Generator | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="/qr/qr.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+              <a href="/qr/">QR Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <a class="back-link" href="/qr/">← Back to QR Tools</a>
+          <h1>Batch QR Generator</h1>
+          <p class="hero-copy">Paste up to 100 lines and create one QR code per line.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Generated locally.</h2>
+          <p>The lines you enter stay in your browser. Nothing is sent to Pelaxix, Cloudflare, or a third-party QR service.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">How it works</p>
+          <h2>One line becomes one QR code.</h2>
+          <p>Paste one item per line. Blank lines are ignored. In Link mode, plain domains like pelaxix.com automatically become https://pelaxix.com. The browser limit is 100 QR codes at a time.</p>
+        </section>
+
+        <section class="builder-grid">
+          <div class="qr-panel">
+            <h2>Batch settings</h2>
+            <div class="form-grid">
+              <fieldset class="option-card">
+                <legend>QR type</legend>
+                <label class="radio-row">
+                  <input type="radio" name="qrType" value="link" checked />
+                  <span>Links</span>
+                </label>
+                <label class="radio-row">
+                  <input type="radio" name="qrType" value="text" />
+                  <span>Plain text</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="option-card">
+                <legend>Output</legend>
+                <label class="radio-row">
+                  <input type="radio" name="outputType" value="png" checked />
+                  <span>PNG files in ZIP</span>
+                </label>
+                <label class="radio-row">
+                  <input type="radio" name="outputType" value="svg" />
+                  <span>SVG files in ZIP</span>
+                </label>
+              </fieldset>
+
+              <label>
+                Items
+                <textarea id="batchInput" placeholder="One item per line..." rows="10"></textarea>
+                <span id="lineCount">0 lines</span>
+              </label>
+
+              <div class="color-row">
+                <label>
+                  Foreground
+                  <span class="color-input"><input id="foregroundInput" type="color" value="#153c3f" /><span id="foregroundLabel">#153c3f</span></span>
+                </label>
+                <label>
+                  Background
+                  <span class="color-input"><input id="backgroundInput" type="color" value="#fffdf8" /><span id="backgroundLabel">#fffdf8</span></span>
+                </label>
+              </div>
+
+              <div class="button-row">
+                <button id="generateButton" class="button primary" type="button">Create ZIP</button>
+                <button id="clearButton" class="button secondary" type="button">Clear</button>
+              </div>
+            </div>
+            <p id="statusMessage" class="status-message">Paste one item per line to create a batch of QR codes.</p>
+          </div>
+
+          <aside class="preview-panel">
+            <h2>Preview list</h2>
+            <div id="previewList" class="qr-preview">
+              <p class="helper-text">Your first few items will appear here before export.</p>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/kjua@0.9.0/dist/kjua.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="batch.js"></script>
+  </body>
+</html>
