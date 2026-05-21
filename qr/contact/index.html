@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Create contact vCard QR codes locally in your browser and download PNG or SVG." />
+    <title>Contact QR | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="/qr/qr.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+              <a href="/qr/">QR Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <a class="back-link" href="/qr/">← Back to QR Tools</a>
+          <h1>Contact QR</h1>
+          <p class="hero-copy">Create a contact QR code that phones can scan to save a vCard.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Generated locally.</h2>
+          <p>The contact details stay in your browser. Nothing is sent to Pelaxix, Cloudflare, or a third-party QR service.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Sharing note</p>
+          <h2>The QR contains the contact details.</h2>
+          <p>Anyone who scans the code may be able to save the information you include. Only add details you are comfortable sharing.</p>
+        </section>
+
+        <section class="builder-grid">
+          <div class="qr-panel">
+            <h2>Contact details</h2>
+            <div class="form-grid">
+              <div class="color-row">
+                <label>
+                  First name
+                  <input id="firstNameInput" type="text" placeholder="First name" autocomplete="given-name" />
+                </label>
+                <label>
+                  Last name
+                  <input id="lastNameInput" type="text" placeholder="Last name" autocomplete="family-name" />
+                </label>
+              </div>
+
+              <label>
+                Organization
+                <input id="organizationInput" type="text" placeholder="Company or organization" autocomplete="organization" />
+              </label>
+
+              <label>
+                Job title
+                <input id="titleInput" type="text" placeholder="Job title" autocomplete="organization-title" />
+              </label>
+
+              <label>
+                Phone
+                <input id="phoneInput" type="text" placeholder="Phone number" autocomplete="tel" />
+              </label>
+
+              <label>
+                Email
+                <input id="emailInput" type="text" placeholder="Email address" autocomplete="email" />
+              </label>
+
+              <label>
+                Website
+                <input id="websiteInput" type="text" placeholder="Website" autocomplete="url" />
+              </label>
+
+              <label>
+                Address
+                <input id="addressInput" type="text" placeholder="Address" autocomplete="street-address" />
+              </label>
+
+              <label>
+                Notes
+                <input id="notesInput" type="text" placeholder="Optional note" />
+              </label>
+
+              <div class="color-row">
+                <label>
+                  Foreground
+                  <span class="color-input"><input id="foregroundInput" type="color" value="#153c3f" /><span id="foregroundLabel">#153c3f</span></span>
+                </label>
+                <label>
+                  Background
+                  <span class="color-input"><input id="backgroundInput" type="color" value="#fffdf8" /><span id="backgroundLabel">#fffdf8</span></span>
+                </label>
+              </div>
+
+              <div class="button-row">
+                <button id="generateButton" class="button primary" type="button">Generate QR</button>
+                <button id="downloadPngButton" class="button secondary" type="button" disabled>Download PNG</button>
+                <button id="downloadSvgButton" class="button secondary" type="button" disabled>Download SVG</button>
+              </div>
+            </div>
+            <p id="statusMessage" class="status-message">Enter at least a first or last name to generate a contact QR.</p>
+          </div>
+
+          <aside class="preview-panel">
+            <h2>Preview</h2>
+            <div id="qrPreview" class="qr-preview">
+              <p class="helper-text">Your QR code will appear here.</p>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/kjua@0.9.0/dist/kjua.min.js"></script>
+    <script src="contact.js"></script>
+  </body>
+</html>
