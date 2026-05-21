@@ -1,5 +1,5 @@
-let currentSvg = '';
 let currentValue = '';
+let currentSvg = '';
 
 const linkInput = document.querySelector('#linkInput');
 const foregroundInput = document.querySelector('#foregroundInput');
@@ -30,7 +30,7 @@ linkInput.addEventListener('keydown', (event) => {
 downloadPngButton.addEventListener('click', downloadPng);
 downloadSvgButton.addEventListener('click', downloadSvg);
 
-async function generateQr() {
+function generateQr() {
   const normalizedLink = normalizeLink(linkInput.value);
 
   if (!normalizedLink) {
@@ -38,19 +38,17 @@ async function generateQr() {
     return;
   }
 
+  if (typeof kjua !== 'function') {
+    setStatus('QR library did not load. Refresh and try again.');
+    return;
+  }
+
   try {
     currentValue = normalizedLink;
-    currentSvg = await QRCode.toString(normalizedLink, {
-      type: 'svg',
-      errorCorrectionLevel: 'M',
-      margin: 2,
-      color: {
-        dark: foregroundInput.value,
-        light: backgroundInput.value
-      }
-    });
-
-    qrPreview.innerHTML = currentSvg;
+    const svgNode = createQrNode('svg', 280);
+    currentSvg = new XMLSerializer().serializeToString(svgNode);
+    qrPreview.innerHTML = '';
+    qrPreview.appendChild(svgNode);
     downloadPngButton.disabled = false;
     downloadSvgButton.disabled = false;
     setStatus(`QR generated for ${normalizedLink}`);
@@ -60,29 +58,31 @@ async function generateQr() {
   }
 }
 
+function createQrNode(renderMode, size) {
+  return kjua({
+    render: renderMode,
+    text: currentValue,
+    size,
+    fill: foregroundInput.value,
+    back: backgroundInput.value,
+    quiet: 2,
+    ecLevel: 'M'
+  });
+}
+
 function normalizeLink(value) {
   const text = String(value || '').trim();
   if (!text) return '';
-
   if (/^[a-z][a-z0-9+.-]*:/i.test(text)) return text;
-
   return `https://${text}`;
 }
 
-async function downloadPng() {
+function downloadPng() {
   if (!currentValue) return;
 
   try {
-    const dataUrl = await QRCode.toDataURL(currentValue, {
-      errorCorrectionLevel: 'M',
-      margin: 2,
-      width: 1024,
-      color: {
-        dark: foregroundInput.value,
-        light: backgroundInput.value
-      }
-    });
-
+    const canvas = createQrNode('canvas', 1024);
+    const dataUrl = canvas.toDataURL('image/png');
     downloadUrl(dataUrl, buildFileName('png'));
   } catch (error) {
     setStatus(`Could not download PNG: ${error.message}`);
