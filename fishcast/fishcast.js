@@ -155,10 +155,14 @@ function analyzeConditions(weather, water, target) {
   if (pressure >= 1008 && pressure <= 1022) { score += .5; reasons.push('pressure looks fairly stable'); }
   if (temp < 8 || temp > 31) { score -= 1; reasons.push('temperature is on the tougher side'); }
 
+  const selectedTarget = pickTarget(target, water, wind, clouds, hour);
+  const speciesAdjustment = getSpeciesScoreAdjustment(selectedTarget, water, temp, wind, clouds, hour, rain);
+  score += speciesAdjustment.value;
+  reasons.push(speciesAdjustment.reason);
+
   score = Math.max(1, Math.min(10, Math.round(score)));
   const rating = score >= 8 ? 'Great' : score >= 6 ? 'Good' : score >= 4 ? 'Okay' : 'Rough';
   const verdict = score >= 8 ? 'Worth making time for.' : score >= 6 ? 'Worth a shot.' : score >= 4 ? 'Go if you feel like exploring.' : 'Probably not ideal.';
-  const selectedTarget = pickTarget(target, water, wind, clouds, hour);
   const lures = pickLures(selectedTarget, water, wind, clouds, hour, rain, temp);
 
   return {
@@ -172,6 +176,60 @@ function analyzeConditions(weather, water, target) {
     lures,
     reasons
   };
+}
+
+function getSpeciesScoreAdjustment(target, water, temp, wind, clouds, hour, rain) {
+  const species = target.toLowerCase();
+  const lowLight = hour < 9 || hour >= 18;
+  const cloudyOrWindy = clouds >= 45 || wind >= 10;
+
+  if (species.includes('trout')) {
+    let value = 0;
+    const notes = [];
+    if (temp <= 18) { value += 1.5; notes.push('cooler weather favours trout'); }
+    if (temp > 22) { value -= 2; notes.push('warm weather makes trout tougher'); }
+    if (water === 'river') { value += 1; notes.push('river or creek water fits trout better'); }
+    if (rain > 55) { value -= .5; notes.push('rain risk may muddy small-water trout spots'); }
+    return { value, reason: notes.join(', ') || 'trout conditions are neutral' };
+  }
+
+  if (species.includes('pike')) {
+    let value = 0;
+    const notes = [];
+    if (cloudyOrWindy) { value += 1.5; notes.push('cloud and wind can help pike ambush prey'); }
+    if (temp >= 8 && temp <= 22) { value += .75; notes.push('temperature is comfortable for pike activity'); }
+    if (temp > 27) { value -= 1.25; notes.push('hot weather can slow pike down'); }
+    if (water === 'harbour' || water === 'lake') { value += .5; notes.push('this water type is a decent pike fit'); }
+    return { value, reason: notes.join(', ') || 'pike conditions are neutral' };
+  }
+
+  if (species.includes('panfish')) {
+    let value = .5;
+    const notes = ['panfish are usually more forgiving'];
+    if (wind > 24) { value -= 1; notes.push('heavy wind makes small presentations harder'); }
+    if (temp >= 14 && temp <= 28) { value += .75; notes.push('temperature is friendly for panfish'); }
+    if (lowLight) { value += .25; notes.push('low light can help shore activity'); }
+    return { value, reason: notes.join(', ') };
+  }
+
+  if (species.includes('carp') || species.includes('catfish')) {
+    let value = 0;
+    const notes = [];
+    if (temp >= 18) { value += 1.25; notes.push('warmer water favours carp and catfish activity'); }
+    if (lowLight) { value += 1; notes.push('evening timing is good for carp and catfish'); }
+    if (wind > 28) { value -= .75; notes.push('strong wind can make bottom fishing annoying'); }
+    if (temp < 10) { value -= 1.25; notes.push('cold weather can make bottom feeders slower'); }
+    return { value, reason: notes.join(', ') || 'carp and catfish conditions are neutral' };
+  }
+
+  let value = 0;
+  const notes = [];
+  if (temp >= 16 && temp <= 28) { value += 1; notes.push('temperature is in a good bass range'); }
+  if (lowLight) { value += .75; notes.push('low light helps bass move shallow'); }
+  if (cloudyOrWindy) { value += .75; notes.push('cloud or wind can improve bass reaction bites'); }
+  if (temp < 10) { value -= 1.5; notes.push('cold weather can slow bass down'); }
+  if (clouds < 20 && !lowLight) { value -= .5; notes.push('bright sun can push bass tighter to cover'); }
+  return { value, reason: notes.join(', ') || 'bass conditions are neutral' };
 }
 
 function pickTarget(target, water, wind, clouds, hour) {
