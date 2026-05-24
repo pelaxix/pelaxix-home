@@ -29,13 +29,7 @@
       <main>
         <section class="hero compact-hero">
           <h1>Location Snap</h1>
-          <p class="hero-copy">Get your current GPS location, copy it fast, or save a parking spot.</p>
-        </section>
-
-        <section class="privacy-banner">
-          <p class="eyebrow">Privacy first</p>
-          <h2>Your location stays on this device.</h2>
-          <p>Pelaxix only asks the browser for your location after permission is allowed. It is not uploaded, logged, or stored on a server. Saved spots use this browser only.</p>
+          <p class="hero-copy">Get your GPS location, copy it fast, or save a parking spot.</p>
         </section>
 
         <section class="location-card" aria-live="polite">
@@ -48,7 +42,7 @@
             <a id="whatsappButton" class="button primary disabled-link" href="#" target="_blank" rel="noopener noreferrer">Send to WhatsApp</a>
             <button id="copyButton" class="button secondary" type="button" disabled>Copy location</button>
             <button id="saveParkingButton" class="button secondary" type="button" disabled>Save parking spot</button>
-            <button id="refreshButton" class="button secondary" type="button">Refresh location</button>
+            <button id="refreshButton" class="button secondary" type="button">Refresh</button>
           </div>
         </section>
 
@@ -60,10 +54,16 @@
             <p id="savedMeta" class="location-meta"></p>
           </div>
           <div class="button-row">
-            <a id="whatsappSavedButton" class="button primary" href="#" target="_blank" rel="noopener noreferrer">Send saved spot to WhatsApp</a>
-            <button id="copySavedButton" class="button secondary" type="button">Copy saved spot</button>
-            <button id="clearSavedButton" class="button danger" type="button">Clear saved spot</button>
+            <a id="whatsappSavedButton" class="button primary" href="#" target="_blank" rel="noopener noreferrer">Send saved to WhatsApp</a>
+            <button id="copySavedButton" class="button secondary" type="button">Copy saved</button>
+            <button id="clearSavedButton" class="button danger" type="button">Clear saved</button>
           </div>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Your location stays on this device.</h2>
+          <p>Pelaxix asks the browser for your location only after permission is allowed. It is not uploaded, logged, or stored on a server. Saved spots use this browser only.</p>
         </section>
       </main>
     </div>
