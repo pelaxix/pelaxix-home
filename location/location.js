@@ -6,12 +6,10 @@ const statusMessage = document.querySelector('#statusMessage');
 const refreshButton = document.querySelector('#refreshButton');
 const copyButton = document.querySelector('#copyButton');
 const saveParkingButton = document.querySelector('#saveParkingButton');
-const googleMapsButton = document.querySelector('#googleMapsButton');
 const savedCard = document.querySelector('#savedCard');
 const savedCoordinateText = document.querySelector('#savedCoordinateText');
 const savedMeta = document.querySelector('#savedMeta');
 const copySavedButton = document.querySelector('#copySavedButton');
-const savedGoogleMapsButton = document.querySelector('#savedGoogleMapsButton');
 const clearSavedButton = document.querySelector('#clearSavedButton');
 
 let currentLocation = null;
@@ -37,8 +35,6 @@ function requestLocation() {
   locationMeta.textContent = 'Your browser may ask for GPS permission.';
   copyButton.disabled = true;
   saveParkingButton.disabled = true;
-  googleMapsButton.classList.add('disabled-link');
-  googleMapsButton.href = '#';
 
   navigator.geolocation.getCurrentPosition(handleLocation, handleLocationError, {
     enableHighAccuracy: true,
@@ -77,8 +73,6 @@ function handleLocationError(error) {
 function renderLocation(location) {
   coordinateText.textContent = formatCoordinates(location);
   locationMeta.textContent = `Accuracy: ±${Math.round(location.accuracy)} m · ${formatTime(location.timestamp)}`;
-  googleMapsButton.href = buildGoogleMapsUrl(location);
-  googleMapsButton.classList.remove('disabled-link');
   copyButton.disabled = false;
   saveParkingButton.disabled = false;
 }
@@ -100,7 +94,6 @@ function renderSavedSpot() {
 
   savedCoordinateText.textContent = formatCoordinates(saved);
   savedMeta.textContent = `Saved: ${formatTime(saved.timestamp)} · Accuracy: ±${Math.round(saved.accuracy)} m`;
-  savedGoogleMapsButton.href = buildGoogleMapsUrl(saved);
   savedCard.hidden = false;
 }
 
