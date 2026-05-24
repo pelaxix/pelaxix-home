@@ -15,9 +15,9 @@ const clearSavedButton = document.querySelector('#clearSavedButton');
 let currentLocation = null;
 
 refreshButton.addEventListener('click', requestLocation);
-copyButton.addEventListener('click', () => copyLocation(currentLocation, 'Copied current location.'));
+copyButton.addEventListener('click', () => copyLocation(currentLocation, 'current', 'Copied current location.'));
 saveParkingButton.addEventListener('click', saveParkingSpot);
-copySavedButton.addEventListener('click', () => copyLocation(getSavedSpot(), 'Copied saved spot.'));
+copySavedButton.addEventListener('click', () => copyLocation(getSavedSpot(), 'parking', 'Copied saved parking spot.'));
 clearSavedButton.addEventListener('click', clearSavedSpot);
 
 renderSavedSpot();
@@ -112,9 +112,9 @@ function getSavedSpot() {
   }
 }
 
-async function copyLocation(location, successMessage) {
+async function copyLocation(location, type, successMessage) {
   if (!location) return;
-  const message = buildShareMessage(location);
+  const message = buildShareMessage(location, type);
 
   try {
     await navigator.clipboard.writeText(message);
@@ -124,8 +124,12 @@ async function copyLocation(location, successMessage) {
   }
 }
 
-function buildShareMessage(location) {
-  return `I’m here: ${formatCoordinates(location)}\nGoogle Maps: ${buildGoogleMapsUrl(location)}\nAccuracy: ±${Math.round(location.accuracy)} m`;
+function buildShareMessage(location, type) {
+  if (type === 'parking') {
+    return `My car is parked here: ${formatCoordinates(location)}\n\nGoogle Maps: ${buildGoogleMapsUrl(location)}\n\nSaved: ${formatTime(location.timestamp)}\nAccuracy: ±${Math.round(location.accuracy)} m`;
+  }
+
+  return `I’m here: ${formatCoordinates(location)}\n\nGoogle Maps: ${buildGoogleMapsUrl(location)}\n\nAccuracy: ±${Math.round(location.accuracy)} m`;
 }
 
 function buildGoogleMapsUrl(location) {
