@@ -33,7 +33,10 @@
         </section>
 
         <section class="location-card" aria-live="polite">
-          <p class="eyebrow">Current location</p>
+          <div class="card-topline">
+            <p class="eyebrow">Current location</p>
+            <button id="refreshButton" class="refresh-button" type="button" aria-label="Refresh location">↻</button>
+          </div>
           <div id="coordinateText" class="coordinate-text">Getting location...</div>
           <p id="locationMeta" class="location-meta">Your browser may ask for GPS permission.</p>
           <p id="statusMessage" class="status-message">Opening location request.</p>
@@ -42,7 +45,6 @@
             <a id="whatsappButton" class="button primary disabled-link" href="#" target="_blank" rel="noopener noreferrer">Send to WhatsApp</a>
             <button id="copyButton" class="button secondary" type="button" disabled>Copy location</button>
             <button id="saveParkingButton" class="button secondary" type="button" disabled>Save parking spot</button>
-            <button id="refreshButton" class="button secondary" type="button">Refresh</button>
           </div>
         </section>
 
@@ -53,18 +55,20 @@
             <p id="savedCoordinateText" class="saved-coordinates"></p>
             <p id="savedMeta" class="location-meta"></p>
           </div>
-          <div class="button-row">
+          <div class="button-row saved-actions">
             <a id="whatsappSavedButton" class="button primary" href="#" target="_blank" rel="noopener noreferrer">Send saved to WhatsApp</a>
             <button id="copySavedButton" class="button secondary" type="button">Copy saved</button>
             <button id="clearSavedButton" class="button danger" type="button">Clear saved</button>
           </div>
         </section>
 
-        <section class="privacy-banner">
-          <p class="eyebrow">Privacy first</p>
-          <h2>Your location stays on this device.</h2>
+        <details class="privacy-banner">
+          <summary>
+            <span class="eyebrow">Privacy first</span>
+            <span>Your location stays on this device.</span>
+          </summary>
           <p>Pelaxix asks the browser for your location only after permission is allowed. It is not uploaded, logged, or stored on a server. Saved spots use this browser only.</p>
-        </section>
+        </details>
       </main>
     </div>
 
