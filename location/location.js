@@ -2,7 +2,6 @@ const STORAGE_KEY = 'pelaxix-location-snap-saved';
 
 const coordinateText = document.querySelector('#coordinateText');
 const locationMeta = document.querySelector('#locationMeta');
-const statusMessage = document.querySelector('#statusMessage');
 const refreshButton = document.querySelector('#refreshButton');
 const copyButton = document.querySelector('#copyButton');
 const whatsappButton = document.querySelector('#whatsappButton');
@@ -17,9 +16,9 @@ const clearSavedButton = document.querySelector('#clearSavedButton');
 let currentLocation = null;
 
 refreshButton.addEventListener('click', requestLocation);
-copyButton.addEventListener('click', () => copyLocation(currentLocation, 'current', 'Copied current location.'));
+copyButton.addEventListener('click', () => copyLocation(currentLocation, 'current'));
 saveParkingButton.addEventListener('click', saveParkingSpot);
-copySavedButton.addEventListener('click', () => copyLocation(getSavedSpot(), 'parking', 'Copied saved parking spot.'));
+copySavedButton.addEventListener('click', () => copyLocation(getSavedSpot(), 'parking'));
 clearSavedButton.addEventListener('click', clearSavedSpot);
 
 renderSavedSpot();
@@ -27,12 +26,11 @@ requestLocation();
 
 function requestLocation() {
   if (!navigator.geolocation) {
-    setStatus('This browser does not support GPS location.');
     coordinateText.textContent = 'Location unavailable';
+    locationMeta.textContent = 'This browser does not support GPS location.';
     return;
   }
 
-  setStatus('Getting your location...');
   coordinateText.textContent = 'Getting location...';
   locationMeta.textContent = 'Your browser may ask for GPS permission.';
   copyButton.disabled = true;
@@ -56,7 +54,6 @@ function handleLocation(position) {
   };
 
   renderLocation(currentLocation);
-  setStatus('Location ready. Tap Send to WhatsApp, or Copy location if you prefer pasting manually.');
 }
 
 function handleLocationError(error) {
@@ -68,11 +65,11 @@ function handleLocationError(error) {
   coordinateText.textContent = 'Location unavailable';
 
   if (error.code === error.PERMISSION_DENIED) {
-    setStatus('Location permission was denied. Allow location access in your browser settings and try again.');
+    locationMeta.textContent = 'Location permission was denied. Allow location access and try again.';
   } else if (error.code === error.TIMEOUT) {
-    setStatus('Location request timed out. Try again somewhere with a clearer GPS signal.');
+    locationMeta.textContent = 'Location request timed out. Try again somewhere with a clearer GPS signal.';
   } else {
-    setStatus('Could not get your location. Try again.');
+    locationMeta.textContent = 'Could not get your location. Try again.';
   }
 }
 
@@ -89,7 +86,6 @@ function saveParkingSpot() {
   if (!currentLocation) return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLocation));
   renderSavedSpot();
-  setStatus('Parking spot saved on this device.');
 }
 
 function renderSavedSpot() {
@@ -109,7 +105,6 @@ function renderSavedSpot() {
 function clearSavedSpot() {
   localStorage.removeItem(STORAGE_KEY);
   renderSavedSpot();
-  setStatus('Saved parking spot cleared.');
 }
 
 function getSavedSpot() {
@@ -121,15 +116,14 @@ function getSavedSpot() {
   }
 }
 
-async function copyLocation(location, type, successMessage) {
+async function copyLocation(location, type) {
   if (!location) return;
   const message = buildShareMessage(location, type);
 
   try {
     await navigator.clipboard.writeText(message);
-    setStatus(successMessage);
   } catch {
-    setStatus('Could not copy automatically. Select the coordinates and copy manually.');
+    // Clipboard may be blocked outside a direct user action. The coordinates remain visible for manual copy.
   }
 }
 
@@ -160,8 +154,4 @@ function formatTime(timestamp) {
     month: 'short',
     day: 'numeric'
   });
-}
-
-function setStatus(message) {
-  statusMessage.textContent = message;
 }
