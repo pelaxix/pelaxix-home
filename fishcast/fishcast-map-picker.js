@@ -21,9 +21,9 @@ function initFishCastMap() {
   if (fishcastMap || !window.L) return;
 
   fishcastMap = L.map('fishcastMap').setView([43.2696, -79.8714], 11);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20,
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
   }).addTo(fishcastMap);
 
   fishcastMap.on('click', (event) => {
