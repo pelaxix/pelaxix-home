@@ -5,11 +5,13 @@ const locationMeta = document.querySelector('#locationMeta');
 const statusMessage = document.querySelector('#statusMessage');
 const refreshButton = document.querySelector('#refreshButton');
 const copyButton = document.querySelector('#copyButton');
+const whatsappButton = document.querySelector('#whatsappButton');
 const saveParkingButton = document.querySelector('#saveParkingButton');
 const savedCard = document.querySelector('#savedCard');
 const savedCoordinateText = document.querySelector('#savedCoordinateText');
 const savedMeta = document.querySelector('#savedMeta');
 const copySavedButton = document.querySelector('#copySavedButton');
+const whatsappSavedButton = document.querySelector('#whatsappSavedButton');
 const clearSavedButton = document.querySelector('#clearSavedButton');
 
 let currentLocation = null;
@@ -35,6 +37,8 @@ function requestLocation() {
   locationMeta.textContent = 'Your browser may ask for GPS permission.';
   copyButton.disabled = true;
   saveParkingButton.disabled = true;
+  whatsappButton.classList.add('disabled-link');
+  whatsappButton.href = '#';
 
   navigator.geolocation.getCurrentPosition(handleLocation, handleLocationError, {
     enableHighAccuracy: true,
@@ -59,6 +63,8 @@ function handleLocationError(error) {
   currentLocation = null;
   copyButton.disabled = true;
   saveParkingButton.disabled = true;
+  whatsappButton.classList.add('disabled-link');
+  whatsappButton.href = '#';
   coordinateText.textContent = 'Location unavailable';
 
   if (error.code === error.PERMISSION_DENIED) {
@@ -73,6 +79,8 @@ function handleLocationError(error) {
 function renderLocation(location) {
   coordinateText.textContent = formatCoordinates(location);
   locationMeta.textContent = `Accuracy: ±${Math.round(location.accuracy)} m · ${formatTime(location.timestamp)}`;
+  whatsappButton.href = buildWhatsAppUrl(buildShareMessage(location, 'current'));
+  whatsappButton.classList.remove('disabled-link');
   copyButton.disabled = false;
   saveParkingButton.disabled = false;
 }
@@ -94,6 +102,7 @@ function renderSavedSpot() {
 
   savedCoordinateText.textContent = formatCoordinates(saved);
   savedMeta.textContent = `Saved: ${formatTime(saved.timestamp)} · Accuracy: ±${Math.round(saved.accuracy)} m`;
+  whatsappSavedButton.href = buildWhatsAppUrl(buildShareMessage(saved, 'parking'));
   savedCard.hidden = false;
 }
 
@@ -126,7 +135,7 @@ async function copyLocation(location, type, successMessage) {
 
 function buildShareMessage(location, type) {
   if (type === 'parking') {
-    return `My car is parked here: ${formatCoordinates(location)}\n\nGoogle Maps: ${buildGoogleMapsUrl(location)}\n\nSaved: ${formatTime(location.timestamp)}\nAccuracy: ±${Math.round(location.accuracy)} m`;
+    return `Car's here: ${formatCoordinates(location)}\n\nGoogle Maps: ${buildGoogleMapsUrl(location)}\n\nSaved: ${formatTime(location.timestamp)}\nAccuracy: ±${Math.round(location.accuracy)} m`;
   }
 
   return `I’m here: ${formatCoordinates(location)}\n\nGoogle Maps: ${buildGoogleMapsUrl(location)}\n\nAccuracy: ±${Math.round(location.accuracy)} m`;
@@ -134,6 +143,10 @@ function buildShareMessage(location, type) {
 
 function buildGoogleMapsUrl(location) {
   return `https://maps.google.com/?q=${location.lat},${location.lng}`;
+}
+
+function buildWhatsAppUrl(message) {
+  return `https://wa.me/?text=${encodeURIComponent(message)}`;
 }
 
 function formatCoordinates(location) {
