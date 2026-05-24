@@ -29,28 +29,28 @@ function analyzeConditions(weather, water, target) {
   const season = getSeason(now);
   const pressureTrend = getPressureTrend(weather, now, pressure);
   const best = getBestWindow(now, sunrise, sunset, weather);
-  const base = getBaseFishingScore(hour, temp, wind, clouds, rain, pressure);
+  const base = getBalancedBaseScore(hour, temp, wind, clouds, rain, pressure);
   let score = base.score;
   const reasons = [...base.reasons];
 
-  if (best.isPrimeWindow) { score += 1; reasons.push(`${best.label.toLowerCase()} is close to a low-light feeding window`); }
-  if (pressureTrend.kind === 'falling') { score += .75; reasons.push('pressure is falling, which can improve activity before weather changes'); }
-  if (pressureTrend.kind === 'rising') { score -= .5; reasons.push('pressure is rising, which can make fish a little tighter to cover'); }
-  if (moon.strength === 'major') { score += .5; reasons.push(`${moon.name.toLowerCase()} moon can add a small feeding-window boost`); }
-  if (season.kind === 'shoulder') { score += .25; reasons.push(`${season.name.toLowerCase()} seasonal pattern can be productive`); }
-  if (season.kind === 'tough') { score -= .5; reasons.push(`${season.name.toLowerCase()} seasonal pattern can be less forgiving`); }
+  if (best.isPrimeWindow) { score += .5; reasons.push(`${best.label.toLowerCase()} is close to a low-light feeding window`); }
+  if (pressureTrend.kind === 'falling') { score += .35; reasons.push('pressure is falling, which can help activity'); }
+  if (pressureTrend.kind === 'rising') { score -= .45; reasons.push('pressure is rising, which can make fish tighter to cover'); }
+  if (moon.strength === 'major') { score += .2; reasons.push(`${moon.name.toLowerCase()} adds a small moon-phase nudge`); }
+  if (season.kind === 'shoulder') { score += .15; reasons.push(`${season.name.toLowerCase()} seasonal pattern can be productive`); }
+  if (season.kind === 'tough') { score -= .65; reasons.push(`${season.name.toLowerCase()} seasonal pattern can be less forgiving`); }
 
   const selectedTarget = target === 'auto'
     ? pickBestScoringTargetWithFactors(water, temp, wind, clouds, hour, rain, score, season)
     : target;
 
-  const speciesAdjustment = getSpeciesScoreAdjustment(selectedTarget, water, temp, wind, clouds, hour, rain);
+  const speciesAdjustment = getBalancedSpeciesAdjustment(selectedTarget, water, temp, wind, clouds, hour, rain);
   score += speciesAdjustment.value;
   reasons.push(speciesAdjustment.reason);
 
-  score = Math.max(1, Math.min(10, Math.round(score)));
-  const rating = score >= 8 ? 'Great' : score >= 6 ? 'Good' : score >= 4 ? 'Okay' : 'Rough';
-  const verdict = score >= 8 ? 'Worth making time for.' : score >= 6 ? 'Worth a shot.' : score >= 4 ? 'Go if you feel like exploring.' : 'Probably not ideal.';
+  score = normalizeFishCastScore(score);
+  const rating = score >= 9 ? 'Great' : score >= 7 ? 'Good' : score >= 5 ? 'Okay' : 'Rough';
+  const verdict = score >= 9 ? 'Strong conditions, worth making time for.' : score >= 7 ? 'Good enough to be worth a shot.' : score >= 5 ? 'Fishable, but manage expectations.' : 'Probably not ideal.';
   const lures = pickLures(selectedTarget, water, wind, clouds, hour, rain, temp);
 
   return {
@@ -69,16 +69,100 @@ function analyzeConditions(weather, water, target) {
   };
 }
 
+function getBalancedBaseScore(hour, temp, wind, clouds, rain, pressure) {
+  let score = 5;
+  const reasons = [];
+
+  if (hour < 9 || hour >= 18) { score += .7; reasons.push('low-light timing is usually better for active fish'); }
+  if (clouds >= 45 && clouds <= 85) { score += .45; reasons.push('cloud cover can make fish less cautious'); }
+  if (clouds < 15 && hour >= 10 && hour < 17) { score -= .35; reasons.push('bright sun can make fish hold tighter to cover'); }
+  if (wind >= 6 && wind <= 20) { score += .45; reasons.push('some wind adds chop and can push baitfish'); }
+  if (wind > 28) { score -= 1.25; reasons.push('strong wind can make casting and presentation harder'); }
+  if (rain > 70) { score -= .9; reasons.push('high rain chance may make the trip rough'); }
+  if (rain >= 35 && rain <= 70) { score += .15; reasons.push('some weather movement can help activity'); }
+  if (pressure >= 1008 && pressure <= 1022) { score += .2; reasons.push('pressure looks fairly stable'); }
+  if (temp < 8 || temp > 31) { score -= .9; reasons.push('temperature is on the tougher side'); }
+
+  return { score, reasons };
+}
+
+function getBalancedSpeciesAdjustment(target, water, temp, wind, clouds, hour, rain) {
+  const species = target.toLowerCase();
+  const lowLight = hour < 9 || hour >= 18;
+  const cloudyOrWindy = clouds >= 45 || wind >= 10;
+
+  if (species.includes('trout')) {
+    let value = 0;
+    const notes = [];
+    if (temp <= 18) { value += .8; notes.push('cooler weather favours trout'); }
+    if (temp > 22) { value -= 1.4; notes.push('warm weather makes trout tougher'); }
+    if (water === 'river') { value += .5; notes.push('river or creek water fits trout better'); }
+    if (rain > 55) { value -= .35; notes.push('rain risk may muddy small-water trout spots'); }
+    return { value, reason: notes.join(', ') || 'trout conditions are neutral' };
+  }
+
+  if (species.includes('pike')) {
+    let value = 0;
+    const notes = [];
+    if (cloudyOrWindy) { value += .65; notes.push('cloud and wind can help pike ambush prey'); }
+    if (temp >= 8 && temp <= 22) { value += .35; notes.push('temperature is comfortable for pike activity'); }
+    if (temp > 27) { value -= .9; notes.push('hot weather can slow pike down'); }
+    if (water === 'harbour' || water === 'lake') { value += .25; notes.push('this water type is a decent pike fit'); }
+    return { value, reason: notes.join(', ') || 'pike conditions are neutral' };
+  }
+
+  if (species.includes('panfish')) {
+    let value = .15;
+    const notes = ['panfish are usually more forgiving'];
+    if (wind > 24) { value -= .75; notes.push('heavy wind makes small presentations harder'); }
+    if (temp >= 14 && temp <= 28) { value += .35; notes.push('temperature is friendly for panfish'); }
+    if (lowLight) { value += .15; notes.push('low light can help shore activity'); }
+    return { value, reason: notes.join(', ') };
+  }
+
+  if (species.includes('carp') || species.includes('catfish')) {
+    let value = 0;
+    const notes = [];
+    if (temp >= 18) { value += .65; notes.push('warmer water favours carp and catfish activity'); }
+    if (lowLight) { value += .45; notes.push('evening timing is good for carp and catfish'); }
+    if (wind > 28) { value -= .6; notes.push('strong wind can make bottom fishing annoying'); }
+    if (temp < 10) { value -= .9; notes.push('cold weather can make bottom feeders slower'); }
+    return { value, reason: notes.join(', ') || 'carp and catfish conditions are neutral' };
+  }
+
+  let value = 0;
+  const notes = [];
+  if (temp >= 16 && temp <= 28) { value += .55; notes.push('temperature is in a good bass range'); }
+  if (lowLight) { value += .35; notes.push('low light helps bass move shallow'); }
+  if (cloudyOrWindy) { value += .35; notes.push('cloud or wind can improve bass reaction bites'); }
+  if (temp < 10) { value -= 1.1; notes.push('cold weather can slow bass down'); }
+  if (clouds < 20 && !lowLight) { value -= .35; notes.push('bright sun can push bass tighter to cover'); }
+  return { value, reason: notes.join(', ') || 'bass conditions are neutral' };
+}
+
+function normalizeFishCastScore(rawScore) {
+  const rounded = Math.round(rawScore);
+  if (rawScore >= 9.25) return 10;
+  if (rawScore >= 8.45) return 9;
+  if (rawScore >= 7.45) return 8;
+  if (rawScore >= 6.45) return 7;
+  if (rawScore >= 5.45) return 6;
+  if (rawScore >= 4.45) return 5;
+  if (rawScore >= 3.45) return 4;
+  if (rawScore >= 2.45) return 3;
+  return Math.max(1, Math.min(10, rounded));
+}
+
 function pickBestScoringTargetWithFactors(water, temp, wind, clouds, hour, rain, baseScore, season) {
   const candidates = ['bass', 'pike', 'trout', 'panfish', 'carp-catfish'];
   const ranked = candidates.map((candidate) => {
-    const adjustment = getSpeciesScoreAdjustment(candidate, water, temp, wind, clouds, hour, rain);
+    const adjustment = getBalancedSpeciesAdjustment(candidate, water, temp, wind, clouds, hour, rain);
     let score = baseScore + adjustment.value;
-    if (candidate === 'trout' && season.name === 'Summer') score -= .5;
-    if (candidate === 'carp-catfish' && season.name === 'Summer') score += .5;
-    if (candidate === 'pike' && season.name === 'Spring') score += .5;
-    if (candidate === 'bass' && (season.name === 'Summer' || season.name === 'Fall')) score += .25;
-    return { target: candidate, score: Math.max(1, Math.min(10, Math.round(score))) };
+    if (candidate === 'trout' && season.name === 'Summer') score -= .35;
+    if (candidate === 'carp-catfish' && season.name === 'Summer') score += .2;
+    if (candidate === 'pike' && season.name === 'Spring') score += .2;
+    if (candidate === 'bass' && (season.name === 'Summer' || season.name === 'Fall')) score += .15;
+    return { target: candidate, score: normalizeFishCastScore(score) };
   });
 
   ranked.sort((a, b) => b.score - a.score || targetTieBreaker(a.target, water) - targetTieBreaker(b.target, water));
