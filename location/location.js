@@ -4,14 +4,12 @@ const coordinateText = document.querySelector('#coordinateText');
 const locationMeta = document.querySelector('#locationMeta');
 const statusMessage = document.querySelector('#statusMessage');
 const refreshButton = document.querySelector('#refreshButton');
-const shareButton = document.querySelector('#shareButton');
 const copyButton = document.querySelector('#copyButton');
 const whatsappButton = document.querySelector('#whatsappButton');
 const saveParkingButton = document.querySelector('#saveParkingButton');
 const savedCard = document.querySelector('#savedCard');
 const savedCoordinateText = document.querySelector('#savedCoordinateText');
 const savedMeta = document.querySelector('#savedMeta');
-const shareSavedButton = document.querySelector('#shareSavedButton');
 const copySavedButton = document.querySelector('#copySavedButton');
 const whatsappSavedButton = document.querySelector('#whatsappSavedButton');
 const clearSavedButton = document.querySelector('#clearSavedButton');
@@ -19,10 +17,8 @@ const clearSavedButton = document.querySelector('#clearSavedButton');
 let currentLocation = null;
 
 refreshButton.addEventListener('click', requestLocation);
-shareButton.addEventListener('click', () => shareLocation(currentLocation, 'current'));
 copyButton.addEventListener('click', () => copyLocation(currentLocation, 'current', 'Copied current location.'));
 saveParkingButton.addEventListener('click', saveParkingSpot);
-shareSavedButton.addEventListener('click', () => shareLocation(getSavedSpot(), 'parking'));
 copySavedButton.addEventListener('click', () => copyLocation(getSavedSpot(), 'parking', 'Copied saved parking spot.'));
 clearSavedButton.addEventListener('click', clearSavedSpot);
 
@@ -39,7 +35,6 @@ function requestLocation() {
   setStatus('Getting your location...');
   coordinateText.textContent = 'Getting location...';
   locationMeta.textContent = 'Your browser may ask for GPS permission.';
-  shareButton.disabled = true;
   copyButton.disabled = true;
   saveParkingButton.disabled = true;
   whatsappButton.classList.add('disabled-link');
@@ -61,12 +56,11 @@ function handleLocation(position) {
   };
 
   renderLocation(currentLocation);
-  setStatus('Location ready. Tap Share location, or Copy location if you prefer pasting manually.');
+  setStatus('Location ready. Tap Send to WhatsApp, or Copy location if you prefer pasting manually.');
 }
 
 function handleLocationError(error) {
   currentLocation = null;
-  shareButton.disabled = true;
   copyButton.disabled = true;
   saveParkingButton.disabled = true;
   whatsappButton.classList.add('disabled-link');
@@ -87,7 +81,6 @@ function renderLocation(location) {
   locationMeta.textContent = `Accuracy: ±${Math.round(location.accuracy)} m · ${formatTime(location.timestamp)}`;
   whatsappButton.href = buildWhatsAppUrl(buildShareMessage(location, 'current'));
   whatsappButton.classList.remove('disabled-link');
-  shareButton.disabled = false;
   copyButton.disabled = false;
   saveParkingButton.disabled = false;
 }
@@ -126,26 +119,6 @@ function getSavedSpot() {
   } catch {
     return null;
   }
-}
-
-async function shareLocation(location, type) {
-  if (!location) return;
-  const message = buildShareMessage(location, type);
-
-  if (navigator.share) {
-    try {
-      await navigator.share({ text: message, url: buildGoogleMapsUrl(location) });
-      setStatus('Location shared.');
-      return;
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        setStatus('Share cancelled.');
-        return;
-      }
-    }
-  }
-
-  await copyLocation(location, type, 'Native sharing is not available here, so I copied it instead.');
 }
 
 async function copyLocation(location, type, successMessage) {
