@@ -16,6 +16,7 @@ const originalLocationModeHandler = () => {
 
 locationMode.addEventListener('change', originalLocationModeHandler);
 originalLocationModeHandler();
+preventAccidentalPageZoom();
 
 function initFishCastMap() {
   if (fishcastMap || !window.L) return;
@@ -41,6 +42,20 @@ function initFishCastMap() {
 
     mapPickedText.textContent = `Selected: ${pickedPoint.lat.toFixed(5)}, ${pickedPoint.lng.toFixed(5)}`;
   });
+}
+
+function preventAccidentalPageZoom() {
+  document.addEventListener('gesturestart', (event) => {
+    if (!event.target.closest?.('.leaflet-container')) {
+      event.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (event) => {
+    if (event.touches.length > 1 && !event.target.closest?.('.leaflet-container')) {
+      event.preventDefault();
+    }
+  }, { passive: false });
 }
 
 const baseGetCoordinates = getCoordinates;
