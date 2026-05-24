@@ -6,8 +6,9 @@
     <meta name="description" content="Quickly get, copy, and save your current GPS location locally in your browser." />
     <title>Location Snap | Pelaxix</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
-    <meta name="apple-mobile-web-app-title" content="Location Snap" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/location/location-touch-icon.png?v=1" />
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/location/location-touch-icon.png?v=1" />
+    <meta name="apple-mobile-web-app-title" content="Pelaxix GPS" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,21 +24,6 @@
           <span class="logo-mark">P</span>
           <span>Pelaxix</span>
         </a>
-        <nav class="nav-links" aria-label="Main navigation">
-          <details class="nav-menu">
-            <summary>Projects</summary>
-            <div class="nav-dropdown">
-              <a href="/go/">GO Tracker</a>
-              <a href="/fishingmap/">Fishing Map</a>
-              <a href="/bbq/">BBQ Log</a>
-              <a href="/movies/">Movie Shelf</a>
-              <a href="/ip/">Network Check</a>
-              <a href="/pdf/">PDF Tools</a>
-              <a href="/qr/">QR Tools</a>
-              <a href="/location/">Location Snap</a>
-            </div>
-          </details>
-        </nav>
       </header>
 
       <main>
@@ -59,13 +45,9 @@
           <p id="statusMessage" class="status-message">Opening location request.</p>
 
           <div class="button-row main-actions">
-            <button id="refreshButton" class="button secondary" type="button">Refresh location</button>
             <button id="copyButton" class="button primary" type="button" disabled>Copy location</button>
             <button id="saveParkingButton" class="button secondary" type="button" disabled>Save parking spot</button>
-          </div>
-
-          <div class="button-row map-actions">
-            <a id="googleMapsButton" class="button secondary disabled-link" href="#" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+            <button id="refreshButton" class="button secondary" type="button">Refresh location</button>
           </div>
         </section>
 
@@ -78,7 +60,6 @@
           </div>
           <div class="button-row">
             <button id="copySavedButton" class="button primary" type="button">Copy saved spot</button>
-            <a id="savedGoogleMapsButton" class="button secondary" href="#" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
             <button id="clearSavedButton" class="button danger" type="button">Clear saved spot</button>
           </div>
         </section>
