@@ -1,7 +1,6 @@
 const locationMode = document.querySelector('#locationMode');
-const manualCoordinates = document.querySelector('#manualCoordinates');
-const latitudeInput = document.querySelector('#latitudeInput');
-const longitudeInput = document.querySelector('#longitudeInput');
+const spotPickerLabel = document.querySelector('#spotPickerLabel');
+const spotPicker = document.querySelector('#spotPicker');
 const waterType = document.querySelector('#waterType');
 const targetSpecies = document.querySelector('#targetSpecies');
 const checkButton = document.querySelector('#checkButton');
@@ -26,11 +25,35 @@ const pressureFact = document.querySelector('#pressureFact');
 const sunsetFact = document.querySelector('#sunsetFact');
 const whyText = document.querySelector('#whyText');
 
+let fishingSpots = [];
+
 locationMode.addEventListener('change', () => {
-  manualCoordinates.hidden = locationMode.value !== 'manual';
+  spotPickerLabel.hidden = locationMode.value !== 'spot';
+});
+
+spotPicker.addEventListener('change', () => {
+  const spot = getSelectedSpot();
+  if (!spot) return;
+  waterType.value = inferWaterType(spot.category);
+  if (spot.species?.length) {
+    targetSpecies.value = inferTargetSpecies(spot.species);
+  }
 });
 
 checkButton.addEventListener('click', runFishCast);
+loadFishingSpots();
+
+async function loadFishingSpots() {
+  try {
+    const response = await fetch('/fishingmap/spots.json');
+    if (!response.ok) throw new Error('Could not load saved fishing spots.');
+    fishingSpots = await response.json();
+    spotPicker.innerHTML = fishingSpots.map((spot) => `<option value="${escapeHtml(spot.id)}">${escapeHtml(spot.name)}</option>`).join('');
+  } catch (error) {
+    console.error(error);
+    spotPicker.innerHTML = '<option value="">No spots found</option>';
+  }
+}
 
 async function runFishCast() {
   setLoading(true);
@@ -41,7 +64,7 @@ async function runFishCast() {
     const weather = await fetchWeather(coords);
     const analysis = analyzeConditions(weather, waterType.value, targetSpecies.value);
     renderResults(weather, analysis);
-    statusMessage.textContent = `Checked ${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}.`;
+    statusMessage.textContent = `Checked ${coords.name || 'current location'}.`;
   } catch (error) {
     console.error(error);
     statusMessage.textContent = error.message || 'Could not check conditions.';
@@ -56,13 +79,10 @@ function setLoading(isLoading) {
 }
 
 function getCoordinates() {
-  if (locationMode.value === 'manual') {
-    const lat = Number(latitudeInput.value);
-    const lng = Number(longitudeInput.value);
-    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-      throw new Error('Enter valid latitude and longitude.');
-    }
-    return Promise.resolve({ lat, lng });
+  if (locationMode.value === 'spot') {
+    const spot = getSelectedSpot();
+    if (!spot) throw new Error('Choose a saved fishing spot first.');
+    return Promise.resolve({ lat: spot.lat, lng: spot.lng, name: spot.name });
   }
 
   if (!navigator.geolocation) {
@@ -71,11 +91,33 @@ function getCoordinates() {
 
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
-      (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
+      (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude, name: 'current location' }),
       () => reject(new Error('Location permission was denied or unavailable.')),
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
     );
   });
+}
+
+function getSelectedSpot() {
+  return fishingSpots.find((spot) => spot.id === spotPicker.value);
+}
+
+function inferWaterType(category = '') {
+  const text = category.toLowerCase();
+  if (text.includes('harbour') || text.includes('marina') || text.includes('urban shore')) return 'harbour';
+  if (text.includes('river') || text.includes('creek')) return 'river';
+  if (text.includes('lake') || text.includes('pond') || text.includes('conservation')) return 'lake';
+  return 'unknown';
+}
+
+function inferTargetSpecies(species = []) {
+  const normalized = species.map((item) => item.toLowerCase());
+  if (normalized.includes('bass')) return 'bass';
+  if (normalized.includes('pike')) return 'pike';
+  if (normalized.includes('trout')) return 'trout';
+  if (normalized.includes('panfish')) return 'panfish';
+  if (normalized.includes('carp') || normalized.includes('catfish')) return 'carp-catfish';
+  return 'auto';
 }
 
 async function fetchWeather({ lat, lng }) {
