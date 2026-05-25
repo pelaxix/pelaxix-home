@@ -11,19 +11,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Pelaxix" />
     <meta property="og:title" content="Niagara Parks Parking Locator" />
     <meta property="og:description" content="Find nearby Niagara Parks parking lots and boat launches, then open Google Maps directions fast." />
-    <meta property="og:image" content="https://pelaxix.com/NiagaraP/parkpass-social-preview.png" />
-    <meta property="og:image:secure_url" content="https://pelaxix.com/NiagaraP/parkpass-social-preview.png" />
+    <meta property="og:image" content="https://pelaxix.com/NiagaraP/parkpass-social-preview.png?v=2" />
+    <meta property="og:image:url" content="https://pelaxix.com/NiagaraP/parkpass-social-preview.png?v=2" />
+    <meta property="og:image:secure_url" content="https://pelaxix.com/NiagaraP/parkpass-social-preview.png?v=2" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content="1731" />
+    <meta property="og:image:height" content="909" />
+    <meta property="og:image:alt" content="Niagara Parks Parking Locator preview showing parking and boat launch locations." />
     <meta property="og:url" content="https://pelaxix.com/NiagaraP/" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Niagara Parks Parking Locator" />
     <meta name="twitter:description" content="Find nearby Niagara Parks parking lots and boat launches, then open Google Maps directions fast." />
-    <meta name="twitter:image" content="https://pelaxix.com/NiagaraP/parkpass-social-preview.png" />
+    <meta name="twitter:image" content="https://pelaxix.com/NiagaraP/parkpass-social-preview.png?v=2" />
+    <meta name="twitter:image:alt" content="Niagara Parks Parking Locator preview showing parking and boat launch locations." />
 
     <title>Niagara Parks Parking Locator</title>
     <link rel="icon" href="/NiagaraP/parkpass-touch-icon.png" type="image/png" />
@@ -32,17 +36,6 @@
       if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) {
         document.documentElement.classList.add("standalone-app");
       }
-
-      document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
-      document.addEventListener("gesturechange", (event) => event.preventDefault(), { passive: false });
-      document.addEventListener("gestureend", (event) => event.preventDefault(), { passive: false });
-
-      let lastTouchEnd = 0;
-      document.addEventListener("touchend", (event) => {
-        const now = Date.now();
-        if (now - lastTouchEnd <= 300) event.preventDefault();
-        lastTouchEnd = now;
-      }, { passive: false });
     </script>
     <style>
       html,
