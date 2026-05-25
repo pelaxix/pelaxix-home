@@ -49,7 +49,7 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 22px 0;
+  padding: 16px 0 8px;
 }
 
 .logo {
@@ -72,30 +72,16 @@ a {
   box-shadow: 0 12px 28px rgba(47, 143, 135, 0.28);
 }
 
-.home-link {
-  display: inline-flex;
-  min-height: 42px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0 16px;
-  background: rgba(255, 253, 248, 0.72);
-  color: var(--text-strong);
-  font-size: 0.94rem;
-  font-weight: 800;
-}
-
 .hero {
   display: grid;
   align-content: start;
-  padding: 36px 0 24px;
+  padding: 10px 0 14px;
 }
 
 .eyebrow {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
   color: var(--accent-warm);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -110,19 +96,19 @@ p {
 
 h1 {
   max-width: 980px;
-  margin-bottom: 22px;
+  margin-bottom: 10px;
   color: var(--text-strong);
-  font-size: clamp(2.8rem, 7vw, 6.6rem);
-  line-height: 0.9;
-  letter-spacing: -0.08em;
+  font-size: clamp(2.4rem, 6vw, 5.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.07em;
 }
 
 .hero-copy {
   width: 100%;
   margin-bottom: 0;
   color: var(--muted);
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
-  line-height: 1.7;
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
+  line-height: 1.45;
 }
 
 .map-panel {
@@ -138,14 +124,13 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 16px;
+  padding: 12px;
   border-bottom: 1px solid var(--line);
 }
 
 .filter-button,
-.locate-button,
 .show-all-button {
-  min-height: 42px;
+  min-height: 40px;
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0 16px;
@@ -153,7 +138,7 @@ h1 {
   color: var(--text-strong);
   cursor: pointer;
   font: inherit;
-  font-size: 0.94rem;
+  font-size: 0.92rem;
   font-weight: 800;
 }
 
@@ -161,16 +146,6 @@ h1 {
   border-color: transparent;
   background: var(--accent);
   color: var(--surface);
-}
-
-.locate-button {
-  margin-left: auto;
-  background: var(--text-strong);
-  color: var(--surface);
-}
-
-.locate-button.loading {
-  opacity: 0.78;
 }
 
 .show-all-button {
@@ -186,6 +161,28 @@ h1 {
   height: min(46vh, 440px);
   min-height: 300px;
   background: var(--surface-soft);
+}
+
+.locate-control-button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  background: #fff;
+  color: #1f2937;
+  cursor: pointer;
+  font: 900 18px/1 Inter, system-ui, sans-serif;
+}
+
+.locate-control-button:hover,
+.locate-control-button:focus {
+  background: #f4f4f4;
+}
+
+.locate-control-button.locating {
+  color: var(--accent);
 }
 
 .locations-panel {
@@ -269,6 +266,12 @@ h1 {
   margin-bottom: 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.address-link {
+  text-decoration: underline;
+  text-decoration-color: rgba(95, 111, 111, 0.35);
+  text-underline-offset: 3px;
 }
 
 .distance-copy {
@@ -374,15 +377,24 @@ h1 {
   }
 
   .site-header {
-    padding: 18px 0;
+    padding: 12px 0 6px;
   }
 
   .hero {
-    padding: 20px 0 18px;
+    padding: 8px 0 12px;
+  }
+
+  .eyebrow {
+    margin-bottom: 6px;
   }
 
   h1 {
+    margin-bottom: 8px;
     letter-spacing: -0.06em;
+  }
+
+  .hero-copy {
+    line-height: 1.4;
   }
 
   .map-panel {
@@ -391,20 +403,14 @@ h1 {
 
   .toolbar {
     gap: 8px;
-    padding: 12px;
+    padding: 10px;
   }
 
   .filter-button,
-  .locate-button,
   .show-all-button {
     min-height: 38px;
     padding: 0 12px;
     font-size: 0.86rem;
-  }
-
-  .locate-button {
-    width: 100%;
-    margin-left: 0;
   }
 
   .map {
