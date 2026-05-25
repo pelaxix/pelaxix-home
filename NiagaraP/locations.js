@@ -115,8 +115,9 @@ const NIAGARA_LOCATIONS = [
     name: "McFarland House",
     type: "parking",
     address: "15927 Niagara River Parkway, Niagara-on-the-Lake, ON",
-    lat: 43.224859,
-    lng: -79.063558
+    lat: 43.23206,
+    lng: -79.0610124,
+    mapsUrl: "https://www.google.ca/maps/place/McFarland+House/@43.2320024,-79.061972,198m/data=!3m1!1e3!4m6!3m5!1s0x89d35f9e5516d261:0xb939874289095409!8m2!3d43.23206!4d-79.0610124!16s%2Fm%2F0k637j7?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Queenston Heights Boat Launch",
