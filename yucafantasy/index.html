@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Yucafantasy is a small F1 fantasy helper with GP posters, a race selector, and a countdown to the fantasy lock deadline."
+    />
+    <title>Yucafantasy | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="yucafantasy.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/yucafantasy/">Yucafantasy</a>
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/fishcast/">FishCast</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+              <a href="/qr/">QR Tools</a>
+              <a href="/location/">Location Snap</a>
+              <a href="/NiagaraP/">Niagara Parking</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">F1 fantasy helper</p>
+          <h1>Yucafantasy</h1>
+          <p class="hero-copy">
+            Pick a Grand Prix, show the poster, and track the fantasy deadline. Sprint weekends lock at Sprint start. Regular weekends lock at Qualy start.
+          </p>
+        </section>
+
+        <section class="control-panel" aria-label="Grand Prix selector">
+          <div>
+            <label for="gpSelect">Grand Prix</label>
+            <select id="gpSelect"></select>
+          </div>
+          <div class="deadline-card" id="deadlineCard">
+            <p id="deadlineLabel">Deadline</p>
+            <strong id="countdown">Loading...</strong>
+            <span id="deadlineStatus">Checking fantasy lock time.</span>
+          </div>
+        </section>
+
+        <section class="poster-stage" aria-live="polite">
+          <div class="poster-placeholder" id="posterPlaceholder">
+            <p class="eyebrow">Poster pending</p>
+            <h2 id="posterTitle">Yucafantasy</h2>
+            <p id="posterHint">Upload the matching poster image and it will show here automatically.</p>
+            <code id="posterPath"></code>
+          </div>
+          <img id="gpPoster" alt="" hidden />
+        </section>
+      </main>
+    </div>
+
+    <script src="yucafantasy.js"></script>
+  </body>
+</html>
