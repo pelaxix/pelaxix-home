@@ -1,4 +1,4 @@
-const map = L.map("map").setView([43.0896, -79.0769], 11);
+const map = L.map("map").setView([43.0896, -79.0769], 12);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
@@ -19,6 +19,7 @@ let userMarker = null;
 let userAccuracy = null;
 let userPosition = null;
 let locateControlButton = null;
+let hasTriedInitialLocation = false;
 
 function typeLabel(type) {
   return type === "boat-launch" ? "Boat launch" : "Parking";
@@ -174,11 +175,12 @@ function addMarkers() {
     marker.addTo(markerLayer);
     markers.push(marker);
   });
+}
 
-  if (markers.length > 0 && !userPosition) {
-    const bounds = L.latLngBounds(markers.map((marker) => marker.getLatLng()));
-    map.fitBounds(bounds, { padding: [28, 28] });
-  }
+function fitVisibleMarkers() {
+  if (markers.length === 0) return;
+  const bounds = L.latLngBounds(markers.map((marker) => marker.getLatLng()));
+  map.fitBounds(bounds, { padding: [28, 28] });
 }
 
 function setLocateLoading(isLoading) {
@@ -216,10 +218,19 @@ function showUserLocation(position) {
 
 function locationError() {
   setLocateLoading(false);
+  if (!hasTriedInitialLocation) return;
+  fitVisibleMarkers();
+  renderAllCards();
 }
 
 function requestLocation() {
-  if (!navigator.geolocation) return;
+  if (!navigator.geolocation) {
+    fitVisibleMarkers();
+    renderAllCards();
+    return;
+  }
+
+  hasTriedInitialLocation = true;
   setLocateLoading(true);
 
   navigator.geolocation.getCurrentPosition(showUserLocation, locationError, {
@@ -268,5 +279,5 @@ showAllButton.addEventListener("click", () => {
 
 addLocateControl();
 addMarkers();
-renderAllCards();
+showMessage("Finding location", "Loading near you...", "If location permission is blocked, the map will fall back to showing all parking pass locations.");
 requestLocation();
