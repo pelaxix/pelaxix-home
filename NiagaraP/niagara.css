@@ -1,26 +1,23 @@
 :root {
   color-scheme: light;
-  --bg: #f6f3ea;
-  --bg-deep: #e9e2d2;
+  --bg: #f7f6f0;
+  --bg-deep: #ebe6d9;
   --surface: #fffdf8;
-  --surface-soft: #f1eadc;
-  --text: #1d2d26;
-  --text-strong: #14231d;
-  --muted: #68746c;
-  --green-900: #173f31;
-  --green-800: #225443;
-  --green-700: #2f6b52;
-  --green-100: #dfeee6;
-  --river-800: #275d70;
-  --river-700: #36758a;
-  --river-100: #dfecef;
-  --sand-500: #c3a56b;
-  --sand-300: #eadbb8;
-  --parking: #2f6b52;
-  --boat: #36758a;
-  --line: rgba(29, 45, 38, 0.14);
-  --shadow: 0 18px 50px rgba(29, 45, 38, 0.12);
-  --soft-shadow: 0 10px 28px rgba(29, 45, 38, 0.08);
+  --surface-soft: #f3efe4;
+  --text: #153c3f;
+  --text-strong: #072f35;
+  --muted: #657273;
+  --np-green: #2b8c4a;
+  --np-blue: #0087c1;
+  --np-yellow: #f4c542;
+  --np-orange: #ee7c30;
+  --np-red: #d84b3f;
+  --np-teal: #009b9a;
+  --parking: #2b8c4a;
+  --boat: #0087c1;
+  --line: rgba(7, 47, 53, 0.14);
+  --shadow: 0 18px 48px rgba(7, 47, 53, 0.13);
+  --soft-shadow: 0 10px 28px rgba(7, 47, 53, 0.08);
 }
 
 * {
@@ -36,8 +33,9 @@ body {
   min-height: 100vh;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(54, 117, 138, 0.16), transparent 28rem),
-    radial-gradient(circle at 85% 8%, rgba(195, 165, 107, 0.20), transparent 24rem),
+    radial-gradient(circle at top left, rgba(0, 135, 193, 0.16), transparent 27rem),
+    radial-gradient(circle at 92% 7%, rgba(244, 197, 66, 0.22), transparent 22rem),
+    radial-gradient(circle at 22% 96%, rgba(238, 124, 48, 0.14), transparent 26rem),
     linear-gradient(180deg, var(--bg), var(--bg-deep));
   color: var(--text);
 }
@@ -70,7 +68,7 @@ a {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--green-900);
+  color: var(--text-strong);
   font-weight: 900;
   letter-spacing: -0.03em;
 }
@@ -80,34 +78,97 @@ a {
   width: 38px;
   height: 38px;
   place-items: center;
-  border-radius: 13px;
-  background: linear-gradient(135deg, var(--green-900), var(--river-800));
+  border-radius: 999px;
+  background: var(--np-teal);
   color: var(--surface);
-  font-size: 0.78rem;
-  box-shadow: 0 12px 28px rgba(23, 63, 49, 0.24);
+  font-size: 0.92rem;
+  box-shadow: 0 12px 28px rgba(0, 155, 154, 0.24);
 }
 
 .hero {
-  display: block;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
   margin-bottom: 14px;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  border: 1px solid rgba(7, 47, 53, 0.10);
   border-radius: 30px;
   background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 20rem),
-    linear-gradient(135deg, rgba(23, 63, 49, 0.98), rgba(39, 93, 112, 0.94));
-  color: #fffdf8;
+    radial-gradient(circle at 92% 10%, rgba(244, 197, 66, 0.30), transparent 14rem),
+    radial-gradient(circle at 6% 100%, rgba(0, 135, 193, 0.18), transparent 16rem),
+    linear-gradient(135deg, rgba(255, 253, 248, 0.98), rgba(240, 250, 247, 0.98));
+  color: var(--text-strong);
   box-shadow: var(--shadow);
   overflow: hidden;
 }
 
+.hero::after {
+  content: "";
+  position: absolute;
+  right: -58px;
+  top: -58px;
+  width: 172px;
+  height: 172px;
+  border-radius: 999px;
+  background: conic-gradient(from 20deg, var(--np-green), var(--np-blue), var(--np-yellow), var(--np-orange), var(--np-red), var(--np-green));
+  opacity: 0.14;
+}
+
+.hero-mark {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(7, 47, 53, 0.08), 0 14px 30px rgba(7, 47, 53, 0.10);
+}
+
+.petal {
+  position: absolute;
+  left: 34px;
+  top: 12px;
+  width: 20px;
+  height: 36px;
+  border-radius: 999px 999px 999px 6px;
+  transform-origin: 9px 31px;
+}
+
+.petal-green {
+  background: var(--np-green);
+  transform: rotate(0deg);
+}
+
+.petal-blue {
+  background: var(--np-blue);
+  transform: rotate(72deg);
+}
+
+.petal-yellow {
+  background: var(--np-yellow);
+  transform: rotate(144deg);
+}
+
+.petal-orange {
+  background: var(--np-orange);
+  transform: rotate(216deg);
+}
+
+.petal-red {
+  background: var(--np-red);
+  transform: rotate(288deg);
+}
+
 .hero-copy-block {
+  position: relative;
+  z-index: 1;
   min-width: 0;
 }
 
 .eyebrow {
   margin: 0 0 6px;
-  color: rgba(234, 219, 184, 0.96);
+  color: var(--np-blue);
   font-size: 0.74rem;
   font-weight: 900;
   letter-spacing: 0.14em;
@@ -124,18 +185,17 @@ p {
 h1 {
   max-width: 760px;
   margin-bottom: 6px;
-  font-family: "Cormorant Garamond", Georgia, serif;
-  color: #fffdf8;
-  font-size: clamp(2.65rem, 6vw, 5.35rem);
-  font-weight: 700;
-  line-height: 0.88;
-  letter-spacing: -0.035em;
+  color: var(--text-strong);
+  font-size: clamp(2.35rem, 5.2vw, 4.85rem);
+  font-weight: 900;
+  line-height: 0.93;
+  letter-spacing: -0.065em;
 }
 
 .hero-copy {
   max-width: 620px;
   margin-bottom: 0;
-  color: rgba(255, 253, 248, 0.84);
+  color: var(--muted);
   font-size: clamp(0.98rem, 1.8vw, 1.12rem);
   line-height: 1.45;
 }
@@ -148,7 +208,7 @@ h1 {
   margin-bottom: 40px;
   border: 1px solid var(--line);
   border-radius: 30px;
-  background: rgba(255, 253, 248, 0.74);
+  background: rgba(255, 253, 248, 0.78);
   box-shadow: var(--shadow);
   overflow: hidden;
   backdrop-filter: blur(10px);
@@ -164,26 +224,26 @@ h1 {
 .filter-button,
 .show-all-button {
   min-height: 40px;
-  border: 1px solid rgba(23, 63, 49, 0.14);
+  border: 1px solid rgba(7, 47, 53, 0.14);
   border-radius: 999px;
   padding: 0 16px;
-  background: rgba(255, 253, 248, 0.88);
-  color: var(--green-900);
+  background: rgba(255, 253, 248, 0.9);
+  color: var(--text-strong);
   cursor: pointer;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 850;
-  box-shadow: 0 6px 14px rgba(29, 45, 38, 0.04);
+  box-shadow: 0 6px 14px rgba(7, 47, 53, 0.04);
 }
 
 .filter-button.active {
   border-color: transparent;
-  background: var(--green-800);
+  background: linear-gradient(135deg, var(--np-green), var(--np-teal));
   color: #fffdf8;
 }
 
 .show-all-button {
-  background: var(--green-100);
+  background: rgba(244, 197, 66, 0.20);
 }
 
 .show-all-button[hidden] {
@@ -198,7 +258,7 @@ h1 {
   width: 100%;
   height: min(42vh, 410px);
   min-height: 292px;
-  border: 1px solid rgba(29, 45, 38, 0.10);
+  border: 1px solid rgba(7, 47, 53, 0.10);
   border-radius: 24px;
   background: var(--surface-soft);
   box-shadow: inset 0 0 0 1px rgba(255, 253, 248, 0.45);
@@ -216,25 +276,26 @@ h1 {
   place-items: center;
   border: 0;
   background: #fffdf8;
-  color: var(--green-900);
+  color: var(--text-strong);
   cursor: pointer;
   font: 900 20px/1 Inter, system-ui, sans-serif;
 }
 
 .locate-control-button:hover,
 .locate-control-button:focus {
-  background: #f1eadc;
+  background: #f3efe4;
 }
 
 .locate-control-button.locating {
-  color: var(--river-700);
+  color: var(--np-blue);
 }
 
 .locations-panel {
   padding: 18px;
   border-top: 1px solid var(--line);
   background:
-    linear-gradient(180deg, rgba(255, 253, 248, 0.92), rgba(246, 243, 234, 0.96));
+    linear-gradient(90deg, rgba(43, 140, 74, 0.08), rgba(0, 135, 193, 0.08), rgba(244, 197, 66, 0.10), rgba(238, 124, 48, 0.08)),
+    rgba(255, 253, 248, 0.96);
 }
 
 .locations-heading {
@@ -248,11 +309,10 @@ h1 {
 .locations-heading h2 {
   margin-bottom: 0;
   color: var(--text-strong);
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.7rem, 3vw, 2.35rem);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.025em;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.045em;
 }
 
 .location-cards {
@@ -273,25 +333,25 @@ h1 {
   border-left-width: 7px;
   border-radius: 22px;
   background: var(--surface);
-  box-shadow: 0 8px 20px rgba(29, 45, 38, 0.06);
+  box-shadow: 0 8px 20px rgba(7, 47, 53, 0.06);
 }
 
 .location-card.parking-card {
-  border-color: rgba(47, 107, 82, 0.18);
+  border-color: rgba(43, 140, 74, 0.18);
   border-left-color: var(--parking);
-  background: linear-gradient(180deg, rgba(47, 107, 82, 0.07), rgba(255, 253, 248, 0.98));
+  background: linear-gradient(180deg, rgba(43, 140, 74, 0.07), rgba(255, 253, 248, 0.98));
 }
 
 .location-card.boat-card {
-  border-color: rgba(54, 117, 138, 0.20);
+  border-color: rgba(0, 135, 193, 0.20);
   border-left-color: var(--boat);
-  background: linear-gradient(180deg, rgba(54, 117, 138, 0.08), rgba(255, 253, 248, 0.98));
+  background: linear-gradient(180deg, rgba(0, 135, 193, 0.08), rgba(255, 253, 248, 0.98));
 }
 
 .location-card.selected-card {
   transform: translateY(-1px);
-  box-shadow: 0 14px 34px rgba(29, 45, 38, 0.14);
-  outline: 3px solid rgba(195, 165, 107, 0.22);
+  box-shadow: 0 14px 34px rgba(7, 47, 53, 0.14);
+  outline: 3px solid rgba(244, 197, 66, 0.28);
 }
 
 .card-kicker {
@@ -327,13 +387,13 @@ h1 {
 .address-link {
   display: inline-block;
   text-decoration: underline;
-  text-decoration-color: rgba(104, 116, 108, 0.32);
+  text-decoration-color: rgba(101, 114, 115, 0.32);
   text-underline-offset: 3px;
 }
 
 .address-link:hover,
 .address-link:focus {
-  color: var(--green-900);
+  color: var(--text-strong);
   text-decoration-color: currentColor;
 }
 
@@ -343,7 +403,7 @@ h1 {
   margin: 10px 0 0;
   border-radius: 999px;
   padding: 5px 9px;
-  background: rgba(195, 165, 107, 0.18);
+  background: rgba(244, 197, 66, 0.24);
   color: var(--text-strong);
   font-size: 0.82rem;
   font-weight: 900;
@@ -361,11 +421,11 @@ h1 {
   justify-content: center;
   border-radius: 999px;
   padding: 0 18px;
-  background: var(--green-800);
+  background: var(--np-green);
   color: #fffdf8;
   font-size: 0.92rem;
   font-weight: 900;
-  box-shadow: 0 12px 24px rgba(34, 84, 67, 0.20);
+  box-shadow: 0 12px 24px rgba(43, 140, 74, 0.20);
 }
 
 .parking-card .directions-button {
@@ -374,7 +434,7 @@ h1 {
 
 .boat-card .directions-button {
   background: var(--boat);
-  box-shadow: 0 12px 24px rgba(54, 117, 138, 0.20);
+  box-shadow: 0 12px 24px rgba(0, 135, 193, 0.20);
 }
 
 .custom-marker-wrapper {
@@ -392,7 +452,7 @@ h1 {
   border-radius: 999px;
   color: #fffdf8;
   font-weight: 900;
-  box-shadow: 0 10px 24px rgba(20, 35, 29, 0.28);
+  box-shadow: 0 10px 24px rgba(7, 47, 53, 0.28);
 }
 
 .parking-marker {
@@ -419,7 +479,7 @@ h1 {
   border: 4px solid #fffdf8;
   border-radius: 999px;
   background: #1f77ff;
-  box-shadow: 0 0 0 8px rgba(31, 119, 255, 0.16), 0 10px 24px rgba(20, 35, 29, 0.24);
+  box-shadow: 0 0 0 8px rgba(31, 119, 255, 0.16), 0 10px 24px rgba(7, 47, 53, 0.24);
 }
 
 .user-accuracy {
@@ -452,31 +512,46 @@ h1 {
   .logo-mark {
     width: 34px;
     height: 34px;
-    border-radius: 12px;
   }
 
   .hero {
-    padding: 15px 16px;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
     border-radius: 24px;
+  }
+
+  .hero-mark {
+    width: 62px;
+    height: 62px;
+    border-radius: 21px;
+  }
+
+  .petal {
+    left: 24px;
+    top: 8px;
+    width: 15px;
+    height: 27px;
+    transform-origin: 7px 24px;
   }
 
   .eyebrow {
     margin-bottom: 5px;
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
+    font-size: 0.66rem;
+    letter-spacing: 0.11em;
   }
 
   h1 {
     max-width: 100%;
     margin-bottom: 7px;
-    font-size: clamp(2.05rem, 8.8vw, 2.85rem);
-    line-height: 0.94;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.75rem, 7.6vw, 2.45rem);
+    line-height: 0.96;
+    letter-spacing: -0.045em;
   }
 
   .hero-copy {
-    font-size: 0.98rem;
-    line-height: 1.36;
+    font-size: 0.94rem;
+    line-height: 1.34;
   }
 
   .map-panel {
@@ -514,7 +589,7 @@ h1 {
   }
 
   .locations-heading h2 {
-    font-size: clamp(1.45rem, 7vw, 2rem);
+    font-size: clamp(1.35rem, 6.5vw, 1.9rem);
   }
 
   .location-cards {
@@ -538,8 +613,26 @@ h1 {
     width: min(100% - 18px, 1040px);
   }
 
+  .hero {
+    gap: 10px;
+  }
+
+  .hero-mark {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+  }
+
+  .petal {
+    left: 21px;
+    top: 7px;
+    width: 13px;
+    height: 23px;
+    transform-origin: 6px 20px;
+  }
+
   h1 {
-    font-size: clamp(1.82rem, 8.5vw, 2.3rem);
-    line-height: 0.98;
+    font-size: clamp(1.62rem, 7vw, 2.1rem);
+    line-height: 0.99;
   }
 }
