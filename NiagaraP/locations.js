@@ -3,29 +3,33 @@ const NIAGARA_LOCATIONS = [
     name: "Falls Parking Lot A",
     type: "parking",
     address: "6635 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.078917,
-    lng: -79.077998
+    lat: 43.07377,
+    lng: -79.07924,
+    mapsUrl: "https://www.google.ca/maps/place/Niagara+Falls+-+Parking+Lot+A/@43.0735225,-79.0801622,554m/data=!3m1!1e3!4m6!3m5!1s0x89d343c31886ee91:0xd5f1f2f4eb315207!8m2!3d43.07377!4d-79.07924!16s%2Fg%2F11vlg35xvd?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Floral Showhouse Parking Lot B",
     type: "parking",
     address: "7145 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.074068,
-    lng: -79.077791
+    lat: 43.0715246,
+    lng: -79.0745563,
+    mapsUrl: "https://www.google.ca/maps/place/Niagara+Parks+Parking+Lot+B/@43.0714183,-79.0737769,392m/data=!3m1!1e3!4m6!3m5!1s0x89d343e1ba8b8451:0xf258108699e410e8!8m2!3d43.0715246!4d-79.0745563!16s%2Fg%2F11y1x9_kvn?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Rapidsview Parking Lot C",
     type: "parking",
     address: "7651 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.060665,
-    lng: -79.052031
+    lat: 43.0650937,
+    lng: -79.0642459,
+    mapsUrl: "https://www.google.ca/maps/place/Rapidsview+Parking+Lot+(Parking+Lot+C)/@43.0662915,-79.0640446,1108m/data=!3m1!1e3!4m6!3m5!1s0x89d342d417b5f077:0xf673f5fed06d7aaf!8m2!3d43.0650937!4d-79.0642459!16s%2Fg%2F1hf6r0xp0?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Queen Victoria Place",
     type: "parking",
     address: "6345 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.085948,
-    lng: -79.075319
+    lat: 43.0837649,
+    lng: -79.0781158,
+    mapsUrl: "https://www.google.ca/maps/place/Queen+Victoria+Park+Parking+Lot/@43.0836794,-79.0780925,196m/data=!3m1!1e3!4m6!3m5!1s0x89d343000443a2ef:0x73771cbc6f6dcee7!8m2!3d43.0837649!4d-79.0781158!16s%2Fg%2F11xs9nz9p7?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Dufferin Islands",
