@@ -43,8 +43,9 @@ const NIAGARA_LOCATIONS = [
     name: "Kingsbridge Park",
     type: "parking",
     address: "7870 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.054884,
-    lng: -79.042653
+    lat: 43.06425,
+    lng: -79.050567,
+    mapsUrl: "https://www.google.ca/maps/place/Kingsbridge+Park/@43.0641139,-79.0508392,277m/data=!3m1!1e3!4m10!1m2!2m1!1sparking!3m6!1s0x89d34244ce119fd7:0x51a0cc4625642523!8m2!3d43.06425!4d-79.050567!15sCgdwYXJraW5nWgkiB3BhcmtpbmeSAQRwYXJrmgEjQ2haRFNVaE5NRzluUzBWSlEwRm5TVU5LYVRacFZsWjNFQUXgAQD6AQUI5wEQQw!16s%2Fg%2F1w04l2c2?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Rainbow Bridge",
