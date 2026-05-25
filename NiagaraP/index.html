@@ -12,6 +12,30 @@
     <title>Niagara Parks Parking Locator</title>
     <link rel="icon" href="/NiagaraP/parkpass-touch-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/NiagaraP/parkpass-touch-icon.png" />
+    <script>
+      if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) {
+        document.documentElement.classList.add("standalone-app");
+      }
+    </script>
+    <style>
+      @media all and (display-mode: standalone) {
+        .site-header {
+          display: none;
+        }
+
+        .page-shell {
+          padding-top: 12px;
+        }
+      }
+
+      .standalone-app .site-header {
+        display: none;
+      }
+
+      .standalone-app .page-shell {
+        padding-top: 12px;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
