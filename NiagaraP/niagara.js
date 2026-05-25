@@ -5,12 +5,16 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "OpenStreetMap contributors"
 }).addTo(map);
 
-const card = document.querySelector("#location-card");
+const cardsKicker = document.querySelector("#cards-kicker");
+const cardsTitle = document.querySelector("#cards-title");
+const cardsContainer = document.querySelector("#location-cards");
+const showAllButton = document.querySelector("#show-all-button");
 const filterButtons = document.querySelectorAll(".filter-button");
 const locateButton = document.querySelector("#locate-button");
 const markerLayer = L.layerGroup().addTo(map);
 const markers = [];
 let activeFilter = "all";
+let selectedLocationName = null;
 let activeMarker = null;
 let userMarker = null;
 let userAccuracy = null;
@@ -19,8 +23,12 @@ function typeLabel(type) {
   return type === "boat-launch" ? "Boat launch" : "Parking";
 }
 
+function filteredLocations() {
+  return NIAGARA_LOCATIONS.filter((location) => activeFilter === "all" || location.type === activeFilter);
+}
+
 function markerIcon(location, selected) {
-  const label = location.type === "boat-launch" ? "B" : "P";
+  const label = location.type === "boat-launch" ? "⚓" : "P";
   const typeClass = location.type === "boat-launch" ? "boat-marker" : "parking-marker";
   const selectedClass = selected ? " selected-marker" : "";
 
@@ -41,14 +49,20 @@ function userIcon() {
   });
 }
 
-function renderCard(location) {
-  card.innerHTML = "";
+function directionsUrl(location) {
+  return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(location.lat + "," + location.lng);
+}
 
+function makeLocationCard(location) {
+  const card = document.createElement("article");
   const textBox = document.createElement("div");
   const kicker = document.createElement("p");
-  const title = document.createElement("h2");
+  const title = document.createElement("h3");
   const address = document.createElement("p");
   const link = document.createElement("a");
+
+  card.className = "location-card";
+  if (selectedLocationName === location.name) card.classList.add("selected-card");
 
   kicker.className = "card-kicker";
   kicker.textContent = typeLabel(location.type);
@@ -56,26 +70,45 @@ function renderCard(location) {
   address.className = "card-copy";
   address.textContent = location.address;
   link.className = "directions-button";
-  link.href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(location.lat + "," + location.lng);
+  link.href = directionsUrl(location);
   link.textContent = "Directions";
 
   textBox.append(kicker, title, address);
   card.append(textBox, link);
+  return card;
+}
+
+function renderLocationCards(locations, titleText, kickerText) {
+  cardsContainer.innerHTML = "";
+  cardsTitle.textContent = titleText;
+  cardsKicker.textContent = kickerText;
+  showAllButton.hidden = selectedLocationName === null;
+
+  locations.forEach((location) => {
+    cardsContainer.append(makeLocationCard(location));
+  });
+}
+
+function renderAllCards() {
+  selectedLocationName = null;
+  renderLocationCards(filteredLocations(), "Parking lots and boat launches", activeFilter === "all" ? "All locations" : typeLabel(activeFilter));
+}
+
+function renderSelectedCard(location) {
+  selectedLocationName = location.name;
+  renderLocationCards([location], location.name, typeLabel(location.type));
 }
 
 function showMessage(label, titleText, copyText) {
-  card.innerHTML = "";
-  const textBox = document.createElement("div");
-  const kicker = document.createElement("p");
-  const title = document.createElement("h2");
-  const copy = document.createElement("p");
-  kicker.className = "card-kicker";
-  kicker.textContent = label;
-  title.textContent = titleText;
-  copy.className = "card-copy";
-  copy.textContent = copyText;
-  textBox.append(kicker, title, copy);
-  card.append(textBox);
+  cardsContainer.innerHTML = "";
+  cardsKicker.textContent = label;
+  cardsTitle.textContent = titleText;
+  showAllButton.hidden = selectedLocationName === null;
+
+  const message = document.createElement("p");
+  message.className = "card-copy message-copy";
+  message.textContent = copyText;
+  cardsContainer.append(message);
 }
 
 function selectLocation(location, marker) {
@@ -84,11 +117,7 @@ function selectLocation(location, marker) {
   marker.setIcon(markerIcon(location, true));
   marker.openPopup();
   map.setView([location.lat, location.lng], Math.max(map.getZoom(), 14));
-  renderCard(location);
-}
-
-function resetCard(label) {
-  showMessage(label, "Pick a pin.", "Tap any visible marker to open its directions card.");
+  renderSelectedCard(location);
 }
 
 function addMarkers() {
@@ -96,7 +125,7 @@ function addMarkers() {
   markers.length = 0;
   activeMarker = null;
 
-  NIAGARA_LOCATIONS.filter((location) => activeFilter === "all" || location.type === activeFilter).forEach((location) => {
+  filteredLocations().forEach((location) => {
     const marker = L.marker([location.lat, location.lng], { icon: markerIcon(location, false) });
     marker.location = location;
     marker.bindPopup(location.name + "<br>" + typeLabel(location.type));
@@ -125,10 +154,7 @@ function showUserLocation(position) {
   }
 
   if (!userAccuracy) {
-    userAccuracy = L.circle(latLng, {
-      radius: accuracy,
-      className: "user-accuracy"
-    }).addTo(map);
+    userAccuracy = L.circle(latLng, { radius: accuracy, className: "user-accuracy" }).addTo(map);
   } else {
     userAccuracy.setLatLng(latLng);
     userAccuracy.setRadius(accuracy);
@@ -137,7 +163,8 @@ function showUserLocation(position) {
   map.setView(latLng, Math.max(map.getZoom(), 15));
   locateButton.textContent = "Update my location";
   locateButton.classList.remove("loading");
-  showMessage("Your location", "You are on the map.", "The blue dot shows your approximate location. Tap any parking or boat launch pin for directions.");
+  selectedLocationName = null;
+  showMessage("Your location", "You are on the map.", "The blue dot shows your approximate location. Tap any parking or boat launch pin to filter the cards below.");
 }
 
 function locationError() {
@@ -165,13 +192,21 @@ function requestLocation() {
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     activeFilter = button.dataset.filter;
+    selectedLocationName = null;
     filterButtons.forEach((item) => item.classList.remove("active"));
     button.classList.add("active");
     addMarkers();
-    resetCard(button.textContent);
+    renderAllCards();
   });
+});
+
+showAllButton.addEventListener("click", () => {
+  if (activeMarker) activeMarker.setIcon(markerIcon(activeMarker.location, false));
+  activeMarker = null;
+  renderAllCards();
 });
 
 locateButton.addEventListener("click", requestLocation);
 
 addMarkers();
+renderAllCards();
