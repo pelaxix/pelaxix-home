@@ -168,13 +168,6 @@ const NIAGARA_LOCATIONS = [
     mapsUrl: "https://www.google.com/maps/@42.9407659,-78.9248162,69m/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
-    name: "Nichol's Marine Boat Launch",
-    type: "boat-launch",
-    address: "Nichol's Marine, Fort Erie, ON",
-    lat: 42.902219,
-    lng: -78.917366
-  },
-  {
     name: "Niagara Parks Marina",
     type: "boat-launch",
     address: "Niagara Parks Marina at Miller's Creek, Fort Erie, ON",
