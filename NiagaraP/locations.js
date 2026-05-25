@@ -59,15 +59,17 @@ const NIAGARA_LOCATIONS = [
     name: "White Water Walk",
     type: "parking",
     address: "4330 River Road, Niagara Falls, ON",
-    lat: 43.117688,
-    lng: -79.060367
+    lat: 43.1109554,
+    lng: -79.0604553,
+    mapsUrl: "https://www.google.ca/maps/place/White+Water+Walk/@43.1111828,-79.0603696,277m/data=!3m1!1e3!4m10!1m2!2m1!1sparking!3m6!1s0x89d342d4f4364fc1:0x98986aa71e09d257!8m2!3d43.1109554!4d-79.0604553!15sCgdwYXJraW5nWgkiB3BhcmtpbmeSARJ0b3VyaXN0X2F0dHJhY3Rpb26aAURDaTlEUVVsUlFVTnZaRU5vZEhsalJqbHZUMjAxV0ZSV1pFaFdNblJFWWxodmVHSkdXbUZqZWs1NllWaE9lVTVIWXhBQuABAPoBBQicARA3!16s%2Fg%2F1wz53pk_?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Whirlpool Aero Car",
     type: "parking",
     address: "3850 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.119108,
-    lng: -79.064727
+    lat: 43.1180306,
+    lng: -79.0687889,
+    mapsUrl: "https://www.google.ca/maps/place/Whirlpool+Aero+Car/@43.1179102,-79.0689817,165m/data=!3m1!1e3!4m10!1m2!2m1!1sparking!3m6!1s0x89d35cd41852f6c1:0xea6787ce240c67ab!8m2!3d43.1180306!4d-79.0687889!15sCgdwYXJraW5nWgkiB3BhcmtpbmeSARJ0b3VyaXN0X2F0dHJhY3Rpb26aAURDaTlEUVVsUlFVTnZaRU5vZEhsalJqbHZUMnR3ZFZwdGRFaGhSemgwWkVaS1ExcHVUazVrU0ZaWlV6RTVTR05WUlJBQuABAPoBBAgwEDY!16zL20vMDJtcjlt?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Whirlpool Parkette",
@@ -80,43 +82,49 @@ const NIAGARA_LOCATIONS = [
     name: "Fisherman's Parking Lot",
     type: "parking",
     address: "Niagara River Parkway near Niagara Glen, Niagara Falls, ON",
-    lat: 43.127066,
-    lng: -79.067124
+    lat: 43.1249852,
+    lng: -79.0750953,
+    mapsUrl: "https://www.google.com/maps/place/Niagara+Parks+Fisherman's+Parking+Lot/@43.1249805,-79.0807916,16z/data=!4m10!1m2!2m1!1sfishermans+parkin+lot!3m6!1s0x89d35da07a1d5151:0x270fff781328b758!8m2!3d43.1249852!4d-79.0750953!15sChdmaXNoZXJtYW4ncyBwYXJraW5nIGxvdJIBC3BhcmtpbmdfbG904AEA!16s%2Fg%2F11lq65s3nm?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Thompson Point and WildPlay Adventure Course Lot",
     type: "parking",
     address: "3500 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.129827,
-    lng: -79.068979
+    lat: 43.1236319,
+    lng: -79.0685295,
+    mapsUrl: "https://www.google.com/maps/place/WildPlay+Niagara+Falls+Whirlpool+Adventure+Course/@43.1234973,-79.0682943,21z/data=!4m6!3m5!1s0x89d342d45e740f39:0x66b37eb4bd8d5386!8m2!3d43.1236319!4d-79.0685295!16s%2Fg%2F11clzhbvlz?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Butterfly Conservatory and Botanical Gardens",
     type: "parking",
     address: "2565 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.146905,
-    lng: -79.054551
+    lat: 43.136085,
+    lng: -79.0534903,
+    mapsUrl: "https://www.google.ca/maps/place/Butterfly+Conservatory+Parking/@43.1359175,-79.0534088,138m/data=!3m1!1e3!4m10!1m2!2m1!1sButterfly+Conservatory+%26+Botanical+Gardens!3m6!1s0x89d35d476d9303d7:0xc9b95981362917bd!8m2!3d43.136085!4d-79.0534903!15sCipCdXR0ZXJmbHkgQ29uc2VydmF0b3J5ICYgQm90YW5pY2FsIEdhcmRlbnNaLCIqYnV0dGVyZmx5IGNvbnNlcnZhdG9yeSAmIGJvdGFuaWNhbCBnYXJkZW5zkgELcGFya2luZ19sb3SaASRDaGREU1VoTk1HOW5TMFZKUTBGblNVUm9PVjgyWVhkM1JSQULgAQD6AQUIgQkQQw!16s%2Fg%2F11hzxshbn6?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Niagara Glen and Nature Centre",
     type: "parking",
     address: "3050 Niagara River Parkway, Niagara Falls, ON",
-    lat: 43.136853,
-    lng: -79.061695
+    lat: 43.1291667,
+    lng: -79.06,
+    mapsUrl: "https://www.google.ca/maps/place/Niagara+Glen+Nature+Centre/@43.1296851,-79.060445,320m/data=!3m1!1e3!4m6!3m5!1s0x89d35d21720e1ddd:0xdaeaaad7a479ff76!8m2!3d43.1291667!4d-79.06!16s%2Fm%2F0h3p3nq?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Queenston Heights Park",
     type: "parking",
     address: "14184 Niagara River Parkway, Queenston, ON",
-    lat: 43.160654,
-    lng: -79.052869
+    lat: 43.1587641,
+    lng: -79.0515406,
+    mapsUrl: "https://www.google.ca/maps/place/Queenston+Heights+Park/@43.1575192,-79.0514767,658m/data=!3m1!1e3!4m6!3m5!1s0x89d35dafb05e504f:0x217edd4b7ce28385!8m2!3d43.1587641!4d-79.0515406!16s%2Fg%2F1tdjs3j8?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Old Fort Erie",
     type: "parking",
     address: "350 Lakeshore Road, Fort Erie, ON",
-    lat: 42.893719,
-    lng: -78.923225
+    lat: 42.8946381,
+    lng: -78.9239321,
+    mapsUrl: "https://www.google.ca/maps/place/Old+Fort+Erie/@42.8942225,-78.9243331,393m/data=!3m1!1e3!4m6!3m5!1s0x89d3138958422cb1:0x6dbd585c4c96ccd2!8m2!3d42.8946381!4d-78.9239321!16zL20vMDI5OTh3?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "McFarland House",
