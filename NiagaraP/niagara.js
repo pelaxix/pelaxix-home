@@ -73,6 +73,7 @@ function userIcon() {
 }
 
 function directionsUrl(location) {
+  if (location.mapsUrl) return location.mapsUrl;
   return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(location.lat + "," + location.lng);
 }
 
