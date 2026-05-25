@@ -3,21 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta
       name="description"
-      content="Yucafantasy is a small F1 fantasy helper with GP posters, a race selector, and a countdown to the fantasy lock deadline."
+      content="Yucafantasy shows F1 fantasy GP posters and the deadline countdown for each race weekend."
     />
+
     <title>Yucafantasy | Pelaxix</title>
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/project-nav.css" />
+
     <link rel="stylesheet" href="yucafantasy.css" />
+    <link rel="stylesheet" href="/project-nav.css" />
   </head>
+
   <body>
     <div class="app-shell">
       <header class="site-header">
@@ -25,11 +32,12 @@
           <span class="logo-mark">P</span>
           <span>Pelaxix</span>
         </a>
+
         <nav class="nav-links" aria-label="Main navigation">
           <details class="nav-menu">
             <summary>Projects</summary>
+
             <div class="nav-dropdown">
-              <a href="/yucafantasy/">Yucafantasy</a>
               <a href="/go/">GO Tracker</a>
               <a href="/fishingmap/">Fishing Map</a>
               <a href="/fishcast/">FishCast</a>
@@ -40,6 +48,7 @@
               <a href="/qr/">QR Tools</a>
               <a href="/location/">Location Snap</a>
               <a href="/NiagaraP/">Niagara Parking</a>
+              <a href="/yucafantasy/">Yucafantasy</a>
             </div>
           </details>
         </nav>
@@ -47,33 +56,46 @@
 
       <main>
         <section class="hero">
-          <p class="eyebrow">F1 fantasy helper</p>
-          <h1>Yucafantasy</h1>
-          <p class="hero-copy">
-            Pick a Grand Prix, show the poster, and track the fantasy deadline. Sprint weekends lock at Sprint start. Regular weekends lock at Qualy start.
-          </p>
+          <div>
+            <p class="eyebrow">Fantasy deadline tracker</p>
+
+            <h1>Yucafantasy</h1>
+
+            <p class="hero-copy">
+              Pick a Grand Prix, check the poster, and keep an eye on the deadline before the fantasy window closes.
+            </p>
+          </div>
         </section>
 
-        <section class="control-panel" aria-label="Grand Prix selector">
-          <div>
+        <section class="control-panel" aria-label="Grand Prix selector and fantasy deadline">
+          <div class="selector-wrap">
             <label for="gpSelect">Grand Prix</label>
             <select id="gpSelect"></select>
           </div>
+
           <div class="deadline-card" id="deadlineCard">
-            <p id="deadlineLabel">Deadline</p>
-            <strong id="countdown">Loading...</strong>
-            <span id="deadlineStatus">Checking fantasy lock time.</span>
+            <p id="deadlineType" class="deadline-type">Deadline</p>
+            <div id="countdown" class="countdown">Loading...</div>
+            <p id="deadlineMeta" class="deadline-meta"></p>
           </div>
         </section>
 
         <section class="poster-stage" aria-live="polite">
-          <div class="poster-placeholder" id="posterPlaceholder">
-            <p class="eyebrow">Poster pending</p>
-            <h2 id="posterTitle">Yucafantasy</h2>
-            <p id="posterHint">Upload the matching poster image and it will show here automatically.</p>
-            <code id="posterPath"></code>
+          <div class="poster-info">
+            <p id="roundLabel" class="eyebrow">Round</p>
+            <h2 id="gpTitle">Grand Prix</h2>
+            <p id="weekendStatus">The next upcoming race is selected automatically.</p>
           </div>
-          <img id="gpPoster" alt="" hidden />
+
+          <div class="poster-frame">
+            <img id="gpPoster" alt="Selected Grand Prix poster" />
+
+            <div id="posterFallback" class="poster-fallback" hidden>
+              <p>Poster pending</p>
+              <strong id="fallbackTitle"></strong>
+              <span id="fallbackPath"></span>
+            </div>
+          </div>
         </section>
       </main>
     </div>
