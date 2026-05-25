@@ -139,29 +139,33 @@ const NIAGARA_LOCATIONS = [
     name: "Queenston Heights Boat Launch",
     type: "boat-launch",
     address: "Queenston Heights, Niagara River Parkway, Queenston, ON",
-    lat: 43.162638,
-    lng: -79.050669
+    lat: 43.1656534,
+    lng: -79.0524478,
+    mapsUrl: "https://www.google.com/maps/place/Queenston+Docks/@43.1599911,-79.0566559,1860m/data=!3m1!1e3!4m10!1m2!2m1!1sQueenston+Heights+boat+launch!3m6!1s0x89d35dba32214a05:0xe4e1f42f74cefb0d!8m2!3d43.1656534!4d-79.0524478!15sCh1RdWVlbnN0b24gSGVpZ2h0cyBib2F0IGxhdW5jaFofIh1xdWVlbnN0b24gaGVpZ2h0cyBib2F0IGxhdW5jaJIBE2FtZXJpY2FuX3Jlc3RhdXJhbnSaASRDaGREU1VoTk1HOW5TMFZKUTBGblNVUlFlbVJMZDJwQlJSQULgAQD6AQQIURAw!16s%2Fg%2F11b7rxhly9?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Ussher's Creek Boat Launch",
     type: "boat-launch",
     address: "Ussher's Creek Road, Niagara-on-the-Lake, ON",
-    lat: 43.203501,
-    lng: -79.060965
+    lat: 43.0531457,
+    lng: -79.0237832,
+    mapsUrl: "https://www.google.com/maps/place/Ussher's+Creek+Boat+Launch/@43.0531496,-79.0263581,1108m/data=!3m2!1e3!4b1!4m6!3m5!1s0x89d34330c44d1fad:0x9ada2f7e8f286c0d!8m2!3d43.0531457!4d-79.0237832!16s%2Fg%2F11lh4_840_?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Netherby Road Boat Launch",
     type: "boat-launch",
     address: "Netherby Road, Fort Erie, ON",
-    lat: 42.953892,
-    lng: -78.942848
+    lat: 42.9817657,
+    lng: -79.0243148,
+    mapsUrl: "https://www.google.com/maps/place/Netherby+Road+Boat+Launch/@42.9817696,-79.0268897,1109m/data=!3m2!1e3!4b1!4m6!3m5!1s0x89d3413f85f3ea1d:0x4b1ba153c30a341f!8m2!3d42.9817657!4d-79.0243148!16s%2Fg%2F11lh4_7v0w?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Anger Avenue Boat Launch",
     type: "boat-launch",
     address: "Anger Avenue, Fort Erie, ON",
-    lat: 42.903681,
-    lng: -78.924356
+    lat: 42.9407659,
+    lng: -78.9248162,
+    mapsUrl: "https://www.google.com/maps/@42.9407659,-78.9248162,69m/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Nichol's Marine Boat Launch",
@@ -173,8 +177,9 @@ const NIAGARA_LOCATIONS = [
   {
     name: "Niagara Parks Marina",
     type: "boat-launch",
-    address: "Niagara Parks Marina, Fort Erie, ON",
-    lat: 42.884105,
-    lng: -78.924782
+    address: "Niagara Parks Marina at Miller's Creek, Fort Erie, ON",
+    lat: 42.9523158,
+    lng: -78.9716836,
+    mapsUrl: "https://www.google.ca/maps/place/Niagara+Parks+Marina+at+Miller's+Creek/@42.9523197,-78.9742585,17z/data=!3m1!4b1!4m6!3m5!1s0x89d36b2ae677b653:0x18c39132bf588cff!8m2!3d42.9523158!4d-78.9716836!16s%2Fg%2F11c486ycmb?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   }
 ];
