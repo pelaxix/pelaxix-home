@@ -72,8 +72,12 @@ function userIcon() {
   });
 }
 
-function directionsUrl(location) {
+function placeUrl(location) {
   if (location.mapsUrl) return location.mapsUrl;
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(location.lat + "," + location.lng);
+}
+
+function directionsUrl(location) {
   return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(location.lat + "," + location.lng);
 }
 
@@ -82,7 +86,7 @@ function makeLocationCard(location) {
   const textBox = document.createElement("div");
   const kicker = document.createElement("p");
   const title = document.createElement("h3");
-  const address = document.createElement("p");
+  const address = document.createElement("a");
   const distance = document.createElement("p");
   const link = document.createElement("a");
 
@@ -92,7 +96,8 @@ function makeLocationCard(location) {
   kicker.className = "card-kicker";
   kicker.textContent = typeLabel(location.type);
   title.textContent = location.name;
-  address.className = "card-copy";
+  address.className = "card-copy address-link";
+  address.href = placeUrl(location);
   address.textContent = location.address;
 
   const distanceText = formatDistance(location);
