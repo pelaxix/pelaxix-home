@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A simple Pelaxix map for Niagara Parks parking lots and boat launches with quick Google Maps directions." />
+    <title>Pelaxix Niagara Parking</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="niagara.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <a class="home-link" href="/">All projects</a>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Niagara Parks</p>
+          <h1>Parking without the table.</h1>
+          <p class="hero-copy">Tap a pin, get the lot or boat launch, and open Google Maps directions. That is it.</p>
+        </section>
+
+        <section class="map-panel" aria-label="Niagara Parks parking and boat launches map">
+          <div class="toolbar" aria-label="Map filters">
+            <button class="filter-button active" type="button" data-filter="all">All</button>
+            <button class="filter-button" type="button" data-filter="parking">Parking</button>
+            <button class="filter-button" type="button" data-filter="boat-launch">Boat launches</button>
+          </div>
+
+          <div id="map" class="map" aria-label="Map of Niagara Parks parking lots and boat launches"></div>
+
+          <article id="location-card" class="location-card" aria-live="polite">
+            <div>
+              <p class="card-kicker">Pick a pin</p>
+              <h2>Choose a parking lot or boat launch.</h2>
+              <p class="card-copy">The directions button will show up here after you select a spot.</p>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="locations.js"></script>
+    <script src="niagara.js"></script>
+  </body>
+</html>
