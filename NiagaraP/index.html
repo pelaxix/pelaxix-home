@@ -39,13 +39,16 @@
 
           <div id="map" class="map" aria-label="Map of Niagara Parks parking lots and boat launches"></div>
 
-          <article id="location-card" class="location-card" aria-live="polite">
-            <div>
-              <p class="card-kicker">Pick a pin</p>
-              <h2>Choose a parking lot or boat launch.</h2>
-              <p class="card-copy">The directions button will show up here after you select a spot.</p>
+          <section class="locations-panel" aria-live="polite">
+            <div class="locations-heading">
+              <div>
+                <p id="cards-kicker" class="card-kicker">All locations</p>
+                <h2 id="cards-title">Parking lots and boat launches</h2>
+              </div>
+              <button id="show-all-button" class="show-all-button" type="button">Show all</button>
             </div>
-          </article>
+            <div id="location-cards" class="location-cards"></div>
+          </section>
         </section>
       </main>
     </div>
