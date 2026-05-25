@@ -51,8 +51,9 @@ const NIAGARA_LOCATIONS = [
     name: "Rainbow Bridge",
     type: "parking",
     address: "Rainbow Bridge, Niagara Falls, ON",
-    lat: 43.090508,
-    lng: -79.067771
+    lat: 43.0930667,
+    lng: -79.0686039,
+    mapsUrl: "https://www.google.ca/maps/place/Niagara+Parks+Rainbow+Bridge+Parking+Lot/@43.0931057,-79.0682034,165m/data=!3m1!1e3!4m6!3m5!1s0x89d343fd5ee458e9:0x238e31f5653e233e!8m2!3d43.0930667!4d-79.0686039!16s%2Fg%2F11tc1h_pd0?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "White Water Walk",
