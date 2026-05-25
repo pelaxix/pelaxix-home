@@ -35,8 +35,9 @@ const NIAGARA_LOCATIONS = [
     name: "Dufferin Islands",
     type: "parking",
     address: "7400 Portage Road, Niagara Falls, ON",
-    lat: 43.069192,
-    lng: -79.077498
+    lat: 43.0668168,
+    lng: -79.0706608,
+    mapsUrl: "https://www.google.com/maps/place/Niagara+Parks+Dufferin+Islands+Parking/@43.0670372,-79.0709377,69m/data=!3m1!1e3!4m10!1m2!2m1!1sdufferin+islands+parking!3m6!1s0x89d343ae0f11c721:0x21e2278dcaf765a6!8m2!3d43.0668168!4d-79.0706608!15sChhkdWZmZXJpbiBpc2xhbmRzIHBhcmtpbmdaGiIYZHVmZmVyaW4gaXNsYW5kcyBwYXJraW5nkgELcGFya2luZ19sb3SaASRDaGREU1VoTk1HOW5TMFZKUTBGblNVUlBhR0Z5VkhOUlJSQULgAQD6AQQIABAt!16s%2Fg%2F11fxb0y1gb?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Kingsbridge Park",
