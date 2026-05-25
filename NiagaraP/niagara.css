@@ -88,10 +88,7 @@ a {
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 18px;
+  display: block;
   margin-bottom: 14px;
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.32);
@@ -144,24 +141,7 @@ h1 {
 }
 
 .hero-badge {
-  display: grid;
-  gap: 8px;
-  min-width: 154px;
-}
-
-.hero-badge span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  border: 1px solid rgba(255, 253, 248, 0.22);
-  border-radius: 999px;
-  padding: 0 14px;
-  background: rgba(255, 253, 248, 0.12);
-  color: rgba(255, 253, 248, 0.92);
-  font-size: 0.84rem;
-  font-weight: 800;
-  backdrop-filter: blur(12px);
+  display: none;
 }
 
 .map-panel {
@@ -476,37 +456,27 @@ h1 {
   }
 
   .hero {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 16px;
-    border-radius: 26px;
+    padding: 15px 16px;
+    border-radius: 24px;
   }
 
   .eyebrow {
     margin-bottom: 5px;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
   }
 
   h1 {
     max-width: 100%;
-    margin-bottom: 6px;
-    font-size: clamp(2.25rem, 12vw, 3.85rem);
-    line-height: 0.9;
-    letter-spacing: -0.035em;
+    margin-bottom: 7px;
+    font-size: clamp(2.05rem, 8.8vw, 2.85rem);
+    line-height: 0.94;
+    letter-spacing: -0.02em;
   }
 
   .hero-copy {
-    line-height: 1.38;
-  }
-
-  .hero-badge {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    min-width: 0;
-  }
-
-  .hero-badge span {
-    min-height: 34px;
-    padding: 0 10px;
-    font-size: 0.8rem;
+    font-size: 0.98rem;
+    line-height: 1.36;
   }
 
   .map-panel {
@@ -569,10 +539,7 @@ h1 {
   }
 
   h1 {
-    font-size: clamp(2.04rem, 11.4vw, 3.1rem);
-  }
-
-  .hero-badge {
-    gap: 6px;
+    font-size: clamp(1.82rem, 8.5vw, 2.3rem);
+    line-height: 0.98;
   }
 }
