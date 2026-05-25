@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="A simple Pelaxix map for Niagara Parks parking lots and boat launches with quick Google Maps directions." />
-    <title>Parking pass locations</title>
+    <meta name="description" content="A Niagara Pass companion map for parking lots and boat launches with quick Google Maps directions." />
+    <title>Niagara Pass</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="niagara.css" />
   </head>
@@ -16,16 +16,22 @@
     <div class="page-shell">
       <header class="site-header">
         <a class="logo" href="/" aria-label="Pelaxix home">
-          <span class="logo-mark">P</span>
-          <span>Pelaxix</span>
+          <span class="logo-mark">NP</span>
+          <span>Niagara Pass</span>
         </a>
       </header>
 
       <main>
         <section class="hero">
-          <p class="eyebrow">Niagara Parks</p>
-          <h1>Parking pass locations</h1>
-          <p class="hero-copy">Tap a pin, get the lot or boat launch, and open Google Maps directions.</p>
+          <div class="hero-copy-block">
+            <p class="eyebrow">Niagara Parks pass companion</p>
+            <h1>Parking pass locations</h1>
+            <p class="hero-copy">Find nearby parking lots and boat launches, then open Google Maps directions.</p>
+          </div>
+          <div class="hero-badge" aria-label="Map includes parking and boat launches">
+            <span>Parking</span>
+            <span>Boat launches</span>
+          </div>
         </section>
 
         <section class="map-panel" aria-label="Niagara Parks parking and boat launches map">
@@ -35,7 +41,9 @@
             <button class="filter-button" type="button" data-filter="boat-launch">Boat launches</button>
           </div>
 
-          <div id="map" class="map" aria-label="Map of Niagara Parks parking lots and boat launches"></div>
+          <div class="map-shell">
+            <div id="map" class="map" aria-label="Map of Niagara Parks parking lots and boat launches"></div>
+          </div>
 
           <section class="locations-panel" aria-live="polite">
             <div class="locations-heading">
