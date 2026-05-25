@@ -18,6 +18,7 @@ let selectedLocationName = null;
 let activeMarker = null;
 let userMarker = null;
 let userAccuracy = null;
+let userPosition = null;
 
 function typeLabel(type) {
   return type === "boat-launch" ? "Boat launch" : "Parking";
@@ -25,6 +26,28 @@ function typeLabel(type) {
 
 function filteredLocations() {
   return NIAGARA_LOCATIONS.filter((location) => activeFilter === "all" || location.type === activeFilter);
+}
+
+function distanceKm(from, to) {
+  const earthRadiusKm = 6371;
+  const lat1 = from.lat * Math.PI / 180;
+  const lat2 = to.lat * Math.PI / 180;
+  const deltaLat = (to.lat - from.lat) * Math.PI / 180;
+  const deltaLng = (to.lng - from.lng) * Math.PI / 180;
+  const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return earthRadiusKm * c;
+}
+
+function sortedLocations(locations) {
+  if (!userPosition) return locations;
+  return [...locations].sort((a, b) => distanceKm(userPosition, a) - distanceKm(userPosition, b));
+}
+
+function formatDistance(location) {
+  if (!userPosition) return "";
+  const km = distanceKm(userPosition, location);
+  return km < 1 ? Math.round(km * 1000) + " m away" : km.toFixed(1) + " km away";
 }
 
 function markerIcon(location, selected) {
@@ -59,9 +82,10 @@ function makeLocationCard(location) {
   const kicker = document.createElement("p");
   const title = document.createElement("h3");
   const address = document.createElement("p");
+  const distance = document.createElement("p");
   const link = document.createElement("a");
 
-  card.className = "location-card";
+  card.className = "location-card " + (location.type === "boat-launch" ? "boat-card" : "parking-card");
   if (selectedLocationName === location.name) card.classList.add("selected-card");
 
   kicker.className = "card-kicker";
@@ -69,11 +93,20 @@ function makeLocationCard(location) {
   title.textContent = location.name;
   address.className = "card-copy";
   address.textContent = location.address;
+
+  const distanceText = formatDistance(location);
+  if (distanceText) {
+    distance.className = "distance-copy";
+    distance.textContent = distanceText;
+    textBox.append(kicker, title, address, distance);
+  } else {
+    textBox.append(kicker, title, address);
+  }
+
   link.className = "directions-button";
   link.href = directionsUrl(location);
   link.textContent = "Directions";
 
-  textBox.append(kicker, title, address);
   card.append(textBox, link);
   return card;
 }
@@ -84,14 +117,16 @@ function renderLocationCards(locations, titleText, kickerText) {
   cardsKicker.textContent = kickerText;
   showAllButton.hidden = selectedLocationName === null;
 
-  locations.forEach((location) => {
+  sortedLocations(locations).forEach((location) => {
     cardsContainer.append(makeLocationCard(location));
   });
 }
 
 function renderAllCards() {
   selectedLocationName = null;
-  renderLocationCards(filteredLocations(), "Parking lots and boat launches", activeFilter === "all" ? "All locations" : typeLabel(activeFilter));
+  const title = userPosition ? "Nearest locations first" : "Parking lots and boat launches";
+  const kicker = activeFilter === "all" ? "All locations" : typeLabel(activeFilter);
+  renderLocationCards(filteredLocations(), title, kicker);
 }
 
 function renderSelectedCard(location) {
@@ -145,6 +180,7 @@ function showUserLocation(position) {
   const lng = position.coords.longitude;
   const accuracy = position.coords.accuracy || 0;
   const latLng = [lat, lng];
+  userPosition = { lat, lng };
 
   if (!userMarker) {
     userMarker = L.marker(latLng, { icon: userIcon(), zIndexOffset: 1000 }).addTo(map);
@@ -164,7 +200,7 @@ function showUserLocation(position) {
   locateButton.textContent = "Update my location";
   locateButton.classList.remove("loading");
   selectedLocationName = null;
-  showMessage("Your location", "You are on the map.", "The blue dot shows your approximate location. Tap any parking or boat launch pin to filter the cards below.");
+  renderAllCards();
 }
 
 function locationError() {
