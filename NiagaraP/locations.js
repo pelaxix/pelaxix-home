@@ -75,8 +75,9 @@ const NIAGARA_LOCATIONS = [
     name: "Whirlpool Parkette",
     type: "parking",
     address: "Niagara River Parkway near Whirlpool Road, Niagara Falls, ON",
-    lat: 43.122397,
-    lng: -79.066319
+    lat: 43.1247857,
+    lng: -79.0712209,
+    mapsUrl: "https://www.google.com/maps/place/Whirlpool+Parkette/@43.124505,-79.0715873,391m/data=!3m1!1e3!4m6!3m5!1s0x89d35df535feea0d:0xbdea3e3bcb4d4333!8m2!3d43.1247857!4d-79.0712209!16s%2Fg%2F11kjygrxyp?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     name: "Fisherman's Parking Lot",
