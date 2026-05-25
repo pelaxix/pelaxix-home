@@ -10,7 +10,6 @@ const cardsTitle = document.querySelector("#cards-title");
 const cardsContainer = document.querySelector("#location-cards");
 const showAllButton = document.querySelector("#show-all-button");
 const filterButtons = document.querySelectorAll(".filter-button");
-const locateButton = document.querySelector("#locate-button");
 const markerLayer = L.layerGroup().addTo(map);
 const markers = [];
 let activeFilter = "all";
@@ -19,6 +18,7 @@ let activeMarker = null;
 let userMarker = null;
 let userAccuracy = null;
 let userPosition = null;
+let locateControlButton = null;
 
 function typeLabel(type) {
   return type === "boat-launch" ? "Boat launch" : "Parking";
@@ -175,10 +175,16 @@ function addMarkers() {
     markers.push(marker);
   });
 
-  if (markers.length > 0) {
+  if (markers.length > 0 && !userPosition) {
     const bounds = L.latLngBounds(markers.map((marker) => marker.getLatLng()));
     map.fitBounds(bounds, { padding: [28, 28] });
   }
+}
+
+function setLocateLoading(isLoading) {
+  if (!locateControlButton) return;
+  locateControlButton.classList.toggle("locating", isLoading);
+  locateControlButton.title = isLoading ? "Finding you..." : "Recenter on my location";
 }
 
 function showUserLocation(position) {
@@ -203,32 +209,44 @@ function showUserLocation(position) {
   }
 
   map.setView(latLng, Math.max(map.getZoom(), 15));
-  locateButton.textContent = "Update my location";
-  locateButton.classList.remove("loading");
+  setLocateLoading(false);
   selectedLocationName = null;
   renderAllCards();
 }
 
 function locationError() {
-  locateButton.textContent = "Use my location";
-  locateButton.classList.remove("loading");
-  showMessage("Location blocked", "Could not get your location.", "Check your browser location permission and make sure the site is using HTTPS.");
+  setLocateLoading(false);
 }
 
 function requestLocation() {
-  if (!navigator.geolocation) {
-    showMessage("Not supported", "Location is not available.", "This browser does not support geolocation.");
-    return;
-  }
-
-  locateButton.textContent = "Finding you...";
-  locateButton.classList.add("loading");
+  if (!navigator.geolocation) return;
+  setLocateLoading(true);
 
   navigator.geolocation.getCurrentPosition(showUserLocation, locationError, {
     enableHighAccuracy: true,
     timeout: 12000,
     maximumAge: 30000
   });
+}
+
+function addLocateControl() {
+  const LocateControl = L.Control.extend({
+    options: { position: "topleft" },
+    onAdd: function () {
+      const container = L.DomUtil.create("div", "leaflet-bar locate-control");
+      const button = L.DomUtil.create("button", "locate-control-button", container);
+      button.type = "button";
+      button.title = "Recenter on my location";
+      button.setAttribute("aria-label", "Recenter on my location");
+      button.textContent = "◎";
+      L.DomEvent.disableClickPropagation(container);
+      L.DomEvent.on(button, "click", requestLocation);
+      locateControlButton = button;
+      return container;
+    }
+  });
+
+  map.addControl(new LocateControl());
 }
 
 filterButtons.forEach((button) => {
@@ -248,7 +266,7 @@ showAllButton.addEventListener("click", () => {
   renderAllCards();
 });
 
-locateButton.addEventListener("click", requestLocation);
-
+addLocateControl();
 addMarkers();
 renderAllCards();
+requestLocation();
