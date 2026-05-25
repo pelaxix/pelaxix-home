@@ -183,8 +183,8 @@ h1 {
 
 .map {
   width: 100%;
-  height: min(66vh, 640px);
-  min-height: 440px;
+  height: min(46vh, 440px);
+  min-height: 300px;
   background: var(--surface-soft);
 }
 
@@ -225,21 +225,36 @@ h1 {
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(219, 238, 233, 0.62), rgba(255, 253, 248, 0.96));
+}
+
+.location-card.parking-card {
+  border-color: rgba(47, 143, 135, 0.26);
+  background: linear-gradient(180deg, rgba(47, 143, 135, 0.14), rgba(255, 253, 248, 0.97));
+}
+
+.location-card.boat-card {
+  border-color: rgba(217, 111, 69, 0.30);
+  background: linear-gradient(180deg, rgba(217, 111, 69, 0.16), rgba(255, 253, 248, 0.97));
 }
 
 .location-card.selected-card {
-  border-color: rgba(217, 111, 69, 0.52);
-  background: linear-gradient(180deg, rgba(217, 111, 69, 0.14), rgba(255, 253, 248, 0.98));
+  outline: 3px solid rgba(11, 47, 51, 0.12);
 }
 
 .card-kicker {
   margin-bottom: 8px;
-  color: var(--accent-warm);
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.parking-card .card-kicker {
+  color: var(--accent-strong);
+}
+
+.boat-card .card-kicker {
+  color: var(--accent-warm);
 }
 
 .location-card h3 {
@@ -254,6 +269,13 @@ h1 {
   margin-bottom: 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.distance-copy {
+  margin: 8px 0 0;
+  color: var(--text-strong);
+  font-size: 0.9rem;
+  font-weight: 900;
 }
 
 .message-copy {
@@ -272,6 +294,15 @@ h1 {
   color: var(--surface);
   font-weight: 900;
   box-shadow: 0 14px 30px rgba(217, 111, 69, 0.24);
+}
+
+.parking-card .directions-button {
+  background: var(--accent);
+  box-shadow: 0 14px 30px rgba(47, 143, 135, 0.22);
+}
+
+.boat-card .directions-button {
+  background: var(--accent-warm);
 }
 
 .custom-marker-wrapper {
@@ -377,8 +408,8 @@ h1 {
   }
 
   .map {
-    height: 58vh;
-    min-height: 380px;
+    height: 42vh;
+    min-height: 280px;
   }
 
   .locations-panel {
