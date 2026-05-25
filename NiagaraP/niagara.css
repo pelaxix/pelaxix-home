@@ -141,7 +141,8 @@ h1 {
   border-bottom: 1px solid var(--line);
 }
 
-.filter-button {
+.filter-button,
+.locate-button {
   min-height: 42px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -158,6 +159,16 @@ h1 {
   border-color: transparent;
   background: var(--accent);
   color: var(--surface);
+}
+
+.locate-button {
+  margin-left: auto;
+  background: var(--text-strong);
+  color: var(--surface);
+}
+
+.locate-button.loading {
+  opacity: 0.78;
 }
 
 .map {
@@ -247,6 +258,23 @@ h1 {
   transform: translate(-4px, -4px);
 }
 
+.user-marker {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 4px solid var(--surface);
+  border-radius: 999px;
+  background: #2d7ff9;
+  box-shadow: 0 0 0 8px rgba(45, 127, 249, 0.18), 0 10px 24px rgba(11, 47, 51, 0.24);
+}
+
+.user-accuracy {
+  fill: #2d7ff9;
+  fill-opacity: 0.1;
+  stroke: #2d7ff9;
+  stroke-opacity: 0.34;
+}
+
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
   background: var(--surface);
@@ -284,10 +312,16 @@ h1 {
     padding: 12px;
   }
 
-  .filter-button {
+  .filter-button,
+  .locate-button {
     min-height: 38px;
     padding: 0 12px;
     font-size: 0.86rem;
+  }
+
+  .locate-button {
+    width: 100%;
+    margin-left: 0;
   }
 
   .map {
