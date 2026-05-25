@@ -1,8 +1,8 @@
 const map = L.map("map").setView([43.0896, -79.0769], 12);
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
   maxZoom: 19,
-  attribution: "OpenStreetMap contributors"
+  attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
 }).addTo(map);
 
 const cardsKicker = document.querySelector("#cards-kicker");
