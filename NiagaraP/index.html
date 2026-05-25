@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta name="description" content="A Niagara Parks parking locator map for parking lots and boat launches with quick Google Maps directions." />
     <meta name="theme-color" content="#007965" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -16,8 +16,27 @@
       if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) {
         document.documentElement.classList.add("standalone-app");
       }
+
+      document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("gesturechange", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("gestureend", (event) => event.preventDefault(), { passive: false });
+
+      let lastTouchEnd = 0;
+      document.addEventListener("touchend", (event) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) event.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
     </script>
     <style>
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+        overscroll-behavior-x: none;
+        touch-action: manipulation;
+      }
+
       @media all and (display-mode: standalone) {
         .site-header {
           display: none;
