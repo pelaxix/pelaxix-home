@@ -44,8 +44,8 @@ function renderCard(location) {
   address.className = "card-copy";
   address.textContent = location.address;
   link.className = "directions-button";
-  link.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(location.lat + "," + location.lng);
-  link.textContent = "Open in Google Maps";
+  link.href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(location.lat + "," + location.lng);
+  link.textContent = "Directions";
 
   textBox.append(kicker, title, address);
   card.append(textBox, link);
