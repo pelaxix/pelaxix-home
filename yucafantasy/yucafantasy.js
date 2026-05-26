@@ -31,6 +31,10 @@ function orderedGps() {
   return gps.slice().sort((a, b) => a.round - b.round);
 }
 
+function formatRound(round) {
+  return String(round).padStart(2, "0");
+}
+
 function nextGp() {
   const now = new Date();
   return orderedGps().find((gp) => new Date(gp.raceStartUtc) > now) || gps[gps.length - 1];
@@ -58,7 +62,7 @@ function renderSelect() {
   orderedGps().forEach((gp) => {
     const option = document.createElement("option");
     option.value = gp.id;
-    option.textContent = `R${gp.round} - ${gp.label}`;
+    option.textContent = `Cobitos ${formatRound(gp.round)} - ${gp.label}`;
     gpSelect.appendChild(option);
   });
 }
