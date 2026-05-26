@@ -36,21 +36,26 @@ function analyzeConditions(weather, water, target) {
   if (best.isPrimeWindow) { score += .5; reasons.push(`${best.label.toLowerCase()} is close to a low-light feeding window`); }
   if (pressureTrend.kind === 'falling') { score += .35; reasons.push('pressure is falling, which can help activity'); }
   if (pressureTrend.kind === 'rising') { score -= .45; reasons.push('pressure is rising, which can make fish tighter to cover'); }
-  if (moon.strength === 'major') { score += .2; reasons.push(`${moon.name.toLowerCase()} adds a small moon-phase nudge`); }
+  if (moon.strength === 'major') { score += .15; reasons.push(`${moon.name.toLowerCase()} adds a small moon-phase nudge`); }
   if (season.kind === 'shoulder') { score += .15; reasons.push(`${season.name.toLowerCase()} seasonal pattern can be productive`); }
   if (season.kind === 'tough') { score -= .65; reasons.push(`${season.name.toLowerCase()} seasonal pattern can be less forgiving`); }
 
-  const selectedTarget = target === 'auto'
-    ? pickBestScoringTargetWithFactors(water, temp, wind, clouds, hour, rain, score, season)
-    : target;
-
+  const speciesRanking = rankSpeciesForSpot({ water, temp, wind, clouds, hour, rain, baseScore: score, season, targetPreference: target });
+  const mostLikely = speciesRanking[0];
+  const bestActive = pickBestActiveTarget(speciesRanking, target);
+  const wildcard = pickWildcardTarget(speciesRanking, mostLikely, bestActive);
+  const selectedTarget = bestActive.target;
   const speciesAdjustment = getBalancedSpeciesAdjustment(selectedTarget, water, temp, wind, clouds, hour, rain);
   score += speciesAdjustment.value;
+
+  reasons.push(buildEncounterReason(mostLikely));
+  reasons.push(buildActiveReason(bestActive));
+  if (wildcard) reasons.push(buildWildcardReason(wildcard));
   reasons.push(speciesAdjustment.reason);
 
   score = normalizeFishCastScore(score);
   const rating = score >= 9 ? 'Great' : score >= 7 ? 'Good' : score >= 5 ? 'Okay' : 'Rough';
-  const verdict = score >= 9 ? 'Strong conditions, worth making time for.' : score >= 7 ? 'Good enough to be worth a shot.' : score >= 5 ? 'Fishable, but manage expectations.' : 'Probably not ideal.';
+  const verdict = buildRealisticVerdict(score, mostLikely, bestActive, speciesRanking.confidence);
   const lures = pickLures(selectedTarget, water, wind, clouds, hour, rain, temp);
 
   return {
@@ -59,10 +64,15 @@ function analyzeConditions(weather, water, target) {
     verdict,
     bestWindow: best.label,
     target: selectedTarget,
+    mostLikely: mostLikely.target,
+    bestActiveTarget: bestActive.target,
+    wildcardTarget: wildcard?.target || null,
+    confidence: speciesRanking.confidence,
     tryThis: lures[0].name,
-    watch: getWatchOut(wind, rain, clouds, pressureTrend, season),
+    watch: getWatchOut(wind, rain, clouds, pressureTrend, season, wildcard),
     lures,
     reasons,
+    speciesRanking,
     pressureTrend,
     moon,
     season
@@ -84,6 +94,222 @@ function getBalancedBaseScore(hour, temp, wind, clouds, rain, pressure) {
   if (temp < 8 || temp > 31) { score -= .9; reasons.push('temperature is on the tougher side'); }
 
   return { score, reasons };
+}
+
+function rankSpeciesForSpot({ water, temp, wind, clouds, hour, rain, baseScore, season, targetPreference }) {
+  const candidates = ['bass', 'pike', 'trout', 'panfish', 'carp-catfish'];
+  const spotContext = getCurrentSpotContext();
+  const lowLight = hour < 9 || hour >= 18;
+
+  const ranked = candidates.map((candidate) => {
+    const presence = getSpotPresenceScore(candidate, spotContext);
+    const waterFit = getWaterFitScore(candidate, water);
+    const seasonFit = getSeasonFitScore(candidate, season, temp);
+    const accessibility = getShoreAccessibilityScore(candidate, water, temp, wind, lowLight);
+    const encounter = getEncounterBias(candidate, water, spotContext);
+    const condition = getBalancedSpeciesAdjustment(candidate, water, temp, wind, clouds, hour, rain);
+    const targetBoost = targetPreference !== 'auto' && speciesMatches(candidate, targetPreference) ? 1.5 : 0;
+
+    const rawScore = baseScore + presence.value + waterFit.value + seasonFit.value + accessibility.value + encounter.value + condition.value + targetBoost;
+
+    return {
+      target: candidate,
+      score: normalizeSpeciesScore(rawScore),
+      rawScore,
+      localPresence: presence.label,
+      notes: [presence.reason, waterFit.reason, seasonFit.reason, accessibility.reason, encounter.reason, condition.reason].filter(Boolean)
+    };
+  });
+
+  ranked.sort((a, b) => b.rawScore - a.rawScore || targetTieBreaker(a.target, water) - targetTieBreaker(b.target, water));
+  ranked.confidence = getRankingConfidence(spotContext, ranked);
+  ranked.spotContext = spotContext;
+  return ranked;
+}
+
+function getCurrentSpotContext() {
+  const hasSavedSpot = locationMode?.value === 'spot';
+  const spot = hasSavedSpot ? getSelectedSpot() : null;
+  const species = Array.isArray(spot?.species) ? spot.species.map(normalizeSpeciesText) : [];
+
+  return {
+    hasSavedSpot,
+    spotName: spot?.name || null,
+    species,
+    hasKnownSpecies: species.length > 0
+  };
+}
+
+function getSpotPresenceScore(candidate, context) {
+  if (!context.hasSavedSpot) {
+    return {
+      value: 0,
+      label: 'unknown',
+      reason: 'local species are unknown for this location, so the recommendation is more conservative'
+    };
+  }
+
+  if (!context.hasKnownSpecies) {
+    return {
+      value: -.5,
+      label: 'unknown',
+      reason: 'this saved spot does not list known species yet'
+    };
+  }
+
+  if (context.species.some((species) => speciesMatches(candidate, species))) {
+    return {
+      value: 4,
+      label: 'known',
+      reason: `${formatTarget(candidate)} is listed for this spot`
+    };
+  }
+
+  return {
+    value: -3,
+    label: 'not listed',
+    reason: `${formatTarget(candidate)} is not listed for this spot, so it is treated as less likely`
+  };
+}
+
+function getWaterFitScore(candidate, water) {
+  const table = {
+    bass: { lake: 1.5, harbour: 1.25, river: .75, unknown: .25 },
+    pike: { lake: 1.25, harbour: 1.25, river: .25, unknown: 0 },
+    trout: { river: 1.75, lake: .5, harbour: -1, unknown: 0 },
+    panfish: { lake: 1.5, harbour: 1, river: .5, unknown: .5 },
+    'carp-catfish': { harbour: 1.25, river: 1, lake: .75, unknown: .25 }
+  };
+  const value = table[candidate]?.[water] ?? 0;
+  return {
+    value,
+    reason: value > 1 ? `${water} water is a strong fit for ${formatTarget(candidate)}` : value < 0 ? `${water} water is not a great fit for ${formatTarget(candidate)}` : ''
+  };
+}
+
+function getSeasonFitScore(candidate, season, temp) {
+  let value = 0;
+  let reason = '';
+
+  if (candidate === 'trout') {
+    if (season.name === 'Spring' || season.name === 'Fall') { value += 1; reason = 'spring and fall are better trout windows'; }
+    if (season.name === 'Summer' && temp > 22) { value -= 1.5; reason = 'warm summer conditions make trout less realistic from shore'; }
+  }
+
+  if (candidate === 'pike') {
+    if (season.name === 'Spring' || season.name === 'Fall') { value += .75; reason = 'pike are often more practical in cooler shoulder seasons'; }
+    if (season.name === 'Summer' && temp > 27) { value -= .75; reason = 'hot summer weather can push pike out of easy shore range'; }
+  }
+
+  if (candidate === 'bass') {
+    if (season.name === 'Summer' || season.name === 'Fall') { value += .75; reason = 'bass are a reliable warm-season target'; }
+    if (season.name === 'Winter') { value -= 1.25; reason = 'winter makes bass less reliable'; }
+  }
+
+  if (candidate === 'panfish') {
+    if (season.name !== 'Winter') { value += .5; reason = 'panfish are usually a forgiving open-water target'; }
+  }
+
+  if (candidate === 'carp-catfish') {
+    if (temp >= 18) { value += .75; reason = 'warmer water improves carp and catfish odds'; }
+    if (temp < 10) { value -= .75; reason = 'cold water can slow carp and catfish down'; }
+  }
+
+  return { value, reason };
+}
+
+function getShoreAccessibilityScore(candidate, water, temp, wind, lowLight) {
+  let value = 0;
+  let reason = '';
+
+  if (candidate === 'panfish') {
+    value += .75;
+    reason = 'panfish are usually easier to reach from shore';
+  }
+
+  if (candidate === 'bass') {
+    value += .45;
+    reason = 'bass are a practical shore target around cover and edges';
+  }
+
+  if (candidate === 'pike') {
+    value += water === 'lake' || water === 'harbour' ? .15 : -.35;
+    if (wind > 18) reason = 'wind can create pike opportunity, but only if weeds or ambush edges are reachable';
+  }
+
+  if (candidate === 'trout' && temp > 20 && water !== 'river') {
+    value -= 1;
+    reason = 'trout may be deeper or less reachable from shore in warm non-river water';
+  }
+
+  if (candidate === 'carp-catfish') {
+    value += lowLight ? .35 : .1;
+    reason = 'carp and catfish can be practical from shore with slower bottom presentations';
+  }
+
+  return { value, reason };
+}
+
+function getEncounterBias(candidate, water, context) {
+  if (context.hasSavedSpot && context.hasKnownSpecies) return { value: 0, reason: '' };
+
+  const fallback = {
+    bass: .5,
+    panfish: .75,
+    'carp-catfish': .2,
+    pike: -.35,
+    trout: water === 'river' ? .2 : -.75
+  };
+
+  const value = fallback[candidate] ?? 0;
+  return {
+    value,
+    reason: value > 0 ? `${formatTarget(candidate)} is a more common casual shore target when local species are unknown` : ''
+  };
+}
+
+function pickBestActiveTarget(ranking, targetPreference) {
+  if (targetPreference !== 'auto') {
+    const preferred = ranking.find((item) => speciesMatches(item.target, targetPreference));
+    if (preferred) return preferred;
+  }
+
+  const sportTargets = ranking.filter((item) => ['bass', 'pike', 'trout', 'carp-catfish'].includes(item.target));
+  return sportTargets[0] || ranking[0];
+}
+
+function pickWildcardTarget(ranking, mostLikely, bestActive) {
+  return ranking.find((item) => item.target !== mostLikely.target && item.target !== bestActive.target && item.score >= 5) || null;
+}
+
+function getRankingConfidence(context, ranking) {
+  if (!context.hasSavedSpot) return 'Low';
+  if (!context.hasKnownSpecies) return 'Medium-low';
+  const gap = ranking[0]?.rawScore - ranking[1]?.rawScore;
+  if (gap >= 2) return 'High';
+  return 'Medium';
+}
+
+function buildEncounterReason(mostLikely) {
+  return `most likely encounter: ${formatTarget(mostLikely.target)} (${mostLikely.localPresence})`;
+}
+
+function buildActiveReason(bestActive) {
+  return `best active target: ${formatTarget(bestActive.target)} based on today’s practical conditions`;
+}
+
+function buildWildcardReason(wildcard) {
+  return `wildcard option: ${formatTarget(wildcard.target)} if you find the right cover or depth`;
+}
+
+function buildRealisticVerdict(score, mostLikely, bestActive, confidence) {
+  const likely = formatTarget(mostLikely.target);
+  const active = formatTarget(bestActive.target);
+
+  if (score >= 9) return `Strong outing. ${likely} is the most realistic catch, with ${active} as the best active target.`;
+  if (score >= 7) return `Worth a shot. Expect ${likely} first, but target ${active} if you want the better bite.`;
+  if (score >= 5) return `Fishable, but manage expectations. ${likely} is the safest play.`;
+  return `Tough conditions. ${likely} is still the most realistic option, confidence ${confidence.toLowerCase()}.`;
 }
 
 function getBalancedSpeciesAdjustment(target, water, temp, wind, clouds, hour, rain) {
@@ -153,20 +379,8 @@ function normalizeFishCastScore(rawScore) {
   return Math.max(1, Math.min(10, rounded));
 }
 
-function pickBestScoringTargetWithFactors(water, temp, wind, clouds, hour, rain, baseScore, season) {
-  const candidates = ['bass', 'pike', 'trout', 'panfish', 'carp-catfish'];
-  const ranked = candidates.map((candidate) => {
-    const adjustment = getBalancedSpeciesAdjustment(candidate, water, temp, wind, clouds, hour, rain);
-    let score = baseScore + adjustment.value;
-    if (candidate === 'trout' && season.name === 'Summer') score -= .35;
-    if (candidate === 'carp-catfish' && season.name === 'Summer') score += .2;
-    if (candidate === 'pike' && season.name === 'Spring') score += .2;
-    if (candidate === 'bass' && (season.name === 'Summer' || season.name === 'Fall')) score += .15;
-    return { target: candidate, score: normalizeFishCastScore(score) };
-  });
-
-  ranked.sort((a, b) => b.score - a.score || targetTieBreaker(a.target, water) - targetTieBreaker(b.target, water));
-  return ranked[0].target;
+function normalizeSpeciesScore(rawScore) {
+  return Math.max(1, Math.min(10, Math.round(rawScore)));
 }
 
 function getPressureTrend(weather, now, currentPressure) {
@@ -219,13 +433,26 @@ function getSeason(date) {
   return { name: 'Winter', kind: 'tough' };
 }
 
-function getWatchOut(wind, rain, clouds, pressureTrend, season) {
+function getWatchOut(wind, rain, clouds, pressureTrend, season, wildcard) {
   if (wind > 25) return 'Heavy wind';
   if (rain > 50) return 'Rain risk';
   if (pressureTrend.kind === 'rising') return 'Rising pressure';
   if (season.kind === 'tough') return 'Cold season';
   if (clouds < 25) return 'Bright sun';
+  if (wildcard) return `${formatTarget(wildcard.target)} is a wildcard`;
   return 'Slow areas';
+}
+
+function normalizeSpeciesText(value) {
+  return String(value || '').toLowerCase().trim();
+}
+
+function speciesMatches(candidate, value) {
+  const text = normalizeSpeciesText(value);
+  if (!text) return false;
+  if (candidate === 'carp-catfish') return text.includes('carp') || text.includes('catfish') || text.includes('channel catfish');
+  if (candidate === 'panfish') return text.includes('panfish') || text.includes('bluegill') || text.includes('sunfish') || text.includes('perch') || text.includes('crappie') || text.includes('rock bass');
+  return text.includes(candidate);
 }
 
 function renderResults(weather, analysis) {
@@ -234,7 +461,7 @@ function renderResults(weather, analysis) {
   verdictText.textContent = analysis.verdict;
   scoreBadge.textContent = `${analysis.score}/10`;
   bestWindow.textContent = analysis.bestWindow;
-  targetText.textContent = formatTarget(analysis.target);
+  targetText.textContent = buildTargetSummary(analysis);
   tryText.textContent = analysis.tryThis;
   watchText.textContent = analysis.watch;
 
@@ -252,9 +479,24 @@ function renderResults(weather, analysis) {
   rainFact.textContent = `${weather.daily.precipitation_probability_max?.[0] ?? 0}%`;
   pressureFact.textContent = `${Math.round(current.pressure_msl)} hPa, ${analysis.pressureTrend.label}`;
   sunsetFact.textContent = `${formatTime(weather.daily.sunset?.[0])} · ${analysis.moon.name}`;
-  whyText.textContent = analysis.reasons.length ? analysis.reasons.join(', ') + '.' : 'Neutral conditions with no major weather advantage or penalty.';
+  whyText.textContent = buildWhyText(analysis);
 
   resultCard.hidden = false;
   lureCard.hidden = false;
   weatherCard.hidden = false;
+}
+
+function buildTargetSummary(analysis) {
+  const likely = formatTarget(analysis.mostLikely || analysis.target);
+  const active = formatTarget(analysis.bestActiveTarget || analysis.target);
+  if (likely === active) return `${likely} · ${analysis.confidence} confidence`;
+  return `Likely ${likely} · Target ${active}`;
+}
+
+function buildWhyText(analysis) {
+  const rankingText = Array.isArray(analysis.speciesRanking)
+    ? `Species ranking: ${analysis.speciesRanking.slice(0, 3).map((item) => `${formatTarget(item.target)} ${item.score}/10`).join(', ')}.`
+    : '';
+  const reasonsText = analysis.reasons.length ? analysis.reasons.join(', ') + '.' : 'Neutral conditions with no major weather advantage or penalty.';
+  return [rankingText, reasonsText].filter(Boolean).join(' ');
 }
