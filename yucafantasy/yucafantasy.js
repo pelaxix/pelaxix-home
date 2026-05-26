@@ -57,6 +57,31 @@ function formatCountdown(parts) {
   return `${parts.days}d ${parts.hours}h ${parts.minutes}m ${parts.seconds}s`;
 }
 
+function weekendStartDate(gp) {
+  const start = new Date(gp.raceStartUtc);
+  start.setUTCDate(start.getUTCDate() - 2);
+  return start;
+}
+
+function monthName(date) {
+  return new Intl.DateTimeFormat("es-MX", { month: "long", timeZone: "UTC" }).format(date);
+}
+
+function formatWeekendRange(gp) {
+  const start = weekendStartDate(gp);
+  const end = new Date(gp.raceStartUtc);
+  const startDay = start.getUTCDate();
+  const endDay = end.getUTCDate();
+  const startMonth = monthName(start);
+  const endMonth = monthName(end);
+
+  if (startMonth === endMonth) {
+    return `Del ${startDay} al ${endDay} de ${endMonth}`;
+  }
+
+  return `Del ${startDay} de ${startMonth} al ${endDay} de ${endMonth}`;
+}
+
 function renderSelect() {
   gpSelect.innerHTML = "";
   orderedGps().forEach((gp) => {
@@ -77,7 +102,7 @@ function renderPoster(gp) {
 
 function renderStatus(gp) {
   if (deadlineType) deadlineType.textContent = gp.hasSprint ? "Cierre: Sprint" : "Cierre: Qualy";
-  if (deadlineMeta) deadlineMeta.textContent = "";
+  if (deadlineMeta) deadlineMeta.textContent = formatWeekendRange(gp);
 }
 
 function updateCountdown() {
