@@ -27,11 +27,13 @@ const whyText = document.querySelector('#whyText');
 
 let fishingSpots = [];
 
-locationMode.addEventListener('change', () => {
-  spotPickerLabel.hidden = locationMode.value !== 'spot';
+locationMode?.addEventListener('change', () => {
+  if (spotPickerLabel) {
+    spotPickerLabel.hidden = locationMode.value !== 'spot';
+  }
 });
 
-spotPicker.addEventListener('change', () => {
+spotPicker?.addEventListener('change', () => {
   const spot = getSelectedSpot();
   if (!spot) return;
   waterType.value = inferWaterType(spot.category);
@@ -40,8 +42,8 @@ spotPicker.addEventListener('change', () => {
   }
 });
 
-checkButton.addEventListener('click', runFishCast);
-loadFishingSpots();
+checkButton?.addEventListener('click', runFishCast);
+if (spotPicker) loadFishingSpots();
 
 async function loadFishingSpots() {
   try {
@@ -51,7 +53,9 @@ async function loadFishingSpots() {
     spotPicker.innerHTML = fishingSpots.map((spot) => `<option value="${escapeHtml(spot.id)}">${escapeHtml(spot.name)}</option>`).join('');
   } catch (error) {
     console.error(error);
-    spotPicker.innerHTML = '<option value="">No spots found</option>';
+    if (spotPicker) {
+      spotPicker.innerHTML = '<option value="">No spots found</option>';
+    }
   }
 }
 
@@ -75,7 +79,7 @@ async function runFishCast() {
 
 function setLoading(isLoading) {
   checkButton.disabled = isLoading;
-  checkButton.textContent = isLoading ? 'Checking...' : 'Check conditions';
+  checkButton.textContent = isLoading ? 'Checking...' : 'Get FishCast';
 }
 
 function getCoordinates() {
@@ -99,6 +103,7 @@ function getCoordinates() {
 }
 
 function getSelectedSpot() {
+  if (!spotPicker) return null;
   return fishingSpots.find((spot) => spot.id === spotPicker.value);
 }
 
