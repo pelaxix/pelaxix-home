@@ -3,12 +3,20 @@ const FROM_STOP = "WR";
 const TO_STOP = "UN";
 const START_TIME = "0700";
 const LOOKUP_TIMEOUT_MS = 10000;
+const TARGET_DEPARTURE = { hour: 7, minute: 54 };
+const TARGET_ARRIVAL = { hour: 9, minute: 4 };
+const LIVE_LOOKAHEAD_MINUTES = 30;
+const REFUND_MINUTES = 15;
 
 const apiStatus = document.querySelector("#apiStatus");
 const statusCard = document.querySelector("#statusCard");
 const liveDelay = document.querySelector("#liveDelay");
 const liveUpdated = document.querySelector("#liveUpdated");
 const liveDetails = document.querySelector("#liveDetails");
+const delayedGrid = document.querySelector("#delayedGrid");
+const delayedDeparture = document.querySelector("#delayedDeparture");
+const delayedArrival = document.querySelector("#delayedArrival");
+const refundEligible = document.querySelector("#refundEligible");
 
 let lookupFinished = false;
 
@@ -16,6 +24,7 @@ document.addEventListener("DOMContentLoaded", checkTrain1960);
 
 async function checkTrain1960() {
   lookupFinished = false;
+  hideDelayedGrid();
   setStatusState("checking", "CHECKING...", "Checking the current delay status.");
   liveUpdated.textContent = "-";
   liveDetails.innerHTML = "";
@@ -55,14 +64,20 @@ async function checkTrain1960() {
       throw new Error(data.error || `HTTP ${response.status}`);
     }
 
-    liveUpdated.textContent = data.checkedAt ? formatTime(new Date(data.checkedAt)) : formatTime(new Date());
+    const now = new Date();
+    liveUpdated.textContent = data.checkedAt ? formatTime(new Date(data.checkedAt)) : formatTime(now);
 
     if (!data.trainStatus) {
-      setStatusState("not-checked", "NOT LISTED", "No live in-service record found for this train yet. Try refreshing closer to departure.");
+      applyNotLiveStatus(now);
     } else {
-      const delayText = formatDelay(data.delaySeconds);
-      const state = getDelayState(data.delaySeconds);
+      const delaySeconds = Number(data.delaySeconds || 0);
+      const delayText = formatDelay(delaySeconds);
+      const state = getDelayState(delaySeconds);
       setStatusState(state, delayText, "Live GO status checked for the West Harbour to Union trip.");
+
+      if (delaySeconds > 60) {
+        showDelayedGrid(delaySeconds);
+      }
     }
 
     liveDetails.innerHTML = `<strong>Function response:</strong><br>${escapeHtml(JSON.stringify(data, null, 2))}`;
@@ -81,6 +96,61 @@ async function checkTrain1960() {
       setStatusState("error", "ERROR", `Live lookup failed: ${error.message}`);
     }
   }
+}
+
+function applyNotLiveStatus(now) {
+  const departure = getTodayDateAt(TARGET_DEPARTURE.hour, TARGET_DEPARTURE.minute, now);
+  const arrival = getTodayDateAt(TARGET_ARRIVAL.hour, TARGET_ARRIVAL.minute, now);
+  const liveWindowStart = new Date(departure.getTime() - LIVE_LOOKAHEAD_MINUTES * 60 * 1000);
+
+  if (now < liveWindowStart) {
+    setStatusState(
+      "scheduled",
+      "SCHEDULED",
+      "Live tracking usually starts about 30 minutes before departure. Check back closer to 7:54 AM."
+    );
+    return;
+  }
+
+  if (now > arrival) {
+    setStatusState(
+      "ended",
+      "TRIP ENDED",
+      "This trip is finished, so GO no longer lists it in the live feed."
+    );
+    return;
+  }
+
+  setStatusState(
+    "not-checked",
+    "NOT LISTED",
+    "This train is inside the expected live window, but GO is not listing it yet. Refresh in a few minutes."
+  );
+}
+
+function showDelayedGrid(delaySeconds) {
+  const delayMinutes = Math.max(1, Math.round(Number(delaySeconds) / 60));
+  const now = new Date();
+  const targetDeparture = getTodayDateAt(TARGET_DEPARTURE.hour, TARGET_DEPARTURE.minute, now);
+  const targetArrival = getTodayDateAt(TARGET_ARRIVAL.hour, TARGET_ARRIVAL.minute, now);
+
+  delayedDeparture.textContent = formatTime(new Date(targetDeparture.getTime() + delayMinutes * 60 * 1000));
+  delayedArrival.textContent = formatTime(new Date(targetArrival.getTime() + delayMinutes * 60 * 1000));
+  refundEligible.textContent = delayMinutes >= REFUND_MINUTES ? "YES" : "NO";
+  delayedGrid.hidden = false;
+}
+
+function hideDelayedGrid() {
+  delayedGrid.hidden = true;
+  delayedDeparture.textContent = "-";
+  delayedArrival.textContent = "-";
+  refundEligible.textContent = "NO";
+}
+
+function getTodayDateAt(hour, minute, baseDate) {
+  const date = new Date(baseDate);
+  date.setHours(hour, minute, 0, 0);
+  return date;
 }
 
 function formatDelay(seconds) {
@@ -108,7 +178,7 @@ function getDelayState(seconds) {
 }
 
 function setStatusState(state, statusText, message) {
-  statusCard.classList.remove("not-checked", "checking", "on-time", "delayed", "error");
+  statusCard.classList.remove("not-checked", "checking", "on-time", "delayed", "error", "scheduled", "ended");
   statusCard.classList.add(state);
   liveDelay.textContent = statusText;
   apiStatus.textContent = message;
