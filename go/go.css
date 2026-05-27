@@ -59,10 +59,15 @@ h2 { margin-bottom: 16px; color: var(--text-strong); font-size: clamp(1.8rem, 4v
 .status-hero.delayed .big-status { color: var(--danger); }
 .status-hero.error .big-status { color: var(--danger); }
 .status-hero.not-checked .big-status { color: var(--warning); }
+.status-hero.scheduled .big-status { color: var(--accent); }
+.status-hero.ended .big-status { color: var(--muted); }
 .status-message { margin-bottom: 6px; }
 .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .status-card { background: linear-gradient(180deg, #ffffff, #f3faf5); }
+.delayed-grid[hidden] { display: none; }
+.delayed-card { border-color: rgba(198, 40, 40, 0.24); background: linear-gradient(180deg, #ffffff, #fff5f5); }
 .status-card span { display: block; margin-bottom: 8px; color: var(--text-strong); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.05em; }
+.delayed-card span { color: var(--danger); }
 .single-train-form { margin-top: 4px; }
 .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; border: 0; border-radius: 999px; padding: 0 22px; cursor: pointer; font-weight: 800; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease; }
 .button:hover { transform: translateY(-2px); }
