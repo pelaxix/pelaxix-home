@@ -7,13 +7,15 @@ export async function onRequestGet(context) {
   const startTime = (url.searchParams.get("startTime") || "0700").trim();
   const tripNumber = (url.searchParams.get("tripNumber") || "").trim();
 
-  const apiKey = context.env.GO_API_KEY;
+  const apiKey = getApiKey(context);
 
   if (!apiKey) {
     return jsonResponse(
       {
         ok: false,
-        error: "GO_API_KEY is not configured in Cloudflare Pages environment variables."
+        error:
+          "GO_API_KEY is missing at runtime. Confirm the secret exists in the same Cloudflare Pages environment as this deployment, then redeploy the site so the Function can read it.",
+        availableBindings: getAvailableBindingNames(context)
       },
       500
     );
@@ -50,6 +52,21 @@ export async function onRequestGet(context) {
       500
     );
   }
+}
+
+function getApiKey(context) {
+  return (
+    context?.env?.GO_API_KEY ||
+    context?.env?.METROLINX_API_KEY ||
+    globalThis?.GO_API_KEY ||
+    ""
+  )
+    .toString()
+    .trim();
+}
+
+function getAvailableBindingNames(context) {
+  return Object.keys(context?.env || {}).sort();
 }
 
 async function findTargetJourney({ apiKey, fromStop, toStop, startTime }) {
