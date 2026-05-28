@@ -2,6 +2,7 @@ const API_BASE = "https://api.openmetrolinx.com/OpenDataAPI/api/V1";
 
 export async function onRequestGet(context) {
   const url = new URL(context.request.url);
+  const mode = (url.searchParams.get("mode") || "delay").trim().toLowerCase();
   const fromStop = (url.searchParams.get("fromStop") || "WR").trim().toUpperCase();
   const toStop = (url.searchParams.get("toStop") || "UN").trim().toUpperCase();
   const startTime = (url.searchParams.get("startTime") || "0700").trim();
@@ -22,6 +23,21 @@ export async function onRequestGet(context) {
   }
 
   try {
+    if (mode === "next-service") {
+      const nextService = await findStopNextService({ apiKey, stopCode: fromStop });
+
+      return jsonResponse({
+        ok: true,
+        mode,
+        stopCode: fromStop,
+        endpoint: `Stop/NextService/${fromStop}`,
+        serviceCount: nextService.services.length,
+        services: nextService.services.slice(0, 12),
+        raw: nextService.raw,
+        checkedAt: new Date().toISOString()
+      });
+    }
+
     const journey = tripNumber
       ? null
       : await findTargetJourney({ apiKey, fromStop, toStop, startTime });
@@ -67,6 +83,16 @@ function getApiKey(context) {
 
 function getAvailableBindingNames(context) {
   return Object.keys(context?.env || {}).sort();
+}
+
+async function findStopNextService({ apiKey, stopCode }) {
+  const url = `${API_BASE}/Stop/NextService/${encodeURIComponent(stopCode)}?key=${encodeURIComponent(apiKey)}`;
+  const raw = await fetchJson(url);
+
+  return {
+    raw,
+    services: findArray(raw)
+  };
 }
 
 async function findTargetJourney({ apiKey, fromStop, toStop, startTime }) {
