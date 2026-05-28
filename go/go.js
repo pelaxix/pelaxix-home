@@ -21,12 +21,15 @@ const refundEligible = document.querySelector("#refundEligible");
 const refundCard = document.querySelector("#refundCard");
 const testingStatus = document.querySelector("#testingStatus");
 const testingOutput = document.querySelector("#testingOutput");
+const testing1960Status = document.querySelector("#testing1960Status");
+const testing1960Output = document.querySelector("#testing1960Output");
 
 let lookupFinished = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   checkTrain1960();
   loadTestingPanel();
+  loadTesting1960Panel();
 });
 
 async function loadTestingPanel() {
@@ -52,6 +55,40 @@ async function loadTestingPanel() {
     console.error(error);
     testingStatus.textContent = "Error";
     testingOutput.textContent = error.message || "Testing request failed.";
+  }
+}
+
+async function loadTesting1960Panel() {
+  if (!testing1960Status || !testing1960Output) return;
+
+  testing1960Status.textContent = "Loading...";
+  testing1960Output.textContent = "Fetching train 1960 lookup...";
+
+  try {
+    const params = new URLSearchParams({
+      fromStop: FROM_STOP,
+      toStop: TO_STOP,
+      startTime: START_TIME,
+      tripNumber: TRAIN_NUMBER,
+      ts: Date.now().toString()
+    });
+
+    const response = await fetch(`/api/go-delay?${params.toString()}`, {
+      cache: "no-store"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || `HTTP ${response.status}`);
+    }
+
+    testing1960Status.textContent = data.trainStatus ? "Matched" : "Not found";
+    testing1960Output.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    console.error(error);
+    testing1960Status.textContent = "Error";
+    testing1960Output.textContent = error.message || "1960 testing request failed.";
   }
 }
 
@@ -137,28 +174,16 @@ function applyNotLiveStatus(now) {
   const liveWindowStart = new Date(departure.getTime() - LIVE_LOOKAHEAD_MINUTES * 60 * 1000);
 
   if (now < liveWindowStart) {
-    setStatusState(
-      "scheduled",
-      "SCHEDULED",
-      "Live tracking usually starts about 30 minutes before departure. Check back closer to 7:54 AM."
-    );
+    setStatusState("scheduled", "SCHEDULED", "Live tracking usually starts about 30 minutes before departure. Check back closer to 7:54 AM.");
     return;
   }
 
   if (now > arrival) {
-    setStatusState(
-      "ended",
-      "TRIP ENDED",
-      "This trip is finished, so GO no longer lists it in the live feed."
-    );
+    setStatusState("ended", "TRIP ENDED", "This trip is finished, so GO no longer lists it in the live feed.");
     return;
   }
 
-  setStatusState(
-    "not-checked",
-    "NOT LISTED",
-    "This train is inside the expected live window, but GO is not listing it yet. Refresh in a few minutes."
-  );
+  setStatusState("not-checked", "NOT LISTED", "This train is inside the expected live window, but GO is not listing it yet. Refresh in a few minutes.");
 }
 
 function showDelayedGrid(delaySeconds) {
@@ -232,9 +257,7 @@ function setStatusState(state, statusText, message) {
   statusCard.classList.remove("not-checked", "checking", "on-time", "delayed", "error", "scheduled", "ended");
   statusCard.classList.add(state);
 
-  liveDelay.classList.toggle("fit-long", statusText.length > 18);
   liveDelay.textContent = statusText;
-
   apiStatus.textContent = message;
 }
 
