@@ -57,26 +57,34 @@ h1{margin:0 0 12px;color:var(--text-strong);font-size:clamp(3rem,8vw,6rem);line-
 .status-message{margin:0;color:var(--muted);line-height:1.4}
 .summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .status-card{
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  align-items:center;
+  justify-items:center;
   min-width:0;
-  overflow:hidden
+  min-height:132px;
+  overflow:hidden;
+  text-align:center
 }
 .status-card p{
+  justify-self:stretch;
   margin:0;
   color:var(--muted);
   font-size:.78rem;
   font-weight:800;
   letter-spacing:.04em;
-  text-transform:uppercase;
-  line-height:1.1
+  line-height:1.1;
+  text-align:center;
+  text-transform:uppercase
 }
 .status-card>span{
   display:block;
-  margin-top:18px;
+  align-self:center;
+  justify-self:center;
+  margin:0;
   max-width:100%;
   overflow:hidden;
+  text-align:center;
   text-overflow:clip;
   white-space:nowrap;
   font-size:clamp(1.45rem,3vw,2.6rem);
@@ -89,7 +97,7 @@ h1{margin:0 0 12px;color:var(--text-strong);font-size:clamp(3rem,8vw,6rem);line-
 .delayed-card>span{color:var(--danger)}
 .refund-card{background:linear-gradient(135deg,#fffdf2,var(--gold-soft),#fff)}
 .refund-card p,.refund-card>span,.refund-cta{color:var(--gold-deep)}
-.refund-cta{margin-top:12px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.refund-cta{align-self:end;margin:0;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-align:center;text-transform:uppercase}
 .details-panel summary{cursor:pointer;font-weight:800}
 @media (max-width:850px){
   .tracker-panel,.panel{padding:12px;border-radius:24px}
@@ -107,8 +115,6 @@ h1{margin:0 0 12px;color:var(--text-strong);font-size:clamp(3rem,8vw,6rem);line-
     text-overflow:ellipsis
   }
   .status-card>span{
-    margin-top:auto;
-    margin-bottom:auto;
     font-size:clamp(.95rem,4.4vw,1.35rem)
   }
   .refund-cta{font-size:.56rem;white-space:nowrap}
