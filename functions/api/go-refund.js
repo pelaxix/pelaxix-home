@@ -14,14 +14,70 @@ export async function onRequestGet() {
     lang: "en",
   };
 
-  return jsonResponse({
-    ok: true,
-    eligible: null,
-    label: "Unavailable",
-    reason: "Eligibility lookup is not wired yet.",
-    checkedTrip,
-    checkedAt: new Date().toISOString(),
-  });
+  try {
+    const response = await fetch(getEligibilityUrl(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(checkedTrip),
+    });
+
+    const text = await response.text();
+    const data = safeJson(text);
+
+    if (!response.ok) {
+      return jsonResponse({
+        ok: false,
+        eligible: null,
+        label: "Unavailable",
+        reason: `Eligibility check failed with HTTP ${response.status}.`,
+        checkedTrip,
+        raw: data,
+        checkedAt: new Date().toISOString(),
+      }, 502);
+    }
+
+    const eligible = Boolean(data && data.eligible);
+
+    return jsonResponse({
+      ok: true,
+      eligible,
+      label: eligible ? "YES" : "NO",
+      reason: data && data.reason ? data.reason : null,
+      checkedTrip,
+      checkedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    return jsonResponse({
+      ok: false,
+      eligible: null,
+      label: "Unavailable",
+      reason: error && error.message ? error.message : "Eligibility check unavailable.",
+      checkedTrip,
+      checkedAt: new Date().toISOString(),
+    }, 502);
+  }
+}
+
+function getEligibilityUrl() {
+  return [
+    "https://api.metrolinx.com",
+    "external",
+    "go",
+    "serviceguarantee",
+    "trip",
+    "eligible",
+  ].join("/");
+}
+
+function safeJson(text) {
+  try {
+    return text ? JSON.parse(text) : null;
+  } catch {
+    return { raw: text };
+  }
 }
 
 function getTodayTorontoDate() {
