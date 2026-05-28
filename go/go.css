@@ -41,8 +41,19 @@ h1{margin:0 0 12px;color:var(--text-strong);font-size:clamp(3rem,8vw,6rem);line-
 .eyebrow{margin:0 0 10px;color:var(--accent);font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .route-line{display:flex;justify-content:center;gap:12px;font-size:clamp(1.8rem,4vw,3.2rem);font-weight:800;letter-spacing:-.06em;white-space:nowrap}
 .route-line strong{color:var(--accent)}
-.status-hero{border-left:8px solid var(--accent);gap:10px}
-.big-status{font-size:clamp(2.8rem,9vw,6rem);font-weight:800;letter-spacing:-.08em;line-height:.9;color:var(--danger)}
+.status-hero{border-left:8px solid var(--accent);gap:10px;overflow:hidden}
+.big-status{
+  color:var(--danger);
+  font-size:clamp(2.4rem,8vw,6rem);
+  font-weight:800;
+  letter-spacing:-.085em;
+  line-height:.9;
+  max-width:100%;
+  overflow:hidden;
+  text-wrap:nowrap;
+  white-space:nowrap
+}
+.big-status.fit-long{font-size:clamp(2rem,6.6vw,5rem);letter-spacing:-.09em}
 .status-message{margin:0;color:var(--muted);line-height:1.4}
 .summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .status-card{
@@ -64,7 +75,11 @@ h1{margin:0 0 12px;color:var(--text-strong);font-size:clamp(3rem,8vw,6rem);line-
 .status-card>span{
   display:block;
   margin-top:18px;
-  font-size:clamp(1.6rem,3vw,2.6rem);
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:clip;
+  white-space:nowrap;
+  font-size:clamp(1.45rem,3vw,2.6rem);
   font-weight:800;
   letter-spacing:-.05em;
   line-height:1;
@@ -81,11 +96,12 @@ h1{margin:0 0 12px;color:var(--text-strong);font-size:clamp(3rem,8vw,6rem);line-
   .route-card,.status-card,.status-hero{padding:16px;border-radius:18px}
   h1{font-size:clamp(2.7rem,12vw,4.6rem)}
   .route-line{font-size:clamp(1rem,4vw,1.35rem);gap:8px}
-  .big-status{font-size:clamp(2.2rem,11vw,4rem)}
+  .big-status{font-size:clamp(1.75rem,9vw,3.6rem)}
+  .big-status.fit-long{font-size:clamp(1.35rem,7.4vw,3rem);letter-spacing:-.09em}
   .summary-grid{gap:8px}
   .status-card{min-height:108px}
   .status-card p{
-    font-size:.56rem;
+    font-size:.54rem;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis
@@ -93,7 +109,7 @@ h1{margin:0 0 12px;color:var(--text-strong);font-size:clamp(3rem,8vw,6rem);line-
   .status-card>span{
     margin-top:auto;
     margin-bottom:auto;
-    font-size:clamp(1.05rem,4.8vw,1.45rem)
+    font-size:clamp(.95rem,4.4vw,1.35rem)
   }
-  .refund-cta{font-size:.56rem}
+  .refund-cta{font-size:.56rem;white-space:nowrap}
 }
