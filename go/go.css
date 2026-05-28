@@ -120,10 +120,10 @@ details summary { cursor: pointer; color: var(--text-strong); font-weight: 800; 
   .big-status { font-size: clamp(2.4rem, 13vw, 4rem); }
   .status-message { margin: 0; font-size: 0.95rem; line-height: 1.35; }
   .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .status-card { display: grid; min-height: 96px; grid-template-rows: auto 1fr auto; align-items: stretch; padding: 10px 8px; text-align: center; }
-  .status-card p { align-self: start; margin: 0; font-size: 0.62rem; line-height: 1.08; text-align: center; }
-  .status-card span { align-self: center; justify-self: center; margin: 0; font-size: clamp(1.05rem, 5vw, 1.45rem); letter-spacing: -0.04em; line-height: 1; text-align: center; }
-  .refund-cta { align-self: end; margin-top: 0; font-size: 0.62rem; letter-spacing: 0.06em; text-align: center; }
+  .status-card { display: grid; min-height: 96px; grid-template-rows: 1fr auto 1fr; align-items: center; justify-items: center; padding: 10px 8px; position: relative; text-align: center; }
+  .status-card p { left: 8px; right: 8px; top: 12px; margin: 0; overflow: hidden; position: absolute; font-size: 0.54rem; letter-spacing: 0.035em; line-height: 1; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+  .status-card span { grid-row: 2; justify-self: center; margin: 0; font-size: clamp(1.05rem, 5vw, 1.45rem); letter-spacing: -0.04em; line-height: 1; text-align: center; }
+  .refund-cta { bottom: 12px; left: 8px; right: 8px; margin-top: 0; position: absolute; font-size: 0.56rem; letter-spacing: 0.06em; text-align: center; white-space: nowrap; }
   .button { width: 100%; }
   .details-panel { margin-bottom: 36px; padding: 12px 16px; border-radius: 18px; }
 }
