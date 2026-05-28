@@ -7,6 +7,7 @@ const TARGET_DEPARTURE = { hour: 7, minute: 54 };
 const TARGET_ARRIVAL = { hour: 9, minute: 4 };
 const LIVE_LOOKAHEAD_MINUTES = 30;
 const REFUND_MINUTES = 15;
+const REFUND_CLAIM_URL = "https://www.gotransit.com/en/service-guarantee/submit-a-claim";
 
 const apiStatus = document.querySelector("#apiStatus");
 const statusCard = document.querySelector("#statusCard");
@@ -17,6 +18,7 @@ const delayedGrid = document.querySelector("#delayedGrid");
 const delayedDeparture = document.querySelector("#delayedDeparture");
 const delayedArrival = document.querySelector("#delayedArrival");
 const refundEligible = document.querySelector("#refundEligible");
+const refundCard = document.querySelector("#refundCard");
 
 let lookupFinished = false;
 
@@ -133,10 +135,12 @@ function showDelayedGrid(delaySeconds) {
   const now = new Date();
   const targetDeparture = getTodayDateAt(TARGET_DEPARTURE.hour, TARGET_DEPARTURE.minute, now);
   const targetArrival = getTodayDateAt(TARGET_ARRIVAL.hour, TARGET_ARRIVAL.minute, now);
+  const isRefundEligible = delayMinutes >= REFUND_MINUTES;
 
   delayedDeparture.textContent = formatTime(new Date(targetDeparture.getTime() + delayMinutes * 60 * 1000));
   delayedArrival.textContent = formatTime(new Date(targetArrival.getTime() + delayMinutes * 60 * 1000));
-  refundEligible.textContent = delayMinutes >= REFUND_MINUTES ? "YES" : "NO";
+  refundEligible.textContent = isRefundEligible ? "YES" : "NO";
+  updateRefundCard(isRefundEligible);
   delayedGrid.hidden = false;
 }
 
@@ -145,6 +149,22 @@ function hideDelayedGrid() {
   delayedDeparture.textContent = "-";
   delayedArrival.textContent = "-";
   refundEligible.textContent = "NO";
+  updateRefundCard(false);
+}
+
+function updateRefundCard(isRefundEligible) {
+  refundCard.classList.toggle("refund-yes", isRefundEligible);
+  refundCard.classList.toggle("refund-no", !isRefundEligible);
+
+  if (isRefundEligible) {
+    refundCard.href = REFUND_CLAIM_URL;
+    refundCard.setAttribute("aria-label", "Refund eligible. Open the GO Transit service guarantee claim form.");
+    refundCard.title = "Open GO Transit claim form";
+  } else {
+    refundCard.removeAttribute("href");
+    refundCard.setAttribute("aria-label", "Refund not eligible yet.");
+    refundCard.removeAttribute("title");
+  }
 }
 
 function getTodayDateAt(hour, minute, baseDate) {
