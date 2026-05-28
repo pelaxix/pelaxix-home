@@ -38,6 +38,20 @@ export async function onRequestGet(context) {
       });
     }
 
+    if (mode === "stop-details") {
+      const stopDetails = await findStopDetails({ apiKey, stopCode: fromStop });
+
+      return jsonResponse({
+        ok: true,
+        mode,
+        stopCode: fromStop,
+        requestedTripNumber: tripNumber || null,
+        endpoint: `Stop/Details/${fromStop}`,
+        raw: stopDetails.raw,
+        checkedAt: new Date().toISOString()
+      });
+    }
+
     const journey = tripNumber
       ? null
       : await findTargetJourney({ apiKey, fromStop, toStop, startTime });
@@ -93,6 +107,13 @@ async function findStopNextService({ apiKey, stopCode }) {
     raw,
     services: findArray(raw)
   };
+}
+
+async function findStopDetails({ apiKey, stopCode }) {
+  const url = `${API_BASE}/Stop/Details/${encodeURIComponent(stopCode)}?key=${encodeURIComponent(apiKey)}`;
+  const raw = await fetchJson(url);
+
+  return { raw };
 }
 
 async function findTargetJourney({ apiKey, fromStop, toStop, startTime }) {
