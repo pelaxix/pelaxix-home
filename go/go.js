@@ -200,7 +200,10 @@ function getDelayState(seconds) {
 function setStatusState(state, statusText, message) {
   statusCard.classList.remove("not-checked", "checking", "on-time", "delayed", "error", "scheduled", "ended");
   statusCard.classList.add(state);
+
+  liveDelay.classList.toggle("fit-long", statusText.length > 18);
   liveDelay.textContent = statusText;
+
   apiStatus.textContent = message;
 }
 
