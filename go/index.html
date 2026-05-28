@@ -77,6 +77,18 @@
             <div id="liveDetails" class="live-details"></div>
           </details>
         </section>
+
+        <section class="panel testing-panel" id="testing">
+          <p class="eyebrow">Testing</p>
+          <h2>Stop departure experiment</h2>
+          <p class="testing-copy">Sandbox area for testing whether Metrolinx <code>Stop/NextService/WR</code> can give us actual or predicted departures from West Harbour GO.</p>
+          <div class="testing-grid">
+            <article class="testing-card"><p>Endpoint</p><span>Stop/NextService/WR</span></article>
+            <article class="testing-card"><p>Stop code</p><span>WR</span></article>
+            <article class="testing-card"><p>Status</p><span id="testingStatus">Not wired yet</span></article>
+          </div>
+          <pre id="testingOutput" class="testing-output">Waiting for testing endpoint wiring.</pre>
+        </section>
       </main>
     </div>
     <script src="go.js"></script>
