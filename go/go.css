@@ -14,6 +14,9 @@
   --success: #00843d;
   --danger: #c62828;
   --warning: #9b6a00;
+  --gold: #c58a00;
+  --gold-deep: #7a4f00;
+  --gold-soft: #fff4c4;
   --line: rgba(0, 132, 61, 0.2);
   --shadow: 0 24px 70px rgba(0, 70, 35, 0.12);
 }
@@ -66,8 +69,15 @@ h2 { margin-bottom: 16px; color: var(--text-strong); font-size: clamp(1.8rem, 4v
 .status-card { background: linear-gradient(180deg, #ffffff, #f3faf5); }
 .delayed-grid[hidden] { display: none; }
 .delayed-card { border-color: rgba(198, 40, 40, 0.24); background: linear-gradient(180deg, #ffffff, #fff5f5); }
+.refund-card { position: relative; overflow: hidden; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease; }
+.refund-card.refund-no { cursor: default; }
+.refund-card.refund-yes { cursor: pointer; border-color: rgba(197, 138, 0, 0.58); background: linear-gradient(135deg, #fffdf2, var(--gold-soft), #ffffff); box-shadow: 0 18px 52px rgba(197, 138, 0, 0.24); }
+.refund-card.refund-yes:hover { transform: translateY(-2px); }
+.refund-card.refund-yes::before { content: ""; position: absolute; inset: -60%; background: linear-gradient(120deg, transparent 42%, rgba(255, 255, 255, 0.88) 49%, transparent 56%); animation: refundSparkle 2.4s ease-in-out infinite; pointer-events: none; }
+.refund-card.refund-yes::after { content: "✦"; position: absolute; top: 12px; right: 14px; color: var(--gold); font-size: 1.3rem; animation: refundTwinkle 1.8s ease-in-out infinite; pointer-events: none; }
 .status-card span { display: block; margin-bottom: 8px; color: var(--text-strong); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.05em; }
 .delayed-card span { color: var(--danger); }
+.refund-card.refund-yes span, .refund-card.refund-yes p { position: relative; z-index: 1; color: var(--gold-deep); }
 .single-train-form { margin-top: 4px; }
 .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; border: 0; border-radius: 999px; padding: 0 22px; cursor: pointer; font-weight: 800; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease; }
 .button:hover { transform: translateY(-2px); }
@@ -76,6 +86,18 @@ h2 { margin-bottom: 16px; color: var(--text-strong); font-size: clamp(1.8rem, 4v
 details summary { cursor: pointer; color: var(--text-strong); font-weight: 800; }
 .live-details { margin-top: 16px; border: 1px dashed rgba(0, 132, 61, 0.26); border-radius: 18px; padding: 16px; background: rgba(223, 242, 231, 0.72); overflow-x: auto; }
 .live-details:empty { display: none; }
+@keyframes refundSparkle {
+  0% { transform: translateX(-45%) rotate(8deg); opacity: 0; }
+  35% { opacity: 0.9; }
+  70%, 100% { transform: translateX(45%) rotate(8deg); opacity: 0; }
+}
+@keyframes refundTwinkle {
+  0%, 100% { transform: scale(0.82) rotate(0deg); opacity: 0.52; }
+  50% { transform: scale(1.16) rotate(18deg); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refund-card.refund-yes::before, .refund-card.refund-yes::after { animation: none; }
+}
 @media (max-width: 850px) {
   .app-shell { width: min(100% - 28px, 980px); }
   .site-header { align-items: center; flex-direction: row; padding: 18px 0; }
