@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="go.css" />
+    <link rel="stylesheet" href="go.css?v=6" />
     <link rel="stylesheet" href="/project-nav.css" />
   </head>
   <body>
@@ -85,9 +85,9 @@
           <div class="testing-grid">
             <article class="testing-card"><p>Endpoint</p><span>Stop/NextService/WR</span></article>
             <article class="testing-card"><p>Stop code</p><span>WR</span></article>
-            <article class="testing-card"><p>Status</p><span id="testingStatus">Not wired yet</span></article>
+            <article class="testing-card"><p>Status</p><span id="testingStatus">Loading...</span></article>
           </div>
-          <pre id="testingOutput" class="testing-output">Waiting for testing endpoint wiring.</pre>
+          <pre id="testingOutput" class="testing-output">Fetching Stop/NextService/WR...</pre>
 
           <hr class="testing-divider" />
 
@@ -97,12 +97,24 @@
           <div class="testing-grid">
             <article class="testing-card"><p>Endpoint</p><span>/api/go-delay</span></article>
             <article class="testing-card"><p>Trip number</p><span>1960</span></article>
-            <article class="testing-card"><p>Status</p><span id="testing1960Status">Not wired yet</span></article>
+            <article class="testing-card"><p>Status</p><span id="testing1960Status">Loading...</span></article>
           </div>
-          <pre id="testing1960Output" class="testing-output">Waiting for train 1960 testing endpoint wiring.</pre>
+          <pre id="testing1960Output" class="testing-output">Fetching train 1960 lookup...</pre>
+
+          <hr class="testing-divider" />
+
+          <p class="eyebrow">Testing 3.0</p>
+          <h2>Stop details experiment</h2>
+          <p class="testing-copy">Testing the documented Metrolinx <code>Stop/Details/WR</code> endpoint while keeping train <code>1960</code> as reference context.</p>
+          <div class="testing-grid">
+            <article class="testing-card"><p>Endpoint</p><span>Stop/Details/WR</span></article>
+            <article class="testing-card"><p>Reference train</p><span>1960</span></article>
+            <article class="testing-card"><p>Status</p><span id="testingDetailsStatus">Loading...</span></article>
+          </div>
+          <pre id="testingDetailsOutput" class="testing-output">Fetching Stop/Details/WR...</pre>
         </section>
       </main>
     </div>
-    <script src="go.js"></script>
+    <script src="go.js?v=6"></script>
   </body>
 </html>
