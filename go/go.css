@@ -120,10 +120,10 @@ details summary { cursor: pointer; color: var(--text-strong); font-weight: 800; 
   .big-status { font-size: clamp(2.4rem, 13vw, 4rem); }
   .status-message { margin: 0; font-size: 0.95rem; line-height: 1.35; }
   .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .status-card { min-height: 96px; align-items: flex-start; justify-content: space-between; padding: 10px 8px; text-align: left; }
-  .status-card p { margin: 0; font-size: 0.62rem; line-height: 1.1; text-align: left; }
-  .status-card span { margin: 0; font-size: clamp(1.05rem, 5vw, 1.45rem); letter-spacing: -0.04em; line-height: 1; }
-  .refund-cta { margin-top: 7px; font-size: 0.62rem; letter-spacing: 0.06em; }
+  .status-card { display: grid; min-height: 96px; grid-template-rows: auto 1fr auto; align-items: stretch; padding: 10px 8px; text-align: center; }
+  .status-card p { align-self: start; margin: 0; font-size: 0.62rem; line-height: 1.08; text-align: center; }
+  .status-card span { align-self: center; justify-self: center; margin: 0; font-size: clamp(1.05rem, 5vw, 1.45rem); letter-spacing: -0.04em; line-height: 1; text-align: center; }
+  .refund-cta { align-self: end; margin-top: 0; font-size: 0.62rem; letter-spacing: 0.06em; text-align: center; }
   .button { width: 100%; }
   .details-panel { margin-bottom: 36px; padding: 12px 16px; border-radius: 18px; }
 }
