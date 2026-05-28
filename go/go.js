@@ -19,10 +19,41 @@ const delayedDeparture = document.querySelector("#delayedDeparture");
 const delayedArrival = document.querySelector("#delayedArrival");
 const refundEligible = document.querySelector("#refundEligible");
 const refundCard = document.querySelector("#refundCard");
+const testingStatus = document.querySelector("#testingStatus");
+const testingOutput = document.querySelector("#testingOutput");
 
 let lookupFinished = false;
 
-document.addEventListener("DOMContentLoaded", checkTrain1960);
+document.addEventListener("DOMContentLoaded", () => {
+  checkTrain1960();
+  loadTestingPanel();
+});
+
+async function loadTestingPanel() {
+  if (!testingStatus || !testingOutput) return;
+
+  testingStatus.textContent = "Loading...";
+  testingOutput.textContent = "Fetching Stop/NextService/WR...";
+
+  try {
+    const response = await fetch(`/api/go-delay?mode=next-service&fromStop=${FROM_STOP}&ts=${Date.now()}`, {
+      cache: "no-store"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || `HTTP ${response.status}`);
+    }
+
+    testingStatus.textContent = `${data.serviceCount || 0} services`;
+    testingOutput.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    console.error(error);
+    testingStatus.textContent = "Error";
+    testingOutput.textContent = error.message || "Testing request failed.";
+  }
+}
 
 async function checkTrain1960() {
   lookupFinished = false;
