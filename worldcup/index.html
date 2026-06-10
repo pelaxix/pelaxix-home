@@ -2,17 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta
       name="description"
       content="A quick local-time World Cup schedule app for checking upcoming games."
     />
     <meta name="application-name" content="Pelaxix World Cup" />
     <meta name="apple-mobile-web-app-title" content="Pelaxix World Cup" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#070812" />
     <title>Pelaxix World Cup</title>
     <link rel="icon" href="/worldcup/worldcup-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/worldcup/worldcup-icon.png" />
+    <script>
+      if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) {
+        document.documentElement.classList.add("standalone-app");
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,7 +28,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="worldcup.css?v=5" />
-    <link rel="stylesheet" href="worldcup-tweaks.css?v=5" />
+    <link rel="stylesheet" href="worldcup-tweaks.css?v=6" />
     <link rel="stylesheet" href="/project-nav.css" />
   </head>
   <body>
