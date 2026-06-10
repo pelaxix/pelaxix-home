@@ -238,15 +238,50 @@ time {
     padding-top: 16px;
   }
 
-  .controls { grid-template-columns: 1fr; }
+  .site-header { margin-bottom: 22px; }
+  .hero { margin-bottom: 18px; }
+  .hero-copy { font-size: 0.98rem; }
+  .controls { grid-template-columns: 1fr; margin-top: 20px; }
   .ghost-button { width: 100%; }
-  .timezone-card { display: grid; }
-  .date-heading { padding: 18px; }
+  .timezone-card { display: grid; gap: 6px; }
 
+  .schedule { gap: 14px; }
+  .date-card { border-radius: 24px; }
+
+  .date-heading {
+    align-items: center;
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .date-heading h2 { font-size: 1.42rem; }
+  .date-heading > span { font-size: 0.74rem; }
+
+  .match-row {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 8px;
+    padding: 14px 18px;
+  }
+
+  .team {
+    gap: 6px;
+    font-size: 0.94rem;
+    line-height: 1.15;
+  }
+
+  .flag { font-size: 1.1rem; }
+
+  time {
+    min-width: 76px;
+    padding: 8px 9px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 390px) {
   .match-row {
     grid-template-columns: 1fr;
     gap: 8px;
-    padding: 18px;
   }
 
   .away {
@@ -254,8 +289,5 @@ time {
     text-align: left;
   }
 
-  time {
-    justify-self: start;
-    order: -1;
-  }
+  time { justify-self: start; }
 }
