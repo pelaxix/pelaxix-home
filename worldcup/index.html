@@ -15,7 +15,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="worldcup.css?v=1" />
+    <link rel="stylesheet" href="worldcup.css?v=2" />
+    <link rel="stylesheet" href="worldcup-tweaks.css?v=1" />
     <link rel="stylesheet" href="/project-nav.css" />
   </head>
   <body>
@@ -38,22 +39,73 @@
 
         <section class="controls" aria-label="Schedule filters">
           <label class="search-box">
-            <span>Search team</span>
-            <input id="teamSearch" type="search" placeholder="Mexico, Canada, USA..." autocomplete="off" />
+            <span>Select team</span>
+            <select id="teamSearch" autocomplete="off">
+              <option value="">All teams</option>
+              <option value="Algeria">🇩🇿 Algeria</option>
+              <option value="Argentina">🇦🇷 Argentina</option>
+              <option value="Australia">🇦🇺 Australia</option>
+              <option value="Austria">🇦🇹 Austria</option>
+              <option value="Belgium">🇧🇪 Belgium</option>
+              <option value="Bosnia and Herzegovina">🇧🇦 Bosnia and Herzegovina</option>
+              <option value="Brazil">🇧🇷 Brazil</option>
+              <option value="Cabo Verde">🇨🇻 Cabo Verde</option>
+              <option value="Canada">🇨🇦 Canada</option>
+              <option value="Colombia">🇨🇴 Colombia</option>
+              <option value="Congo DR">🇨🇩 Congo DR</option>
+              <option value="Croatia">🇭🇷 Croatia</option>
+              <option value="Curaçao">🇨🇼 Curaçao</option>
+              <option value="Czechia">🇨🇿 Czechia</option>
+              <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
+              <option value="Ecuador">🇪🇨 Ecuador</option>
+              <option value="Egypt">🇪🇬 Egypt</option>
+              <option value="England">🏴 England</option>
+              <option value="France">🇫🇷 France</option>
+              <option value="Germany">🇩🇪 Germany</option>
+              <option value="Ghana">🇬🇭 Ghana</option>
+              <option value="Haiti">🇭🇹 Haiti</option>
+              <option value="IR Iran">🇮🇷 IR Iran</option>
+              <option value="Iraq">🇮🇶 Iraq</option>
+              <option value="Japan">🇯🇵 Japan</option>
+              <option value="Jordan">🇯🇴 Jordan</option>
+              <option value="Mexico">🇲🇽 Mexico</option>
+              <option value="Morocco">🇲🇦 Morocco</option>
+              <option value="Netherlands">🇳🇱 Netherlands</option>
+              <option value="New Zealand">🇳🇿 New Zealand</option>
+              <option value="Norway">🇳🇴 Norway</option>
+              <option value="Panama">🇵🇦 Panama</option>
+              <option value="Paraguay">🇵🇾 Paraguay</option>
+              <option value="Portugal">🇵🇹 Portugal</option>
+              <option value="Qatar">🇶🇦 Qatar</option>
+              <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+              <option value="Scotland">🏴 Scotland</option>
+              <option value="Senegal">🇸🇳 Senegal</option>
+              <option value="South Africa">🇿🇦 South Africa</option>
+              <option value="South Korea">🇰🇷 South Korea</option>
+              <option value="Spain">🇪🇸 Spain</option>
+              <option value="Sweden">🇸🇪 Sweden</option>
+              <option value="Switzerland">🇨🇭 Switzerland</option>
+              <option value="Tunisia">🇹🇳 Tunisia</option>
+              <option value="Türkiye">🇹🇷 Türkiye</option>
+              <option value="United States">🇺🇸 United States</option>
+              <option value="Uruguay">🇺🇾 Uruguay</option>
+              <option value="Uzbekistan">🇺🇿 Uzbekistan</option>
+            </select>
           </label>
-          <button id="showAllButton" class="ghost-button" type="button">Show all</button>
-        </section>
-
-        <section class="timezone-card" aria-live="polite">
-          <span>Your time zone</span>
-          <strong id="timezoneLabel">Detecting...</strong>
+          <button id="showAllButton" class="ghost-button" type="button">Reset selection</button>
         </section>
 
         <section id="schedule" class="schedule" aria-label="Upcoming World Cup games"></section>
-        <p id="emptyState" class="empty-state" hidden>No games found for that search.</p>
+        <p id="emptyState" class="empty-state" hidden>No games found for that selection.</p>
+
+        <section class="timezone-card" aria-live="polite">
+          <span>Times shown in</span>
+          <strong id="timezoneLabel">Detecting...</strong>
+        </section>
       </main>
     </div>
 
     <script src="worldcup.js?v=1"></script>
+    <script src="worldcup-ui.js?v=1"></script>
   </body>
 </html>
