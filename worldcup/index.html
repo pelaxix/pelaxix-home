@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A quick local-time World Cup schedule app for checking upcoming games."
+    />
+    <title>World Cup Schedule | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="worldcup.css?v=1" />
+    <link rel="stylesheet" href="/project-nav.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">World Cup 2026</p>
+          <h1>What games are coming up?</h1>
+          <p class="hero-copy">
+            One card per date. Times automatically shown in your local timezone.
+          </p>
+        </section>
+
+        <section class="controls" aria-label="Schedule filters">
+          <label class="search-box">
+            <span>Search team</span>
+            <input id="teamSearch" type="search" placeholder="Mexico, Canada, USA..." autocomplete="off" />
+          </label>
+          <button id="showAllButton" class="ghost-button" type="button">Show all</button>
+        </section>
+
+        <section class="timezone-card" aria-live="polite">
+          <span>Your time zone</span>
+          <strong id="timezoneLabel">Detecting...</strong>
+        </section>
+
+        <section id="schedule" class="schedule" aria-label="Upcoming World Cup games"></section>
+        <p id="emptyState" class="empty-state" hidden>No games found for that search.</p>
+      </main>
+    </div>
+
+    <script src="worldcup.js?v=1"></script>
+  </body>
+</html>
