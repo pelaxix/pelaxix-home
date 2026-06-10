@@ -1,3 +1,11 @@
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y manipulation;
+}
+
 .compact-title {
   margin-bottom: 14px;
 }
@@ -42,6 +50,24 @@
 .timezone-card {
   margin-top: 22px;
   margin-bottom: 0;
+}
+
+@media all and (display-mode: standalone) {
+  .site-header {
+    display: none;
+  }
+
+  .app-shell {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+}
+
+.standalone-app .site-header {
+  display: none;
+}
+
+.standalone-app .app-shell {
+  padding-top: max(12px, env(safe-area-inset-top));
 }
 
 @media (max-width: 680px) {
