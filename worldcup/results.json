@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "lastUpdated": null,
+  "fields": [
+    "id",
+    "kickoffUtc",
+    "home",
+    "away",
+    "status",
+    "homeScore",
+    "awayScore",
+    "homePenaltyScore",
+    "awayPenaltyScore",
+    "winner",
+    "homeFlagOverride",
+    "awayFlagOverride",
+    "note"
+  ],
+  "statusHelp": {
+    "scheduled": "not started / keep showing kickoff time",
+    "live": "match is live",
+    "ht": "halftime",
+    "ft": "full time",
+    "aet": "after extra time",
+    "pen": "finished after penalties",
+    "postponed": "postponed",
+    "cancelled": "cancelled"
+  },
+  "matches": [
+    [
+      1,
+      "2026-06-11T19:00:00Z",
+      "Mexico",
+      "South Africa",
+      "scheduled",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      ""
+    ],
+    [
+      2,
+      "2026-06-12T02:00:00Z",
+      "South Korea",
+      "Czechia",
+      "scheduled",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      ""
+    ],
+    [
+      3,
+      "2026-06-12T19:00:00Z",
+      "Canada",
+      "Bosnia and Herzegovina",
+      "scheduled",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      ""
+    ],
+    [
+      4,
+      "2026-06-13T01:00:00Z",
+      "United States",
+      "Paraguay",
+      "scheduled",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      ""
+    ]
+  ]
+}
