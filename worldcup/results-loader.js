@@ -9,9 +9,11 @@ const RESULT_STATUS_LABELS = {
 };
 
 const RESULTS_BY_ID = new Map();
+const ENGLAND_FLAG = "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}";
+const SCOTLAND_FLAG = "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}";
 
-FLAGS["England"] = "🏴";
-FLAGS["Scotland"] = "🏴";
+FLAGS["England"] = ENGLAND_FLAG;
+FLAGS["Scotland"] = SCOTLAND_FLAG;
 
 function resultFromRow(fields, row) {
   return Object.fromEntries(fields.map((field, index) => [field, row[index]]));
