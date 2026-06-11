@@ -16,6 +16,7 @@ FLAGS["England"] = ENGLAND_FLAG;
 FLAGS["Scotland"] = SCOTLAND_FLAG;
 
 function resultFromRow(fields, row) {
+  if (!Array.isArray(row)) return row;
   return Object.fromEntries(fields.map((field, index) => [field, row[index]]));
 }
 
@@ -104,7 +105,7 @@ function renderResultAwareSchedule() {
 
 render = renderResultAwareSchedule;
 
-fetch("results.json?v=1")
+fetch("results.json?v=2")
   .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`)))
   .then((data) => {
     const fields = data.fields || [];
