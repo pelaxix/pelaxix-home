@@ -28,6 +28,10 @@ function normalizeResult(result) {
     result.status = result.status.trim().toLowerCase();
   }
 
+  if (typeof result.winner === "string") {
+    result.winner = result.winner.trim() || null;
+  }
+
   result.homeScore = normalizeScore(result.homeScore);
   result.awayScore = normalizeScore(result.awayScore);
   result.homePenaltyScore = normalizeScore(result.homePenaltyScore);
@@ -67,24 +71,39 @@ function visibleMatchesWithResults() {
     .sort((a, b) => a.kickoff - b.kickoff);
 }
 
+function isWinner(team, result) {
+  if (!team || !result?.winner) return false;
+  return normalize(team) === normalize(result.winner);
+}
+
 function teamMarkupWithResult(team, side, result, flagSide) {
   const flagOverride = flagSide === "home" ? result?.homeFlagOverride : result?.awayFlagOverride;
   const flag = flagOverride || FLAGS[team] || "";
+  const winner = isWinner(team, result);
+  const sparkle = winner ? `<span class="winner-sparkle" aria-label="Winner">✨</span>` : "";
+  const teamClass = `team ${side}${winner ? " winner" : ""}`;
+
   return `
-    <div class="team ${side}">
-      ${side === "away" ? `<span>${team}</span><span class="flag" aria-hidden="true">${flag}</span>` : `<span class="flag" aria-hidden="true">${flag}</span><span>${team}</span>`}
+    <div class="${teamClass}">
+      ${side === "away"
+        ? `<span class="team-name">${team}</span>${sparkle}<span class="flag" aria-hidden="true">${flag}</span>`
+        : `<span class="flag" aria-hidden="true">${flag}</span>${sparkle}<span class="team-name">${team}</span>`}
     </div>
   `;
 }
 
 function resultLabel(result) {
-  const status = RESULT_STATUS_LABELS[result.status] || String(result.status || "").toUpperCase();
   const homeScore = result.homeScore ?? "–";
   const awayScore = result.awayScore ?? "–";
   const penalties = result.homePenaltyScore !== null && result.awayPenaltyScore !== null
-    ? ` (${result.homePenaltyScore}–${result.awayPenaltyScore} pens)`
+    ? ` (${result.homePenaltyScore}–${result.awayPenaltyScore})`
     : "";
-  return `${status} ${homeScore}–${awayScore}${penalties}`;
+
+  if (result.status === "postponed" || result.status === "cancelled") {
+    return RESULT_STATUS_LABELS[result.status];
+  }
+
+  return `${homeScore}–${awayScore}${penalties}`;
 }
 
 function centerMarkup(match) {
@@ -93,7 +112,9 @@ function centerMarkup(match) {
     return `<time datetime="${match.kickoffUtc}">${timeLabel(match.kickoff)}</time>`;
   }
 
-  const title = result.note ? ` title="${result.note.replaceAll('"', '&quot;')}"` : "";
+  const statusLabel = RESULT_STATUS_LABELS[result.status] || String(result.status || "").toUpperCase();
+  const titleParts = [statusLabel, result.note].filter(Boolean);
+  const title = titleParts.length ? ` title="${titleParts.join(' · ').replaceAll('"', '&quot;')}"` : "";
   return `<span class="result-pill"${title}>${resultLabel(result)}</span>`;
 }
 
@@ -159,8 +180,11 @@ fetch(`results.json?v=${Date.now()}`)
 const resultsStyles = document.createElement("style");
 resultsStyles.textContent = `
 .result-pill { min-width: 92px; border-radius: 999px; padding: 10px 12px; background: #e0f2fe; color: #075985; font-weight: 900; text-align: center; white-space: nowrap; }
-.match-row.has-result .team span:last-child,
-.match-row.has-result .team span:first-child:not(.flag) { font-weight: 900; }
-@media (max-width: 680px) { .result-pill { min-width: 70px; padding: 8px; font-size: clamp(0.72rem, 3.1vw, 0.84rem); } }
+.team.winner { color: #166534; font-weight: 1000; text-shadow: 0 0 16px rgba(34, 197, 94, 0.18); }
+.team.winner .team-name { text-decoration: underline; text-decoration-color: rgba(34, 197, 94, 0.55); text-decoration-thickness: 3px; text-underline-offset: 5px; }
+.winner-sparkle { display: inline-block; margin: 0 4px; animation: winnerSparkle 1.8s ease-in-out infinite; filter: drop-shadow(0 0 5px rgba(250, 204, 21, 0.65)); }
+@keyframes winnerSparkle { 0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.78; } 45% { transform: scale(1.22) rotate(12deg); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .winner-sparkle { animation: none; } }
+@media (max-width: 680px) { .result-pill { min-width: 70px; padding: 8px; font-size: clamp(0.72rem, 3.1vw, 0.84rem); } .winner-sparkle { margin: 0 2px; } }
 `;
 document.head.appendChild(resultsStyles);
