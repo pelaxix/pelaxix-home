@@ -32,5 +32,5 @@ if (resetSelectionButton) {
 keepResetButtonLabel();
 
 const calendarScript = document.createElement("script");
-calendarScript.src = "worldcup-calendar.js?v=1";
+calendarScript.src = "worldcup-calendar.js?v=2";
 document.body.appendChild(calendarScript);
