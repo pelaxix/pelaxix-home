@@ -1,55 +1,14 @@
 const calendarSchedule = document.querySelector("#schedule");
 
-function calendarTimestamp(date) {
-  return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-}
+function openCalendarEvent(match) {
+  const params = new URLSearchParams({
+    id: match.id,
+    home: match.home,
+    away: match.away,
+    kickoff: match.kickoffUtc
+  });
 
-function escapeCalendarText(value) {
-  return String(value)
-    .replace(/\\/g, "\\\\")
-    .replace(/\r?\n/g, "\\n")
-    .replace(/,/g, "\\,")
-    .replace(/;/g, "\\;");
-}
-
-function downloadCalendarEvent(match) {
-  const kickoff = new Date(match.kickoffUtc);
-  const eventEnd = new Date(kickoff.getTime() + 135 * 60 * 1000);
-  const title = `${match.home} vs ${match.away}`;
-  const description = "2026 World Cup match · Added from Pelaxix World Cup Schedule";
-  const calendar = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Pelaxix//World Cup Schedule//EN",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "BEGIN:VEVENT",
-    `UID:worldcup-2026-match-${match.id}@pelaxix.com`,
-    `DTSTAMP:${calendarTimestamp(new Date())}`,
-    `DTSTART:${calendarTimestamp(kickoff)}`,
-    `DTEND:${calendarTimestamp(eventEnd)}`,
-    `SUMMARY:${escapeCalendarText(title)}`,
-    `DESCRIPTION:${escapeCalendarText(description)}`,
-    "URL:https://pelaxix.com/worldcup/",
-    "STATUS:CONFIRMED",
-    "BEGIN:VALARM",
-    "TRIGGER:-PT30M",
-    "ACTION:DISPLAY",
-    `DESCRIPTION:${escapeCalendarText(title)} starts in 30 minutes`,
-    "END:VALARM",
-    "END:VEVENT",
-    "END:VCALENDAR"
-  ].join("\r\n");
-  const blob = new Blob([calendar], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  const filename = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase();
-  link.href = url;
-  link.download = `${filename}.ics`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  window.location.href = `/api/worldcup-calendar?${params}`;
 }
 
 function enhanceCalendarTimes() {
@@ -82,7 +41,7 @@ calendarSchedule.addEventListener("click", (event) => {
   const pill = event.target.closest("[data-calendar-match]");
   if (!pill) return;
   const match = MATCHES.find((item) => item.id === Number(pill.dataset.calendarMatch));
-  if (match) downloadCalendarEvent(match);
+  if (match) openCalendarEvent(match);
 });
 
 new MutationObserver(enhanceCalendarTimes).observe(calendarSchedule, { childList: true, subtree: true });
