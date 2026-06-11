@@ -33,4 +33,9 @@ keepResetButtonLabel();
 
 const calendarScript = document.createElement("script");
 calendarScript.src = "worldcup-calendar.js?v=2";
-document.body.appendChild(calendarScript);
+
+const resultsScript = document.createElement("script");
+resultsScript.src = "results-loader.js?v=1";
+resultsScript.onload = () => document.body.appendChild(calendarScript);
+resultsScript.onerror = () => document.body.appendChild(calendarScript);
+document.body.appendChild(resultsScript);
