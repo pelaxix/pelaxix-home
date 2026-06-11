@@ -15,9 +15,33 @@ const SCOTLAND_FLAG = "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{
 FLAGS["England"] = ENGLAND_FLAG;
 FLAGS["Scotland"] = SCOTLAND_FLAG;
 
+function normalizeScore(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : value;
+}
+
+function normalizeResult(result) {
+  if (!result) return result;
+
+  if (typeof result.status === "string") {
+    result.status = result.status.trim().toLowerCase();
+  }
+
+  result.homeScore = normalizeScore(result.homeScore);
+  result.awayScore = normalizeScore(result.awayScore);
+  result.homePenaltyScore = normalizeScore(result.homePenaltyScore);
+  result.awayPenaltyScore = normalizeScore(result.awayPenaltyScore);
+
+  return result;
+}
+
 function resultFromRow(fields, row) {
-  if (!Array.isArray(row)) return row;
-  return Object.fromEntries(fields.map((field, index) => [field, row[index]]));
+  const result = Array.isArray(row)
+    ? Object.fromEntries(fields.map((field, index) => [field, row[index]]))
+    : { ...row };
+
+  return normalizeResult(result);
 }
 
 function getResult(match) {
@@ -28,6 +52,19 @@ function hasVisibleResult(result) {
   if (!result) return false;
   if (!result.status || result.status === "scheduled") return false;
   return true;
+}
+
+function visibleMatchesWithResults() {
+  const query = normalize(searchEl.value.trim());
+
+  return MATCHES
+    .map((match) => ({ ...match, kickoff: new Date(match.kickoffUtc) }))
+    .filter((match) => showAll || !isPast(match) || hasVisibleResult(getResult(match)))
+    .filter((match) => {
+      if (!query) return true;
+      return normalize(`${match.home} ${match.away}`).includes(query);
+    })
+    .sort((a, b) => a.kickoff - b.kickoff);
 }
 
 function teamMarkupWithResult(team, side, result, flagSide) {
@@ -61,7 +98,7 @@ function centerMarkup(match) {
 }
 
 function renderResultAwareSchedule() {
-  const matches = visibleMatches();
+  const matches = visibleMatchesWithResults();
   const grouped = new Map();
 
   for (const match of matches) {
@@ -105,7 +142,7 @@ function renderResultAwareSchedule() {
 
 render = renderResultAwareSchedule;
 
-fetch("results.json?v=2")
+fetch(`results.json?v=${Date.now()}`)
   .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`)))
   .then((data) => {
     const fields = data.fields || [];
