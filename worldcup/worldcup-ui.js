@@ -1,11 +1,27 @@
 const teamSelectEl = document.querySelector("#teamSearch");
 const resetSelectionButton = document.querySelector("#showAllButton");
 
+function addWorldCupTabs() {
+  const hero = document.querySelector(".hero");
+  if (!hero || hero.querySelector(".worldcup-tabs")) return;
+
+  const nav = document.createElement("nav");
+  nav.className = "worldcup-tabs";
+  nav.setAttribute("aria-label", "World Cup navigation");
+  nav.innerHTML = `
+    <a class="active" href="/worldcup/">Schedule</a>
+    <a href="/worldcup/groups/">Groups</a>
+  `;
+  hero.appendChild(nav);
+}
+
 function keepResetButtonLabel() {
   if (!resetSelectionButton) return;
   resetSelectionButton.textContent = "Reset selection";
   resetSelectionButton.disabled = !teamSelectEl?.value;
 }
+
+addWorldCupTabs();
 
 if (teamSelectEl) {
   teamSelectEl.addEventListener("change", () => {
