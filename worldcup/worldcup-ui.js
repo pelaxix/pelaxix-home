@@ -12,7 +12,6 @@ function clearFilterOnReload() {
   try {
     sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
   } catch {
-    // Ignore storage errors.
   }
 }
 
@@ -32,7 +31,6 @@ function saveTeamFilter(value) {
       sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
     }
   } catch {
-    // Ignore storage errors and keep filtering for the current page only.
   }
 }
 
@@ -106,7 +104,7 @@ const calendarScript = document.createElement("script");
 calendarScript.src = "worldcup-calendar.js?v=2";
 
 const resultsScript = document.createElement("script");
-resultsScript.src = "results-loader.js?v=2";
+resultsScript.src = "results-loader.js?v=4";
 resultsScript.onload = () => document.body.appendChild(calendarScript);
 resultsScript.onerror = () => document.body.appendChild(calendarScript);
 document.body.appendChild(resultsScript);
