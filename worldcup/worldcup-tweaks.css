@@ -7,6 +7,8 @@ body {
 }
 
 .compact-title {
+  display: grid;
+  gap: 14px;
   margin-bottom: 14px;
 }
 
@@ -14,6 +16,29 @@ body {
   margin-bottom: 0;
   font-size: 0.95rem;
   letter-spacing: 0.13em;
+}
+
+.worldcup-tabs {
+  display: inline-flex;
+  width: fit-content;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.worldcup-tabs a {
+  border-radius: 999px;
+  padding: 10px 14px;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.worldcup-tabs a.active {
+  background: #f8fafc;
+  color: #0f172a;
 }
 
 .search-box select {
@@ -77,6 +102,15 @@ body {
 
   .compact-title {
     margin-bottom: 12px;
+  }
+
+  .worldcup-tabs {
+    width: 100%;
+  }
+
+  .worldcup-tabs a {
+    flex: 1;
+    text-align: center;
   }
 
   .timezone-card {
