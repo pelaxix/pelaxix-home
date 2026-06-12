@@ -176,7 +176,9 @@ function renderStandings(results) {
 
   results.forEach((result) => applyMatch(standings, result));
 
-  groupsGrid.innerHTML = selectedGroups().map((group) => {
+  const visibleGroups = selectedGroups();
+  groupsGrid.classList.toggle("filtered", visibleGroups.length === 1);
+  groupsGrid.innerHTML = visibleGroups.map((group) => {
     const table = standings[group];
     const rows = sortStandings(Array.from(table.values()));
     const played = rows.reduce((total, row) => total + row.played, 0) / 2;
