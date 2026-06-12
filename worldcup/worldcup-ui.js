@@ -1,5 +1,35 @@
 const teamSelectEl = document.querySelector("#teamSearch");
 const resetSelectionButton = document.querySelector("#showAllButton");
+const WORLD_CUP_TEAM_FILTER_KEY = "worldcupSelectedTeam";
+
+function savedTeamFilter() {
+  try {
+    return localStorage.getItem(WORLD_CUP_TEAM_FILTER_KEY) || "";
+  } catch {
+    return "";
+  }
+}
+
+function saveTeamFilter(value) {
+  try {
+    if (value) {
+      localStorage.setItem(WORLD_CUP_TEAM_FILTER_KEY, value);
+    } else {
+      localStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
+    }
+  } catch {
+    // Ignore storage errors and keep filtering for the current page only.
+  }
+}
+
+function applySavedTeamFilter() {
+  if (!teamSelectEl) return;
+  const savedValue = savedTeamFilter();
+  if (savedValue && Array.from(teamSelectEl.options).some((option) => option.value === savedValue)) {
+    teamSelectEl.value = savedValue;
+    render();
+  }
+}
 
 function addWorldCupTabs() {
   const hero = document.querySelector(".hero");
@@ -29,9 +59,11 @@ function keepResetButtonLabel() {
 }
 
 addWorldCupTabs();
+applySavedTeamFilter();
 
 if (teamSelectEl) {
   teamSelectEl.addEventListener("change", () => {
+    saveTeamFilter(teamSelectEl.value);
     render();
     keepResetButtonLabel();
   });
@@ -45,6 +77,7 @@ if (resetSelectionButton) {
       event.stopImmediatePropagation();
 
       if (teamSelectEl) teamSelectEl.value = "";
+      saveTeamFilter("");
       render();
       keepResetButtonLabel();
     },
