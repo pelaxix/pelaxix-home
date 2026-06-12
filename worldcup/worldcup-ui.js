@@ -66,13 +66,16 @@ function addWorldCupTabs() {
 
 function keepResetButtonLabel() {
   if (!resetSelectionButton) return;
+  const hasSelection = Boolean(teamSelectEl?.value);
   resetSelectionButton.textContent = "Reset selection";
-  resetSelectionButton.disabled = !teamSelectEl?.value;
+  resetSelectionButton.disabled = !hasSelection;
+  resetSelectionButton.hidden = !hasSelection;
 }
 
 clearFilterOnReload();
 addWorldCupTabs();
 applySavedTeamFilter();
+keepResetButtonLabel();
 
 if (teamSelectEl) {
   teamSelectEl.addEventListener("change", () => {
@@ -97,8 +100,6 @@ if (resetSelectionButton) {
     true
   );
 }
-
-keepResetButtonLabel();
 
 const calendarScript = document.createElement("script");
 calendarScript.src = "worldcup-calendar.js?v=2";
