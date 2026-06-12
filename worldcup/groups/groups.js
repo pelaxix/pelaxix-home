@@ -65,11 +65,40 @@ const FLAGS = {
 };
 
 const FINAL_STATUSES = new Set(["ft", "aet", "pen"]);
+const WORLD_CUP_TEAM_FILTER_KEY = "worldcupSelectedTeam";
 const groupsGrid = document.querySelector("#groupsGrid");
 const emptyState = document.querySelector("#groupsEmptyState");
 const teamSelectEl = document.querySelector("#teamSearch");
 const resetGroupsButton = document.querySelector("#resetGroupsButton");
 let currentResults = [];
+
+function savedTeamFilter() {
+  try {
+    return localStorage.getItem(WORLD_CUP_TEAM_FILTER_KEY) || "";
+  } catch {
+    return "";
+  }
+}
+
+function saveTeamFilter(value) {
+  try {
+    if (value) {
+      localStorage.setItem(WORLD_CUP_TEAM_FILTER_KEY, value);
+    } else {
+      localStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
+    }
+  } catch {
+    // Ignore storage errors and keep filtering for the current page only.
+  }
+}
+
+function applySavedTeamFilter() {
+  if (!teamSelectEl) return;
+  const savedValue = savedTeamFilter();
+  if (savedValue && Array.from(teamSelectEl.options).some((option) => option.value === savedValue)) {
+    teamSelectEl.value = savedValue;
+  }
+}
 
 function normalize(value) {
   return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -224,7 +253,10 @@ function renderStandings(results) {
   }).join("");
 }
 
+applySavedTeamFilter();
+
 teamSelectEl?.addEventListener("change", () => {
+  saveTeamFilter(teamSelectEl.value);
   renderStandings(currentResults);
   keepResetButtonLabel();
 });
@@ -232,6 +264,7 @@ teamSelectEl?.addEventListener("change", () => {
 resetGroupsButton?.addEventListener("click", (event) => {
   event.preventDefault();
   if (teamSelectEl) teamSelectEl.value = "";
+  saveTeamFilter("");
   renderStandings(currentResults);
   keepResetButtonLabel();
 });
