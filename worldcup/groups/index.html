@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="description" content="World Cup 2026 group standings calculated from the Pelaxix results file." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Pelaxix" />
+    <meta property="og:title" content="Pelaxix World Cup Groups" />
+    <meta property="og:description" content="World Cup 2026 group standings calculated from match results." />
+    <meta property="og:image" content="https://pelaxix.com/worldcup/worldcup-social-card.png?v=1" />
+    <meta property="og:url" content="https://pelaxix.com/worldcup/groups/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pelaxix World Cup Groups" />
+    <meta name="twitter:description" content="World Cup 2026 group standings calculated from match results." />
+    <meta name="twitter:image" content="https://pelaxix.com/worldcup/worldcup-social-card.png?v=1" />
+    <meta name="application-name" content="Groups" />
+    <meta name="apple-mobile-web-app-title" content="Groups" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#070812" />
+    <title>Pelaxix World Cup Groups</title>
+    <link rel="icon" href="/worldcup/worldcup-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/worldcup/worldcup-icon.png" />
+    <script>
+      if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) {
+        document.documentElement.classList.add("standalone-app");
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../worldcup.css?v=5" />
+    <link rel="stylesheet" href="../worldcup-tweaks.css?v=6" />
+    <link rel="stylesheet" href="groups.css?v=1" />
+    <link rel="stylesheet" href="/project-nav.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+      </header>
+
+      <main>
+        <section class="hero compact-title groups-hero">
+          <p class="eyebrow">World Cup 2026 Groups</p>
+          <nav class="worldcup-tabs" aria-label="World Cup navigation">
+            <a href="/worldcup/">Schedule</a>
+            <a class="active" href="/worldcup/groups/">Groups</a>
+          </nav>
+        </section>
+
+        <section class="standings-note" aria-live="polite">
+          <span>Calculated from</span>
+          <strong>results.json</strong>
+        </section>
+
+        <section id="groupsGrid" class="groups-grid" aria-label="World Cup group standings"></section>
+        <p id="groupsEmptyState" class="empty-state" hidden>Could not load group standings.</p>
+      </main>
+    </div>
+
+    <script src="groups.js?v=1"></script>
+  </body>
+</html>
