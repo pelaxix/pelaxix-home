@@ -82,7 +82,6 @@ function clearFilterOnReload() {
   try {
     sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
   } catch {
-    // Ignore storage errors.
   }
 }
 
@@ -102,7 +101,6 @@ function saveTeamFilter(value) {
       sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
     }
   } catch {
-    // Ignore storage errors and keep filtering for the current page only.
   }
 }
 
@@ -150,8 +148,10 @@ function selectedGroups() {
 
 function keepResetButtonLabel() {
   if (!resetGroupsButton) return;
+  const hasSelection = Boolean(teamSelectEl?.value);
   resetGroupsButton.textContent = "Reset selection";
-  resetGroupsButton.disabled = !teamSelectEl?.value;
+  resetGroupsButton.disabled = !hasSelection;
+  resetGroupsButton.hidden = !hasSelection;
 }
 
 function applyMatch(standings, match) {
@@ -269,6 +269,7 @@ function renderStandings(results) {
 
 clearFilterOnReload();
 applySavedTeamFilter();
+keepResetButtonLabel();
 
 teamSelectEl?.addEventListener("change", () => {
   saveTeamFilter(teamSelectEl.value);
@@ -283,8 +284,6 @@ resetGroupsButton?.addEventListener("click", (event) => {
   renderStandings(currentResults);
   keepResetButtonLabel();
 });
-
-keepResetButtonLabel();
 
 fetch(`../results.json?v=${Date.now()}`)
   .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`)))
