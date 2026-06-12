@@ -67,6 +67,9 @@ const FLAGS = {
 const FINAL_STATUSES = new Set(["ft", "aet", "pen"]);
 const groupsGrid = document.querySelector("#groupsGrid");
 const emptyState = document.querySelector("#groupsEmptyState");
+const teamSelectEl = document.querySelector("#teamSearch");
+const resetGroupsButton = document.querySelector("#resetGroupsButton");
+let currentResults = [];
 
 function normalize(value) {
   return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -94,6 +97,18 @@ function blankStanding(team) {
 
 function groupForTeam(team) {
   return Object.entries(GROUPS).find(([, teams]) => teams.includes(team))?.[0] || null;
+}
+
+function selectedGroups() {
+  const selectedTeam = teamSelectEl?.value || "";
+  const selectedGroup = groupForTeam(selectedTeam);
+  return selectedGroup ? [selectedGroup] : Object.keys(GROUPS);
+}
+
+function keepResetButtonLabel() {
+  if (!resetGroupsButton) return;
+  resetGroupsButton.textContent = "Reset selection";
+  resetGroupsButton.disabled = !teamSelectEl?.value;
 }
 
 function applyMatch(standings, match) {
@@ -161,7 +176,8 @@ function renderStandings(results) {
 
   results.forEach((result) => applyMatch(standings, result));
 
-  groupsGrid.innerHTML = Object.entries(standings).map(([group, table]) => {
+  groupsGrid.innerHTML = selectedGroups().map((group) => {
+    const table = standings[group];
     const rows = sortStandings(Array.from(table.values()));
     const played = rows.reduce((total, row) => total + row.played, 0) / 2;
 
@@ -206,16 +222,30 @@ function renderStandings(results) {
   }).join("");
 }
 
+teamSelectEl?.addEventListener("change", () => {
+  renderStandings(currentResults);
+  keepResetButtonLabel();
+});
+
+resetGroupsButton?.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (teamSelectEl) teamSelectEl.value = "";
+  renderStandings(currentResults);
+  keepResetButtonLabel();
+});
+
+keepResetButtonLabel();
+
 fetch(`../results.json?v=${Date.now()}`)
   .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`)))
   .then((data) => {
     const fields = data.fields || [];
-    const results = (data.matches || []).map((row) => normalizeResult(Array.isArray(row)
+    currentResults = (data.matches || []).map((row) => normalizeResult(Array.isArray(row)
       ? Object.fromEntries(fields.map((field, index) => [field, row[index]]))
       : row
     ));
     emptyState.hidden = true;
-    renderStandings(results);
+    renderStandings(currentResults);
   })
   .catch((error) => {
     console.warn("Could not load World Cup group standings.", error);
