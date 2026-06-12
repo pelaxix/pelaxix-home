@@ -72,9 +72,23 @@ const teamSelectEl = document.querySelector("#teamSearch");
 const resetGroupsButton = document.querySelector("#resetGroupsButton");
 let currentResults = [];
 
+function isPageReload() {
+  const navigationEntry = performance.getEntriesByType?.("navigation")?.[0];
+  return navigationEntry?.type === "reload" || performance.navigation?.type === 1;
+}
+
+function clearFilterOnReload() {
+  if (!isPageReload()) return;
+  try {
+    sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
+  } catch {
+    // Ignore storage errors.
+  }
+}
+
 function savedTeamFilter() {
   try {
-    return localStorage.getItem(WORLD_CUP_TEAM_FILTER_KEY) || "";
+    return sessionStorage.getItem(WORLD_CUP_TEAM_FILTER_KEY) || "";
   } catch {
     return "";
   }
@@ -83,9 +97,9 @@ function savedTeamFilter() {
 function saveTeamFilter(value) {
   try {
     if (value) {
-      localStorage.setItem(WORLD_CUP_TEAM_FILTER_KEY, value);
+      sessionStorage.setItem(WORLD_CUP_TEAM_FILTER_KEY, value);
     } else {
-      localStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
+      sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
     }
   } catch {
     // Ignore storage errors and keep filtering for the current page only.
@@ -253,6 +267,7 @@ function renderStandings(results) {
   }).join("");
 }
 
+clearFilterOnReload();
 applySavedTeamFilter();
 
 teamSelectEl?.addEventListener("change", () => {
