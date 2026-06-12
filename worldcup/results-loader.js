@@ -189,11 +189,11 @@ const resultsStyles = document.createElement("style");
 resultsStyles.textContent = `
 .result-pill { min-width: 92px; border-radius: 999px; padding: 10px 12px; background: #e0f2fe; color: #075985; font-weight: 900; text-align: center; white-space: nowrap; }
 .match-row.has-result .team { transition: color 0.2s ease, opacity 0.2s ease, text-shadow 0.2s ease; }
-.team.winner { color: #86efac; font-weight: 1000; text-shadow: 0 0 10px rgba(134, 239, 172, 0.22); }
-.team.winner .team-name { padding: 1px 4px; border-radius: 8px; background: rgba(134, 239, 172, 0.10); box-shadow: inset 0 0 0 1px rgba(134, 239, 172, 0.22); text-decoration: none; }
+.team.winner { color: #86efac; font-weight: 1000; text-shadow: 0 0 10px rgba(134, 239, 172, 0.18); }
+.team.winner .team-name { background: none; box-shadow: none; padding: 0; text-decoration: none; }
 .team.loser { color: rgba(255, 255, 255, 0.42); }
 .team.tied { color: #93c5fd; font-weight: 900; }
-.team.tied .team-name { padding: 1px 4px; border-radius: 8px; background: rgba(147, 197, 253, 0.10); box-shadow: inset 0 0 0 1px rgba(147, 197, 253, 0.18); }
+.team.tied .team-name { background: none; box-shadow: none; padding: 0; text-decoration: none; }
 .winner-sparkle { display: inline-block; margin: 0 4px; animation: winnerSparkle 1.8s ease-in-out infinite; filter: drop-shadow(0 0 5px rgba(250, 204, 21, 0.55)); }
 @keyframes winnerSparkle { 0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.78; } 45% { transform: scale(1.15) rotate(10deg); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .winner-sparkle { animation: none; } }
