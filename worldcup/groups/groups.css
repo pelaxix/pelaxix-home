@@ -3,47 +3,14 @@
   gap: 14px;
 }
 
-.worldcup-tabs {
-  display: inline-flex;
-  width: fit-content;
-  gap: 8px;
-  padding: 6px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.worldcup-tabs a {
-  border-radius: 999px;
-  padding: 10px 14px;
-  color: var(--muted);
-  text-decoration: none;
-  font-weight: 900;
-}
-
-.worldcup-tabs a.active {
-  background: #f8fafc;
-  color: #0f172a;
-}
-
-.standings-note {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 22px 0;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--muted);
-}
-
-.standings-note strong { color: var(--text); }
-
 .groups-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+}
+
+.groups-grid.filtered {
+  grid-template-columns: 1fr;
 }
 
 .group-card {
@@ -126,9 +93,6 @@
 }
 
 @media (max-width: 680px) {
-  .worldcup-tabs { width: 100%; }
-  .worldcup-tabs a { flex: 1; text-align: center; }
-  .standings-note { display: grid; gap: 6px; }
   .group-card { border-radius: 24px; }
   .standings-table { font-size: 0.76rem; }
   .standings-table th,
