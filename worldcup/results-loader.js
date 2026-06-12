@@ -137,7 +137,6 @@ function renderResultAwareSchedule() {
   }
 
   emptyStateEl.hidden = matches.length > 0;
-  showAllButton.textContent = showAll ? "Show upcoming" : "Show all";
 
   scheduleEl.innerHTML = Array.from(grouped.values())
     .map((dayMatches) => {
