@@ -11,6 +11,8 @@ const RESULT_STATUS_LABELS = {
 const RESULTS_BY_ID = new Map();
 const ENGLAND_FLAG = "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}";
 const SCOTLAND_FLAG = "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}";
+let showPastResults = false;
+let pastResultsButton = null;
 
 FLAGS["England"] = ENGLAND_FLAG;
 FLAGS["Scotland"] = SCOTLAND_FLAG;
@@ -58,16 +60,73 @@ function hasVisibleResult(result) {
   return true;
 }
 
-function visibleMatchesWithResults() {
-  const query = normalize(searchEl.value.trim());
+function localDayKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
+function isOlderResult(match) {
+  return hasVisibleResult(getResult(match)) && localDayKey(match.kickoff) < localDayKey(new Date());
+}
+
+function matchesTeamFilter(match) {
+  const query = normalize(searchEl.value.trim());
+  if (!query) return true;
+  return normalize(`${match.home} ${match.away}`).includes(query);
+}
+
+function hiddenPastResultsCount() {
   return MATCHES
     .map((match) => ({ ...match, kickoff: new Date(match.kickoffUtc) }))
-    .filter((match) => showAll || !isPast(match) || hasVisibleResult(getResult(match)))
+    .filter((match) => matchesTeamFilter(match))
+    .filter((match) => isOlderResult(match))
+    .length;
+}
+
+function createPastResultsButton() {
+  if (pastResultsButton) return;
+
+  const controls = document.querySelector(".controls");
+  if (!controls) return;
+
+  pastResultsButton = document.createElement("button");
+  pastResultsButton.id = "pastResultsButton";
+  pastResultsButton.className = "ghost-button past-results-button";
+  pastResultsButton.type = "button";
+  pastResultsButton.hidden = true;
+
+  pastResultsButton.addEventListener("click", () => {
+    showPastResults = !showPastResults;
+    render();
+  });
+
+  controls.appendChild(pastResultsButton);
+}
+
+function updatePastResultsButton() {
+  if (!pastResultsButton) return;
+  const count = hiddenPastResultsCount();
+
+  if (!count && !showPastResults) {
+    pastResultsButton.hidden = true;
+    return;
+  }
+
+  pastResultsButton.hidden = false;
+  pastResultsButton.textContent = showPastResults ? "Hide past results" : "Show past results";
+}
+
+function visibleMatchesWithResults() {
+  return MATCHES
+    .map((match) => ({ ...match, kickoff: new Date(match.kickoffUtc) }))
     .filter((match) => {
-      if (!query) return true;
-      return normalize(`${match.home} ${match.away}`).includes(query);
+      if (showAll || showPastResults) return true;
+      if (isOlderResult(match)) return false;
+      return !isPast(match) || hasVisibleResult(getResult(match));
     })
+    .filter((match) => matchesTeamFilter(match))
     .sort((a, b) => a.kickoff - b.kickoff);
 }
 
@@ -127,6 +186,9 @@ function centerMarkup(match) {
 }
 
 function renderResultAwareSchedule() {
+  createPastResultsButton();
+  updatePastResultsButton();
+
   const matches = visibleMatchesWithResults();
   const grouped = new Map();
 
