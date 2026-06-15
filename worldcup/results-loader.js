@@ -50,6 +50,15 @@ function resultFromRow(fields, row) {
   return normalizeResult(result);
 }
 
+function applyResultRows(data) {
+  const fields = data.fields || [];
+  for (const row of data.matches || []) {
+    const result = resultFromRow(fields, row);
+    const existing = RESULTS_BY_ID.get(Number(result.id)) || {};
+    RESULTS_BY_ID.set(Number(result.id), normalizeResult({ ...existing, ...result }));
+  }
+}
+
 function getResult(match) {
   return RESULTS_BY_ID.get(Number(match.id));
 }
@@ -232,14 +241,13 @@ function renderResultAwareSchedule() {
 
 render = renderResultAwareSchedule;
 
-fetch(`results.json?v=${Date.now()}`)
-  .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`)))
-  .then((data) => {
-    const fields = data.fields || [];
-    for (const row of data.matches || []) {
-      const result = resultFromRow(fields, row);
-      RESULTS_BY_ID.set(Number(result.id), result);
-    }
+Promise.all([
+  fetch(`results.json?v=${Date.now()}`).then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`))),
+  fetch(`results-overrides.json?v=${Date.now()}`).then((response) => response.ok ? response.json() : null).catch(() => null)
+])
+  .then(([resultsData, overridesData]) => {
+    applyResultRows(resultsData);
+    if (overridesData) applyResultRows(overridesData);
     render();
   })
   .catch((error) => {
