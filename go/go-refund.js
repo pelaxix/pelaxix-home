@@ -1,4 +1,5 @@
 const GO_REFUND_CLAIM_URL = "https://www.gotransit.com/en/service-guarantee/submit-a-claim";
+const PRESTO_CARD_NUMBER = "31240116179969000";
 
 window.addEventListener("DOMContentLoaded", () => {
   updateGoRefundCard();
@@ -15,6 +16,7 @@ async function updateGoRefundCard() {
   card.classList.remove("refund-yes", "refund-no");
   card.removeAttribute("href");
   card.removeAttribute("title");
+  card.onclick = null;
   card.setAttribute("aria-label", "Checking GO refund eligibility.");
   updateRefundDetails(details, {
     status: "checking",
@@ -34,11 +36,13 @@ async function updateGoRefundCard() {
 
     if (data.eligible) {
       card.href = GO_REFUND_CLAIM_URL;
-      card.title = data.reason || "Open GO Transit claim form";
-      card.setAttribute("aria-label", `Refund eligible. ${data.reason || "Open the GO Transit claim form."}`);
+      card.title = data.reason || "Copy PRESTO card number and open GO Transit claim form";
+      card.setAttribute("aria-label", `Refund eligible. Copies PRESTO card number and opens the GO Transit claim form. ${data.reason || ""}`);
+      card.onclick = handleEligibleClaimClick;
     } else {
       card.removeAttribute("href");
       card.removeAttribute("title");
+      card.onclick = null;
       card.setAttribute("aria-label", data.reason || "Refund not eligible.");
     }
 
@@ -51,11 +55,25 @@ async function updateGoRefundCard() {
     card.classList.add("refund-no");
     card.removeAttribute("href");
     card.removeAttribute("title");
+    card.onclick = null;
     card.setAttribute("aria-label", error.message || "Refund eligibility unavailable.");
     updateRefundDetails(details, {
       status: "error",
       error,
     });
+  }
+}
+
+async function handleEligibleClaimClick(event) {
+  const href = event.currentTarget.href;
+  event.preventDefault();
+
+  try {
+    await navigator.clipboard.writeText(PRESTO_CARD_NUMBER);
+  } catch (error) {
+    console.warn("Could not copy PRESTO card number to clipboard.", error);
+  } finally {
+    window.open(href, "_blank", "noopener");
   }
 }
 
@@ -81,7 +99,7 @@ function updateRefundDetails(details, context) {
   const trip = data.checkedTrip || {};
   const eligibleText = data.eligible ? "YES" : "NO";
   const cardAction = data.eligible
-    ? "The card is clickable and opens the GO Transit claim form."
+    ? "The card copies the PRESTO card number to the clipboard, then opens the GO Transit claim form."
     : "The card is not clickable.";
 
   details.innerHTML = [
