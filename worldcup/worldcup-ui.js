@@ -102,7 +102,7 @@ if (resetSelectionButton) {
 }
 
 const calendarScript = document.createElement("script");
-calendarScript.src = "worldcup-calendar.js?v=2";
+calendarScript.src = "worldcup-calendar.js?v=3";
 
 const resultsScript = document.createElement("script");
 resultsScript.src = "results-loader.js?v=7";
