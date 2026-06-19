@@ -11,10 +11,23 @@ function openCalendarEvent(match) {
   window.location.href = `/api/worldcup-calendar?${params}`;
 }
 
+function matchForTimePill(time) {
+  const row = time.closest(".match-row");
+  const home = row?.querySelector(".team.home .team-name")?.textContent?.trim();
+  const away = row?.querySelector(".team.away .team-name")?.textContent?.trim();
+
+  return MATCHES.find((item) =>
+    item.kickoffUtc === time.dateTime &&
+    item.home === home &&
+    item.away === away
+  );
+}
+
 function enhanceCalendarTimes() {
   calendarSchedule.querySelectorAll(".match-row > time").forEach((time) => {
-    const match = MATCHES.find((item) => item.kickoffUtc === time.dateTime);
+    const match = matchForTimePill(time);
     if (!match) return;
+
     const button = document.createElement("button");
     button.className = "time-pill";
     button.type = "button";
