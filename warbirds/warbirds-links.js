@@ -6,9 +6,6 @@
     "dev",
   ].join(".");
   const statusEndpoint = `https://${workerHost}/public`;
-  const knownHexes = {
-    "C-GCWM": "c04c39",
-  };
 
   const styles = document.createElement("style");
   styles.textContent = `
@@ -16,20 +13,34 @@
       cursor: pointer;
     }
 
-    .airplanes-live-link:hover,
-    .airplanes-live-link:focus-visible {
+    .live-card.airplanes-live-link {
+      padding-bottom: 58px;
+    }
+
+    .live-card.airplanes-live-link:hover,
+    .live-card.airplanes-live-link:focus-visible {
       border-color: rgba(168, 228, 107, 0.72) !important;
       outline: none;
     }
 
-    .airplanes-live-link::after {
-      content: "Open on Airplanes.live ↗";
-      display: block;
-      margin-top: 16px;
+    .live-card.airplanes-live-link::after {
+      content: "Follow this plane’s live route";
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      left: 18px;
+      width: auto;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+      margin: 0;
       color: var(--green);
+      background: transparent;
       font-family: "DM Mono", monospace;
       font-size: 0.68rem;
       letter-spacing: 0.04em;
+      line-height: 1.3;
+      text-align: center;
       text-transform: uppercase;
     }
   `;
@@ -57,7 +68,11 @@
     element.classList.add("airplanes-live-link");
     element.setAttribute("role", "link");
     element.setAttribute("tabindex", "0");
-    element.setAttribute("title", "Open this aircraft on Airplanes.live");
+    element.setAttribute(
+      "aria-label",
+      "Follow this plane’s live route on Airplanes.live",
+    );
+    element.setAttribute("title", "Follow this plane’s live route");
 
     element.addEventListener("click", () => openGlobe(hex));
     element.addEventListener("keydown", (event) => {
@@ -65,13 +80,6 @@
         event.preventDefault();
         openGlobe(hex);
       }
-    });
-  }
-
-  function decorateRoster() {
-    document.querySelectorAll(".watchlist-text li").forEach((item) => {
-      const registration = registrationFromText(item.textContent);
-      makeClickable(item, knownHexes[registration]);
     });
   }
 
@@ -104,6 +112,5 @@
     });
   }
 
-  decorateRoster();
   decorateLiveCards();
 })();
