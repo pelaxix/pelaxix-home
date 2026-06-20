@@ -144,6 +144,9 @@ const radar = document.querySelector(".radar-panel");
 const hero = document.querySelector(".hero");
 radar?.remove();
 
+document.querySelector(".site-header")?.remove();
+document.querySelector('footer a[href="/"]')?.remove();
+
 if (hero) {
   hero.style.gridTemplateColumns = "1fr";
   hero.style.minHeight = "auto";
