@@ -29,8 +29,8 @@
   }
 
   window.setInterval(() => {
-    if (!document.hidden && typeof window.load === "function") {
-      window.load();
+    if (!document.hidden) {
+      document.dispatchEvent(new Event("visibilitychange"));
     }
   }, refreshEveryMs);
 })();
