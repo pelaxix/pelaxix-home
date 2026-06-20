@@ -1,8 +1,8 @@
 const GROUPS = {
   A: ["Mexico", "South Africa", "South Korea", "Czechia"],
   B: ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"],
-  C: ["United States", "Paraguay", "Australia", "Türkiye"],
-  D: ["Brazil", "Morocco", "Haiti", "Scotland"],
+  C: ["Brazil", "Morocco", "Haiti", "Scotland"],
+  D: ["United States", "Paraguay", "Australia", "Türkiye"],
   E: ["Germany", "Curaçao", "Côte d'Ivoire", "Ecuador"],
   F: ["Netherlands", "Japan", "Sweden", "Tunisia"],
   G: ["Spain", "Cabo Verde", "Saudi Arabia", "Uruguay"],
@@ -130,6 +130,31 @@ function normalizeResult(result) {
     awayScore: normalizeScore(result.awayScore),
     winner: typeof result.winner === "string" ? result.winner.trim() : result.winner
   };
+}
+
+function resultFromRow(fields, row) {
+  const result = Array.isArray(row)
+    ? Object.fromEntries(fields.map((field, index) => [field, row[index]]))
+    : { ...row };
+  return normalizeResult(result);
+}
+
+function mergeResultData(...sources) {
+  const resultsById = new Map();
+
+  for (const data of sources.filter(Boolean)) {
+    const fields = data.fields || [];
+    for (const row of data.matches || []) {
+      const result = resultFromRow(fields, row);
+      const id = Number(result.id);
+      if (!Number.isFinite(id)) continue;
+
+      const existing = resultsById.get(id) || {};
+      resultsById.set(id, normalizeResult({ ...existing, ...result, id }));
+    }
+  }
+
+  return Array.from(resultsById.values());
 }
 
 function blankStanding(team) {
@@ -285,14 +310,12 @@ resetGroupsButton?.addEventListener("click", (event) => {
   keepResetButtonLabel();
 });
 
-fetch(`../results.json?v=${Date.now()}`)
-  .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`)))
-  .then((data) => {
-    const fields = data.fields || [];
-    currentResults = (data.matches || []).map((row) => normalizeResult(Array.isArray(row)
-      ? Object.fromEntries(fields.map((field, index) => [field, row[index]]))
-      : row
-    ));
+Promise.all([
+  fetch(`../results.json?v=${Date.now()}`).then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`))),
+  fetch(`../results-overrides.json?v=${Date.now()}`).then((response) => response.ok ? response.json() : null).catch(() => null)
+])
+  .then(([resultsData, overridesData]) => {
+    currentResults = mergeResultData(resultsData, overridesData);
     emptyState.hidden = true;
     renderStandings(currentResults);
   })
