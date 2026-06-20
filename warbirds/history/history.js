@@ -4,11 +4,13 @@ const workerHost = [
   "workers",
   "dev",
 ].join(".");
+
 const historyEndpoint = `https://${workerHost}/history`;
 const activityFilter = document.querySelector("#activityFilter");
 const historyStatus = document.querySelector("#historyStatus");
 const historyList = document.querySelector("#historyList");
-const autoRefreshMs = 3 * 60 * 1000;
+const autoRefreshMs = 60 * 1000;
+
 let showActivityOnly = false;
 let allScans = [];
 let isLoading = false;
@@ -17,33 +19,35 @@ let isLoading = false;
 document.querySelector(".site-header")?.remove();
 document.querySelector("footer a")?.remove();
 
-function formatTime(value) {
+function getScanTime(scan) {
+  return scan.at || scan.timestamp || null;
+}
+
+function formatTimestamp(value) {
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
     return "Unknown time";
   }
 
-  return new Intl.DateTimeFormat(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
+  const year = new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+  }).format(date);
+  const month = new Intl.DateTimeFormat(undefined, {
+    month: "2-digit",
+  }).format(date);
+  const day = new Intl.DateTimeFormat(undefined, {
+    day: "2-digit",
+  }).format(date);
+  const time = new Intl.DateTimeFormat(undefined, {
     hour: "numeric",
     minute: "2-digit",
   }).format(date);
+
+  return `${year}.${month}.${day} · ${time}`;
 }
 
-function getPlaneUrl(hex) {
-  return hex
-    ? `https://globe.airplanes.live/?icao=${encodeURIComponent(hex)}`
-    : null;
-}
-
-function showEmpty(title, description) {
-  historyList.innerHTML = `<article class="empty-state"><span class="empty-icon">⌁</span><div><h3>${title}</h3><p>${description}</p></div></article>`;
-}
-
-function activityItems(scan) {
+function aircraftItems(scan) {
   return Array.isArray(scan.aircraft)
     ? scan.aircraft
     : Array.isArray(scan.liveMatches)
@@ -51,70 +55,125 @@ function activityItems(scan) {
       : [];
 }
 
+function scanActivities(scan) {
+  const rawActivities = Array.isArray(scan.activity)
+    ? scan.activity
+    : Array.isArray(scan.activities)
+      ? scan.activities
+      : scan.event
+        ? aircraftItems(scan).map((item) => ({ ...item, type: scan.event }))
+        : [];
+
+  return rawActivities
+    .map((item) => {
+      const type = String(item?.type ?? item?.event ?? "").toLowerCase();
+
+      return {
+        type,
+        aircraft:
+          item?.label ||
+          item?.aircraft ||
+          item?.registration ||
+          "Watched aircraft",
+      };
+    })
+    .filter((item) => item.type === "detected" || item.type === "airborne");
+}
+
+function hasActivity(scan) {
+  return scanActivities(scan).length > 0;
+}
+
 function scanKind(scan) {
   if (scan.error) {
     return "error";
   }
 
-  const aircraft = activityItems(scan);
+  const activities = scanActivities(scan);
 
-  if (aircraft.some((item) => item.airborne)) {
+  if (activities.some((item) => item.type === "airborne")) {
     return "airborne";
   }
 
-  if (aircraft.length) {
+  if (activities.length) {
     return "detected";
   }
 
   return "quiet";
 }
 
-function scanLabel(scan) {
-  const aircraft = activityItems(scan);
-  const kind = scanKind(scan);
+function showEmpty(title, description) {
+  const card = document.createElement("article");
+  const icon = document.createElement("span");
+  const content = document.createElement("div");
+  const heading = document.createElement("h3");
+  const text = document.createElement("p");
 
-  if (kind === "error") {
-    return "Scan error";
-  }
-
-  if (!aircraft.length) {
-    return "No watched aircraft detected";
-  }
-
-  if (aircraft.length === 1) {
-    return aircraft[0].label || aircraft[0].aircraft || aircraft[0].registration || "Aircraft detected";
-  }
-
-  return `${aircraft.length} watched aircraft detected`;
+  card.className = "empty-state";
+  icon.className = "empty-icon";
+  icon.textContent = "⌁";
+  heading.textContent = title;
+  text.textContent = description;
+  content.append(heading, text);
+  card.append(icon, content);
+  historyList.replaceChildren(card);
 }
 
-function scanDetail(scan) {
-  const aircraft = activityItems(scan);
+function appendActivityMessage(message, activities) {
+  activities.forEach((activity, index) => {
+    if (index > 0) {
+      message.append(document.createTextNode(" · "));
+    }
 
+    message.append(document.createTextNode(`${activity.aircraft} `));
+
+    const status = document.createElement("span");
+    status.className = `status-word ${activity.type}`;
+    status.textContent = activity.type === "airborne" ? "airborne" : "detected";
+    message.append(status);
+  });
+}
+
+function appendScanMessage(message, scan) {
   if (scan.error) {
-    return scan.error;
+    const status = document.createElement("span");
+    status.className = "status-word error";
+    status.textContent = "Scan error";
+    message.append(status, document.createTextNode(` · ${scan.error}`));
+    return;
   }
 
-  if (!aircraft.length) {
-    return scan.source === "manual" ? "Manual check" : "Scheduled check";
+  const activities = scanActivities(scan);
+
+  if (activities.length) {
+    appendActivityMessage(message, activities);
+    return;
   }
 
-  return aircraft
-    .map((item) => {
-      const name = item.label || item.aircraft || item.registration || "Aircraft";
-      const registration = item.registration ? ` (${item.registration})` : "";
-      const route = getPlaneUrl(item.hex);
+  const aircraft = aircraftItems(scan);
 
-      return route
-        ? `<a class="plane-link" href="${route}" target="_blank" rel="noopener noreferrer">${name}${registration}</a>`
-        : `${name}${registration}`;
-    })
-    .join(" · ");
+  if (aircraft.length === 1) {
+    const name = aircraft[0].label || aircraft[0].aircraft || aircraft[0].registration || "Watched aircraft";
+    message.textContent = `${name} still tracked`;
+    return;
+  }
+
+  if (aircraft.length > 1) {
+    message.textContent = `${aircraft.length} watched aircraft still tracked`;
+    return;
+  }
+
+  message.append(document.createTextNode("Scan completed · "));
+
+  const status = document.createElement("span");
+  status.className = "status-word quiet";
+  status.textContent = "Quiet";
+  message.append(status);
 }
 
 function render() {
   const scans = showActivityOnly
-    ? allScans.filter((scan) => scanKind(scan) !== "quiet")
+    ? allScans.filter(hasActivity)
     : allScans;
 
   if (!scans.length) {
@@ -130,34 +189,19 @@ function render() {
   const fragment = document.createDocumentFragment();
 
   scans.forEach((scan) => {
-    const kind = scanKind(scan);
     const row = document.createElement("article");
     const time = document.createElement("time");
-    const detail = document.createElement("div");
-    const heading = document.createElement("h3");
-    const text = document.createElement("p");
-    const badge = document.createElement("span");
+    const message = document.createElement("p");
 
-    row.className = `scan-row ${kind}`;
+    row.className = `scan-row ${scanKind(scan)}`;
     time.className = "scan-time";
-    time.dateTime = scan.at || scan.timestamp || "";
-    time.textContent = formatTime(scan.at || scan.timestamp);
+    time.dateTime = getScanTime(scan) || "";
+    time.textContent = formatTimestamp(getScanTime(scan));
 
-    detail.className = "scan-detail";
-    heading.textContent = scanLabel(scan);
-    text.innerHTML = scanDetail(scan);
-    detail.append(heading, text);
+    message.className = "scan-message";
+    appendScanMessage(message, scan);
 
-    badge.className = `scan-badge ${kind}`;
-    badge.textContent = kind === "airborne"
-      ? "Airborne"
-      : kind === "detected"
-        ? "Detected"
-        : kind === "error"
-          ? "Error"
-          : "Quiet";
-
-    row.append(time, detail, badge);
+    row.append(time, message);
     fragment.append(row);
   });
 
@@ -190,21 +234,24 @@ async function loadHistory() {
       : Array.isArray(payload.history)
         ? payload.history
         : [];
+
     allScans.sort(
       (first, second) =>
-        Date.parse(second.at || second.timestamp) - Date.parse(first.at || first.timestamp),
+        Date.parse(getScanTime(second)) - Date.parse(getScanTime(first)),
     );
+
     render();
+
     historyStatus.textContent = allScans.length
-      ? `${allScans.length} scan${allScans.length === 1 ? "" : "s"} recorded · last 48 hours · updates every 3 min`
-      : "No scans recorded yet · checks every 3 min";
+      ? `${allScans.length} scan${allScans.length === 1 ? "" : "s"} recorded · last 48 hours · updates every min`
+      : "No scans recorded yet · checks every min";
   } catch (error) {
     console.error("Could not load scan history", error);
     showEmpty(
       "Scan history is not online yet",
-      "The history page is ready. The Worker needs its final scan-log update before entries can appear here.",
+      "The history page is ready. The Worker needs its scan-log update before entries can appear here.",
     );
-    historyStatus.textContent = "Waiting for the scan-log update · retrying every 3 min";
+    historyStatus.textContent = "Waiting for the scan-log update · retrying every min";
   } finally {
     isLoading = false;
   }
