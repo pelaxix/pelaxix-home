@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="The last 48 hours of Hamilton Warbird Watch scans."
+    />
+    <title>Scan History · Hamilton Warbird Watch</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="history.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <a class="back-link" href="/warbirds/">← Warbird Watch</a>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Hamilton Warbird Watch</p>
+          <h1>Scan history.</h1>
+          <p class="hero-copy">
+            Every completed tracker scan from the last 48 hours. Quiet scans are included so the log can show exactly when the watcher checked.
+          </p>
+          <div class="hero-actions">
+            <button id="refreshButton" class="button primary" type="button">Refresh history</button>
+            <button id="activityFilter" class="button secondary" type="button" aria-pressed="false">
+              Activity only
+            </button>
+          </div>
+        </section>
+
+        <section class="history-panel" aria-labelledby="history-title">
+          <div class="history-heading">
+            <div>
+              <p class="eyebrow">Last 48 hours</p>
+              <h2 id="history-title">Recent scans</h2>
+            </div>
+            <p id="historyStatus" class="history-status" role="status">Loading scan history…</p>
+          </div>
+
+          <div id="historyList" class="history-list" aria-live="polite">
+            <article class="empty-state">
+              <span class="empty-icon">⌁</span>
+              <div>
+                <h3>Loading scans</h3>
+                <p>The tracker’s recent scan log is on its way.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>History begins once the scan-log update is live. Times are shown in your device’s local time.</p>
+        <a href="/warbirds/">Back to Warbird Watch</a>
+      </footer>
+    </div>
+
+    <script src="history.js"></script>
+  </body>
+</html>
