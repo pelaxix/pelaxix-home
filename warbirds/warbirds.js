@@ -1,151 +1,41 @@
 document.head.insertAdjacentHTML(
   "beforeend",
   `<style>
-    .hero {
-      display: block !important;
-      min-height: auto !important;
-      padding: 34px 0 38px !important;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.65rem, 12vw, 5rem) !important;
-      line-height: 0.92 !important;
-      letter-spacing: -0.075em !important;
-      white-space: nowrap;
-    }
-
-    .hero-text {
-      max-width: 630px;
-      margin-bottom: 23px !important;
-    }
-
-    .hero-actions .button {
-      min-height: 44px;
-      padding: 0 17px;
-    }
-
-    .discord-cta {
-      margin: 19px 0 0;
-      padding-top: 17px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.55;
-    }
-
-    .discord-cta span {
-      color: var(--green);
-      font-weight: 800;
-    }
-
-    .watchlist-text {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0 22px;
-      margin: 25px 0 0;
-      padding: 0;
-      list-style: none;
-      border-top: 1px solid var(--line);
-    }
-
-    .watchlist-text li {
-      padding: 11px 0;
-      border-bottom: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .watchlist-text code {
-      margin-right: 8px;
-      color: var(--green);
-      font-family: monospace;
-      font-size: 0.72rem;
-    }
-
-    .live-card.has-route-link {
-      padding-bottom: 58px;
-    }
-
-    .live-route-link {
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
-      left: 18px;
-      z-index: 1;
-      color: var(--green);
-      font-family: "DM Mono", monospace;
-      font-size: 0.68rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      line-height: 1.3;
-      text-align: center;
-      text-decoration: none;
-      text-transform: uppercase;
-    }
-
-    .live-route-link:hover,
-    .live-route-link:focus-visible {
-      color: #c1f589;
-      outline: none;
-      text-decoration: underline;
-      text-underline-offset: 4px;
-    }
-
+    .hero { display: block !important; min-height: auto !important; padding: 34px 0 38px !important; }
+    .hero h1 { font-size: clamp(2.65rem, 12vw, 5rem) !important; line-height: .92 !important; letter-spacing: -.075em !important; white-space: nowrap; }
+    .hero-text { max-width: 630px; margin-bottom: 23px !important; }
+    .hero-actions .button { min-height: 44px; padding: 0 17px; }
+    .discord-cta { margin: 19px 0 0; padding-top: 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: .92rem; line-height: 1.55; }
+    .discord-cta span { color: var(--green); font-weight: 800; }
+    .watchlist-text { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; margin: 25px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .watchlist-text li { padding: 11px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+    .watchlist-text code { margin-right: 8px; color: var(--green); font-family: monospace; font-size: .72rem; }
+    .live-card.has-route-link { padding-bottom: 58px; }
+    .live-route-link { position: absolute; right: 18px; bottom: 18px; left: 18px; z-index: 1; color: var(--green); font-family: "DM Mono", monospace; font-size: .68rem; font-weight: 500; letter-spacing: .04em; line-height: 1.3; text-align: center; text-decoration: none; text-transform: uppercase; }
+    .live-route-link:hover, .live-route-link:focus-visible { color: #c1f589; outline: none; text-decoration: underline; text-underline-offset: 4px; }
     @media (max-width: 580px) {
-      .hero {
-        padding-top: 28px !important;
-        padding-bottom: 31px !important;
-      }
-
-      .hero h1 {
-        font-size: clamp(2.5rem, 12vw, 3.25rem) !important;
-      }
-
-      .hero-text {
-        font-size: 1.02rem !important;
-        line-height: 1.58 !important;
-      }
-
-      .hero-actions {
-        gap: 9px;
-      }
-
-      .hero-actions .button {
-        min-height: 42px;
-        padding: 0 15px;
-      }
-
-      .live-board,
-      .watchlist-section {
-        margin-bottom: 20px !important;
-      }
-
-      .watchlist-text {
-        grid-template-columns: 1fr;
-        margin-top: 19px;
-      }
-
-      .watchlist-text li {
-        padding: 9px 0;
-      }
-
-      .section-copy {
-        font-size: 0.84rem !important;
-      }
-
-      .discord-cta {
-        font-size: 0.86rem;
-      }
+      .hero { padding-top: 28px !important; padding-bottom: 31px !important; }
+      .hero h1 { font-size: clamp(2.5rem, 12vw, 3.25rem) !important; }
+      .hero-text { font-size: 1.02rem !important; line-height: 1.58 !important; }
+      .hero-actions { gap: 9px; }
+      .hero-actions .button { min-height: 42px; padding: 0 15px; }
+      .live-board, .watchlist-section { margin-bottom: 20px !important; }
+      .watchlist-text { grid-template-columns: 1fr; margin-top: 19px; }
+      .watchlist-text li { padding: 9px 0; }
+      .section-copy { font-size: .84rem !important; }
+      .discord-cta { font-size: .86rem; }
     }
   </style>`,
 );
 
 const radar = document.querySelector(".radar-panel");
 const hero = document.querySelector(".hero");
+const scheduleCopy = document.querySelector(".section-copy");
 radar?.remove();
-
 document.querySelector(".site-header")?.remove();
 document.querySelector('footer a[href="/"]')?.remove();
+document.querySelector("#refreshButton")?.remove();
+document.querySelector('.hero-actions a[href="#watchlist"]')?.remove();
 
 if (hero) {
   hero.style.gridTemplateColumns = "1fr";
@@ -153,9 +43,9 @@ if (hero) {
   hero.style.padding = "42px 0 50px";
 }
 
-// The live board updates automatically, so the old manual controls are not needed.
-document.querySelector("#refreshButton")?.remove();
-document.querySelector('.hero-actions a[href="#watchlist"]')?.remove();
+if (scheduleCopy) {
+  scheduleCopy.textContent = "Checked every minute from 8 AM to 11 PM Hamilton time.";
+}
 
 const workerHost = [
   "hamilton-warbird-watch",
@@ -164,7 +54,7 @@ const workerHost = [
   "dev",
 ].join(".");
 const api = `https://${workerHost}/public`;
-const autoRefreshMs = 3 * 60 * 1000;
+const autoRefreshMs = 60 * 1000;
 const status = document.querySelector("#fetchStatus");
 const cards = document.querySelector("#liveCards");
 let isLoading = false;
@@ -197,7 +87,6 @@ function field(label, value) {
   heading.textContent = label;
   text.textContent = value || "—";
   container.append(heading, text);
-
   return container;
 }
 
@@ -229,7 +118,6 @@ function createRouteLink(hex) {
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.textContent = "Follow this plane’s live route";
-
   return link;
 }
 
@@ -290,7 +178,6 @@ function render(payload) {
   active
     .sort((first, second) => Boolean(second.airborne) - Boolean(first.airborne))
     .forEach((item) => fragment.append(card(item)));
-
   cards.replaceChildren(fragment);
 }
 
@@ -327,7 +214,7 @@ async function load() {
       ? `${activeCount} of ${count} tracked · latest signal ${since(data.checkedAt || data.lastCheckedAt || data.active?.[0]?.lastSeenAt)}`
       : `${count} tracked · no recently reported aircraft`;
 
-    status.textContent = `${baseStatus} · updates every 3 min`;
+    status.textContent = `${baseStatus} · updates every min`;
   } catch (error) {
     console.error("Warbird Watch live status failed", error);
     empty(
@@ -335,7 +222,7 @@ async function load() {
       "The status feed could not be reached just now. It will try again automatically.",
       true,
     );
-    status.textContent = "Live status temporarily unavailable · retrying every 3 min";
+    status.textContent = "Live status temporarily unavailable · retrying every min";
   } finally {
     isLoading = false;
   }
