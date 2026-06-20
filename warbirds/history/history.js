@@ -13,6 +13,10 @@ let showActivityOnly = false;
 let allScans = [];
 let isLoading = false;
 
+// Warbird Watch is intentionally standalone: navigation stays inside the project.
+document.querySelector(".site-header")?.remove();
+document.querySelector("footer a")?.remove();
+
 function formatTime(value) {
   const date = new Date(value);
 
