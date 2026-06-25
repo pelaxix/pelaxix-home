@@ -3,29 +3,97 @@ const FINAL_STATUSES = new Set(["ft", "aet", "pen"]);
 const bracketEl = document.querySelector("#knockoutBracket");
 const thirdPlaceEl = document.querySelector("#thirdPlace");
 const knockoutEmptyStateEl = document.querySelector("#knockoutEmptyState");
+const bracketHintEl = document.querySelector(".bracket-hint");
 
 function makeBracketScrollable() {
   if (!bracketEl || bracketEl.parentElement?.classList.contains("bracket-scroll")) return;
 
   const scroller = document.createElement("div");
   scroller.className = "bracket-scroll";
+  scroller.setAttribute("aria-label", "Scrollable World Cup knockout bracket");
   bracketEl.before(scroller);
   scroller.appendChild(bracketEl);
 
   const style = document.createElement("style");
   style.textContent = `
-    .bracket-scroll { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: visible; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding-bottom: 14px; }
-    .bracket-scroll .knockout-bracket { width: max-content; overflow: visible; min-height: 1180px; height: 1180px; align-items: stretch; }
-    .bracket-scroll .bracket-round { height: 100%; }
-    .bracket-scroll .round-matches { height: calc(100% - 34px); flex: none; }
-    .bracket-scroll .stage-r32 .round-matches { justify-content: space-between; }
-    .bracket-scroll .stage-r16 .round-matches,
-    .bracket-scroll .stage-qf .round-matches,
-    .bracket-scroll .stage-sf .round-matches { justify-content: space-around; }
-    .bracket-scroll .stage-final .round-matches { justify-content: center; }
-    @media (max-width: 700px) { .bracket-scroll .knockout-bracket { min-height: 1100px; height: 1100px; } }
+    .bracket-scroll {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y pinch-zoom;
+      scroll-snap-type: x proximity;
+      padding: 0 0 16px;
+    }
+
+    .bracket-scroll .knockout-bracket {
+      width: max-content;
+      min-width: 0;
+      min-height: 1080px;
+      height: 1080px;
+      grid-template-columns: repeat(5, 190px);
+      gap: 24px;
+      padding: 8px 10px 18px;
+      overflow: visible;
+      align-items: stretch;
+    }
+
+    .bracket-scroll .bracket-round {
+      height: 100%;
+      min-width: 190px;
+      scroll-snap-align: start;
+      scroll-snap-stop: normal;
+    }
+
+    .bracket-scroll .round-matches {
+      height: calc(100% - 34px);
+      flex: none;
+      justify-content: center !important;
+    }
+
+    .bracket-scroll .stage-r32 .round-matches { gap: 4px; }
+    .bracket-scroll .stage-r16 .round-matches { gap: 8px; }
+    .bracket-scroll .stage-qf .round-matches { gap: 12px; }
+    .bracket-scroll .stage-sf .round-matches { gap: 16px; }
+    .bracket-scroll .stage-final .round-matches { gap: 0; }
+
+    .bracket-scroll .stage-r32 .match-meta {
+      padding: 4px 8px 2px;
+      font-size: .58rem;
+      line-height: 1.1;
+    }
+
+    .bracket-scroll .stage-r32 .bracket-team {
+      min-height: 21px;
+      padding: 0 8px;
+      font-size: .71rem;
+    }
+
+    .bracket-scroll .stage-r32 .bracket-team .flag { font-size: .78rem; }
+
+    .bracket-scroll .stage-final .bracket-card {
+      transform: scale(1.06);
+      transform-origin: center;
+    }
+
+    @media (max-width: 700px) {
+      .bracket-scroll .knockout-bracket {
+        min-height: 1040px;
+        height: 1040px;
+        grid-template-columns: repeat(5, 178px);
+        gap: 20px;
+      }
+
+      .bracket-scroll .bracket-round { min-width: 178px; }
+      .bracket-scroll .stage-r32 .bracket-team { min-height: 20px; }
+      .bracket-scroll .stage-r32 .match-meta { font-size: .56rem; }
+    }
   `;
   document.head.appendChild(style);
+
+  if (bracketHintEl) bracketHintEl.textContent = "Swipe sideways · pinch to zoom · scroll normally up and down";
 
   let startX = 0;
   let startY = 0;
@@ -43,12 +111,14 @@ function makeBracketScrollable() {
 
   scroller.addEventListener("touchmove", (event) => {
     if (event.touches.length !== 1) return;
+
     const touch = event.touches[0];
     const deltaX = touch.clientX - startX;
     const deltaY = touch.clientY - startY;
+    const distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
-    if (!axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= 8) {
-      axis = Math.abs(deltaX) > Math.abs(deltaY) ? "x" : "y";
+    if (!axis && distance >= 10) {
+      axis = Math.abs(deltaX) > Math.abs(deltaY) * 1.15 ? "x" : "y";
     }
 
     if (axis === "x") {
@@ -204,8 +274,8 @@ function renderBracket(results) {
   };
 
   const rounds = [
-    { title: "Round of 32", subtitle: "16 matches", stage: "r32", ids: Array.from({ length: 16 }, (_, index) => 73 + index) },
-    { title: "Round of 16", subtitle: "8 matches", stage: "r16", ids: Array.from({ length: 8 }, (_, index) => 89 + index) },
+    { title: "Round of 32", subtitle: "16 matches", stage: "r32", ids: [75, 78, 73, 76, 84, 83, 82, 81, 74, 77, 79, 80, 87, 86, 85, 88] },
+    { title: "Round of 16", subtitle: "8 matches", stage: "r16", ids: [90, 89, 93, 94, 91, 92, 95, 96] },
     { title: "Quarterfinals", subtitle: "4 matches", stage: "qf", ids: [97, 98, 99, 100] },
     { title: "Semifinals", subtitle: "2 matches", stage: "sf", ids: [101, 102] },
     { title: "Final", subtitle: "1 match", stage: "final", ids: [104], final: true }
