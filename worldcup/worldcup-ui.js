@@ -25,11 +25,8 @@ function savedTeamFilter() {
 
 function saveTeamFilter(value) {
   try {
-    if (value) {
-      sessionStorage.setItem(WORLD_CUP_TEAM_FILTER_KEY, value);
-    } else {
-      sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
-    }
+    if (value) sessionStorage.setItem(WORLD_CUP_TEAM_FILTER_KEY, value);
+    else sessionStorage.removeItem(WORLD_CUP_TEAM_FILTER_KEY);
   } catch {
   }
 }
@@ -60,7 +57,11 @@ function addWorldCupTabs() {
   groupsLink.href = "/worldcup/groups/";
   groupsLink.textContent = "Groups";
 
-  nav.append(scheduleLink, groupsLink);
+  const knockoutLink = document.createElement("a");
+  knockoutLink.href = "/worldcup/knockout/";
+  knockoutLink.textContent = "Knockout";
+
+  nav.append(scheduleLink, groupsLink, knockoutLink);
   hero.appendChild(nav);
 }
 
@@ -86,19 +87,14 @@ if (teamSelectEl) {
 }
 
 if (resetSelectionButton) {
-  resetSelectionButton.addEventListener(
-    "click",
-    (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-
-      if (teamSelectEl) teamSelectEl.value = "";
-      saveTeamFilter("");
-      render();
-      keepResetButtonLabel();
-    },
-    true
-  );
+  resetSelectionButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (teamSelectEl) teamSelectEl.value = "";
+    saveTeamFilter("");
+    render();
+    keepResetButtonLabel();
+  }, true);
 }
 
 const calendarScript = document.createElement("script");
