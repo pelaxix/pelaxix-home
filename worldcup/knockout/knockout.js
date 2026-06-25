@@ -1,3 +1,4 @@
+(() => {
 const GROUPS = {
   A: ["Mexico", "South Africa", "South Korea", "Czechia"],
   B: ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"],
@@ -16,7 +17,7 @@ const GROUPS = {
 const FINAL_STATUSES = new Set(["ft", "aet", "pen"]);
 const bracketEl = document.querySelector("#knockoutBracket");
 const thirdPlaceEl = document.querySelector("#thirdPlace");
-const emptyStateEl = document.querySelector("#knockoutEmptyState");
+const knockoutEmptyStateEl = document.querySelector("#knockoutEmptyState");
 
 function normalize(value) {
   return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -128,11 +129,19 @@ function matchCard(match, context, finalCard = false) {
   return `<article class="bracket-card ${cardClass}"><div class="match-meta"><span>M${match.id}</span><span class="match-date">${displayDate(match.kickoffUtc)}</span></div>${teamRow(home, result.homeScore, winner === home.label)}${teamRow(away, result.awayScore, winner === away.label)}</article>`;
 }
 
-function stageMatches(ids) { return ids.map((id) => MATCHES.find((match) => match.id === id)).filter(Boolean); }
+function stageMatches(ids) {
+  return ids.map((id) => MATCHES.find((match) => match.id === id)).filter(Boolean);
+}
 
 function renderBracket(results) {
   const standings = buildStandings(results);
-  const context = { results, standings, thirds: rankThirds(standings), usedThirds: new Set(), matchesById: new Map(MATCHES.map((match) => [match.id, match])) };
+  const context = {
+    results,
+    standings,
+    thirds: rankThirds(standings),
+    usedThirds: new Set(),
+    matchesById: new Map(MATCHES.map((match) => [match.id, match]))
+  };
   const rounds = [
     { title: "Round of 32", subtitle: "16 matches", ids: Array.from({ length: 16 }, (_, index) => 73 + index) },
     { title: "Round of 16", subtitle: "8 matches", ids: Array.from({ length: 8 }, (_, index) => 89 + index) },
@@ -149,9 +158,10 @@ Promise.all([
   fetch(`../results.json?v=${Date.now()}`).then((response) => response.ok ? response.json() : Promise.reject(new Error(`Results failed: ${response.status}`))),
   fetch(`../results-overrides.json?v=${Date.now()}`).then((response) => response.ok ? response.json() : null).catch(() => null)
 ]).then(([resultsData, overridesData]) => {
-  emptyStateEl.hidden = true;
+  knockoutEmptyStateEl.hidden = true;
   renderBracket(mergeResults(resultsData, overridesData));
 }).catch((error) => {
   console.warn("Could not load knockout bracket.", error);
-  emptyStateEl.hidden = false;
+  knockoutEmptyStateEl.hidden = false;
 });
+})();
