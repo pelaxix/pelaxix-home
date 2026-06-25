@@ -14,10 +14,51 @@ function makeBracketScrollable() {
 
   const style = document.createElement("style");
   style.textContent = `
-    .bracket-scroll { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; touch-action: pan-x; padding-bottom: 14px; }
-    .bracket-scroll .knockout-bracket { width: max-content; overflow: visible; }
+    .bracket-scroll { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: visible; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding-bottom: 14px; }
+    .bracket-scroll .knockout-bracket { width: max-content; overflow: visible; min-height: 1180px; height: 1180px; align-items: stretch; }
+    .bracket-scroll .bracket-round { height: 100%; }
+    .bracket-scroll .round-matches { height: calc(100% - 34px); flex: none; }
+    .bracket-scroll .stage-r32 .round-matches { justify-content: space-between; }
+    .bracket-scroll .stage-r16 .round-matches,
+    .bracket-scroll .stage-qf .round-matches,
+    .bracket-scroll .stage-sf .round-matches { justify-content: space-around; }
+    .bracket-scroll .stage-final .round-matches { justify-content: center; }
+    @media (max-width: 700px) { .bracket-scroll .knockout-bracket { min-height: 1100px; height: 1100px; } }
   `;
   document.head.appendChild(style);
+
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let axis = null;
+
+  scroller.addEventListener("touchstart", (event) => {
+    if (event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    startLeft = scroller.scrollLeft;
+    axis = null;
+  }, { passive: true });
+
+  scroller.addEventListener("touchmove", (event) => {
+    if (event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - startX;
+    const deltaY = touch.clientY - startY;
+
+    if (!axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= 8) {
+      axis = Math.abs(deltaX) > Math.abs(deltaY) ? "x" : "y";
+    }
+
+    if (axis === "x") {
+      event.preventDefault();
+      scroller.scrollLeft = startLeft - deltaX;
+    }
+  }, { passive: false });
+
+  scroller.addEventListener("touchend", () => { axis = null; }, { passive: true });
+  scroller.addEventListener("touchcancel", () => { axis = null; }, { passive: true });
 }
 
 makeBracketScrollable();
@@ -163,15 +204,15 @@ function renderBracket(results) {
   };
 
   const rounds = [
-    { title: "Round of 32", subtitle: "16 matches", ids: Array.from({ length: 16 }, (_, index) => 73 + index) },
-    { title: "Round of 16", subtitle: "8 matches", ids: Array.from({ length: 8 }, (_, index) => 89 + index) },
-    { title: "Quarterfinals", subtitle: "4 matches", ids: [97, 98, 99, 100] },
-    { title: "Semifinals", subtitle: "2 matches", ids: [101, 102] },
-    { title: "Final", subtitle: "1 match", ids: [104], final: true }
+    { title: "Round of 32", subtitle: "16 matches", stage: "r32", ids: Array.from({ length: 16 }, (_, index) => 73 + index) },
+    { title: "Round of 16", subtitle: "8 matches", stage: "r16", ids: Array.from({ length: 8 }, (_, index) => 89 + index) },
+    { title: "Quarterfinals", subtitle: "4 matches", stage: "qf", ids: [97, 98, 99, 100] },
+    { title: "Semifinals", subtitle: "2 matches", stage: "sf", ids: [101, 102] },
+    { title: "Final", subtitle: "1 match", stage: "final", ids: [104], final: true }
   ];
 
   bracketEl.innerHTML = rounds.map((round) => `
-    <section class="bracket-round">
+    <section class="bracket-round stage-${round.stage}">
       <h2 class="round-title">${round.title}<span class="round-subtitle">${round.subtitle}</span></h2>
       <div class="round-matches">${stageMatches(round.ids).map((match) => matchCard(match, context, round.final)).join("")}</div>
     </section>
