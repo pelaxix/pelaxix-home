@@ -24,9 +24,7 @@
     <link rel="icon" href="/worldcup/worldcup-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/worldcup/worldcup-icon.png" />
     <script>
-      if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) {
-        document.documentElement.classList.add("standalone-app");
-      }
+      if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) document.documentElement.classList.add("standalone-app");
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,85 +36,26 @@
   </head>
   <body>
     <div class="app-shell">
-      <header class="site-header">
-        <a class="logo" href="/" aria-label="Pelaxix home">
-          <span class="logo-mark">P</span>
-          <span>Pelaxix</span>
-        </a>
-      </header>
-
+      <header class="site-header"><a class="logo" href="/" aria-label="Pelaxix home"><span class="logo-mark">P</span><span>Pelaxix</span></a></header>
       <main>
         <section class="hero compact-title groups-hero">
           <p class="eyebrow">World Cup 2026 Groups</p>
           <nav class="worldcup-tabs" aria-label="World Cup navigation">
             <a href="/worldcup/">Schedule</a>
             <a class="active" href="/worldcup/groups/">Groups</a>
+            <a href="/worldcup/knockout/">Knockout</a>
           </nav>
         </section>
-
         <section class="controls" aria-label="Group filters">
-          <label class="search-box">
-            <span>Select team</span>
-            <select id="teamSearch" autocomplete="off">
-              <option value="">All groups</option>
-              <option value="Algeria">🇩🇿 Algeria</option>
-              <option value="Argentina">🇦🇷 Argentina</option>
-              <option value="Australia">🇦🇺 Australia</option>
-              <option value="Austria">🇦🇹 Austria</option>
-              <option value="Belgium">🇧🇪 Belgium</option>
-              <option value="Bosnia and Herzegovina">🇧🇦 Bosnia and Herzegovina</option>
-              <option value="Brazil">🇧🇷 Brazil</option>
-              <option value="Cabo Verde">🇨🇻 Cabo Verde</option>
-              <option value="Canada">🇨🇦 Canada</option>
-              <option value="Colombia">🇨🇴 Colombia</option>
-              <option value="Congo DR">🇨🇩 Congo DR</option>
-              <option value="Croatia">🇭🇷 Croatia</option>
-              <option value="Curaçao">🇨🇼 Curaçao</option>
-              <option value="Czechia">🇨🇿 Czechia</option>
-              <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
-              <option value="Ecuador">🇪🇨 Ecuador</option>
-              <option value="Egypt">🇪🇬 Egypt</option>
-              <option value="England">&#x1F3F4;&#xE0067;&#xE0062;&#xE0065;&#xE006E;&#xE0067;&#xE007F; England</option>
-              <option value="France">🇫🇷 France</option>
-              <option value="Germany">🇩🇪 Germany</option>
-              <option value="Ghana">🇬🇭 Ghana</option>
-              <option value="Haiti">🇭🇹 Haiti</option>
-              <option value="IR Iran">🇮🇷 IR Iran</option>
-              <option value="Iraq">🇮🇶 Iraq</option>
-              <option value="Japan">🇯🇵 Japan</option>
-              <option value="Jordan">🇯🇴 Jordan</option>
-              <option value="Mexico">🇲🇽 Mexico</option>
-              <option value="Morocco">🇲🇦 Morocco</option>
-              <option value="Netherlands">🇳🇱 Netherlands</option>
-              <option value="New Zealand">🇳🇿 New Zealand</option>
-              <option value="Norway">🇳🇴 Norway</option>
-              <option value="Panama">🇵🇦 Panama</option>
-              <option value="Paraguay">🇵🇾 Paraguay</option>
-              <option value="Portugal">🇵🇹 Portugal</option>
-              <option value="Qatar">🇶🇦 Qatar</option>
-              <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
-              <option value="Scotland">&#x1F3F4;&#xE0067;&#xE0062;&#xE0073;&#xE0063;&#xE0074;&#xE007F; Scotland</option>
-              <option value="Senegal">🇸🇳 Senegal</option>
-              <option value="South Africa">🇿🇦 South Africa</option>
-              <option value="South Korea">🇰🇷 South Korea</option>
-              <option value="Spain">🇪🇸 Spain</option>
-              <option value="Sweden">🇸🇪 Sweden</option>
-              <option value="Switzerland">🇨🇭 Switzerland</option>
-              <option value="Tunisia">🇹🇳 Tunisia</option>
-              <option value="Türkiye">🇹🇷 Türkiye</option>
-              <option value="United States">🇺🇸 United States</option>
-              <option value="Uruguay">🇺🇾 Uruguay</option>
-              <option value="Uzbekistan">🇺🇿 Uzbekistan</option>
-            </select>
-          </label>
+          <label class="search-box"><span>Select team</span><select id="teamSearch" autocomplete="off">
+            <option value="">All groups</option><option value="Algeria">🇩🇿 Algeria</option><option value="Argentina">🇦🇷 Argentina</option><option value="Australia">🇦🇺 Australia</option><option value="Austria">🇦🇹 Austria</option><option value="Belgium">🇧🇪 Belgium</option><option value="Bosnia and Herzegovina">🇧🇦 Bosnia and Herzegovina</option><option value="Brazil">🇧🇷 Brazil</option><option value="Cabo Verde">🇨🇻 Cabo Verde</option><option value="Canada">🇨🇦 Canada</option><option value="Colombia">🇨🇴 Colombia</option><option value="Congo DR">🇨🇩 Congo DR</option><option value="Croatia">🇭🇷 Croatia</option><option value="Curaçao">🇨🇼 Curaçao</option><option value="Czechia">🇨🇿 Czechia</option><option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option><option value="Ecuador">🇪🇨 Ecuador</option><option value="Egypt">🇪🇬 Egypt</option><option value="England">🏴 England</option><option value="France">🇫🇷 France</option><option value="Germany">🇩🇪 Germany</option><option value="Ghana">🇬🇭 Ghana</option><option value="Haiti">🇭🇹 Haiti</option><option value="IR Iran">🇮🇷 IR Iran</option><option value="Iraq">🇮🇶 Iraq</option><option value="Japan">🇯🇵 Japan</option><option value="Jordan">🇯🇴 Jordan</option><option value="Mexico">🇲🇽 Mexico</option><option value="Morocco">🇲🇦 Morocco</option><option value="Netherlands">🇳🇱 Netherlands</option><option value="New Zealand">🇳🇿 New Zealand</option><option value="Norway">🇳🇴 Norway</option><option value="Panama">🇵🇦 Panama</option><option value="Paraguay">🇵🇾 Paraguay</option><option value="Portugal">🇵🇹 Portugal</option><option value="Qatar">🇶🇦 Qatar</option><option value="Saudi Arabia">🇸🇦 Saudi Arabia</option><option value="Scotland">🏴 Scotland</option><option value="Senegal">🇸🇳 Senegal</option><option value="South Africa">🇿🇦 South Africa</option><option value="South Korea">🇰🇷 South Korea</option><option value="Spain">🇪🇸 Spain</option><option value="Sweden">🇸🇪 Sweden</option><option value="Switzerland">🇨🇭 Switzerland</option><option value="Tunisia">🇹🇳 Tunisia</option><option value="Türkiye">🇹🇷 Türkiye</option><option value="United States">🇺🇸 United States</option><option value="Uruguay">🇺🇾 Uruguay</option><option value="Uzbekistan">🇺🇿 Uzbekistan</option>
+          </select></label>
           <button id="resetGroupsButton" class="ghost-button" type="button">Reset selection</button>
         </section>
-
         <section id="groupsGrid" class="groups-grid" aria-label="World Cup group standings"></section>
         <p id="groupsEmptyState" class="empty-state" hidden>Could not load group standings.</p>
       </main>
     </div>
-
     <script src="groups.js?v=6"></script>
   </body>
 </html>
