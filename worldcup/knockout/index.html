@@ -18,9 +18,7 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="site-header">
-      <a class="logo" href="/" aria-label="Pelaxix home"><span class="logo-mark">P</span><span>Pelaxix</span></a>
-    </header>
+    <header class="site-header"><a class="logo" href="/" aria-label="Pelaxix home"><span class="logo-mark">P</span><span>Pelaxix</span></a></header>
     <main>
       <section class="hero compact-title knockout-hero">
         <p class="eyebrow">World Cup 2026 Knockout Rounds</p>
@@ -34,6 +32,13 @@
       <section id="knockoutBracket" class="knockout-bracket" aria-label="World Cup knockout bracket"></section>
       <section id="thirdPlace" class="third-place" aria-label="Third-place play-off"></section>
       <p id="knockoutEmptyState" class="empty-state" hidden>Could not load the knockout bracket.</p>
+      <div hidden aria-hidden="true">
+        <input id="teamSearch" value="" />
+        <button id="showAllButton" type="button"></button>
+        <section id="schedule"></section>
+        <p id="emptyState"></p>
+        <span id="timezoneLabel"></span>
+      </div>
     </main>
   </div>
   <script src="../worldcup.js?v=5"></script>
