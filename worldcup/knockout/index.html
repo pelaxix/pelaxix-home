@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="World Cup 2026 knockout bracket." />
+  <meta name="theme-color" content="#070812" />
+  <title>Pelaxix World Cup Knockout</title>
+  <link rel="icon" href="/worldcup/worldcup-icon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/worldcup/worldcup-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../worldcup.css?v=5" />
+  <link rel="stylesheet" href="../worldcup-tweaks.css?v=7" />
+  <link rel="stylesheet" href="knockout.css?v=1" />
+  <link rel="stylesheet" href="/project-nav.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="logo" href="/" aria-label="Pelaxix home"><span class="logo-mark">P</span><span>Pelaxix</span></a>
+    </header>
+    <main>
+      <section class="hero compact-title knockout-hero">
+        <p class="eyebrow">World Cup 2026 Knockout Rounds</p>
+        <nav class="worldcup-tabs" aria-label="World Cup navigation">
+          <a href="/worldcup/">Schedule</a>
+          <a href="/worldcup/groups/">Groups</a>
+          <a class="active" href="/worldcup/knockout/">Knockout</a>
+        </nav>
+      </section>
+      <p class="bracket-hint">Swipe sideways to follow the bracket to the Final →</p>
+      <section id="knockoutBracket" class="knockout-bracket" aria-label="World Cup knockout bracket"></section>
+      <section id="thirdPlace" class="third-place" aria-label="Third-place play-off"></section>
+      <p id="knockoutEmptyState" class="empty-state" hidden>Could not load the knockout bracket.</p>
+    </main>
+  </div>
+  <script src="../worldcup.js?v=5"></script>
+  <script src="knockout.js?v=1"></script>
+</body>
+</html>
