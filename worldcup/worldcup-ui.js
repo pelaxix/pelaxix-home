@@ -105,7 +105,7 @@ const calendarScript = document.createElement("script");
 calendarScript.src = "worldcup-calendar.js?v=3";
 
 const resultsScript = document.createElement("script");
-resultsScript.src = "results-loader.js?v=7";
+resultsScript.src = "results-loader.js?v=8";
 resultsScript.onload = () => document.body.appendChild(calendarScript);
 resultsScript.onerror = () => document.body.appendChild(calendarScript);
 document.body.appendChild(resultsScript);
