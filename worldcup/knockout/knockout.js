@@ -4,6 +4,24 @@ const bracketEl = document.querySelector("#knockoutBracket");
 const thirdPlaceEl = document.querySelector("#thirdPlace");
 const knockoutEmptyStateEl = document.querySelector("#knockoutEmptyState");
 
+function makeBracketScrollable() {
+  if (!bracketEl || bracketEl.parentElement?.classList.contains("bracket-scroll")) return;
+
+  const scroller = document.createElement("div");
+  scroller.className = "bracket-scroll";
+  bracketEl.before(scroller);
+  scroller.appendChild(bracketEl);
+
+  const style = document.createElement("style");
+  style.textContent = `
+    .bracket-scroll { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; touch-action: pan-x; padding-bottom: 14px; }
+    .bracket-scroll .knockout-bracket { width: max-content; overflow: visible; }
+  `;
+  document.head.appendChild(style);
+}
+
+makeBracketScrollable();
+
 function resultFromRow(fields, row) {
   return Array.isArray(row)
     ? Object.fromEntries(fields.map((field, index) => [field, row[index]]))
