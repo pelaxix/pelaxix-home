@@ -50,6 +50,26 @@ function resultFromRow(fields, row) {
   return normalizeResult(result);
 }
 
+function applyFixtureParticipants(data) {
+  const fields = data.fields || [];
+  const fixturesById = new Map(
+    (data.matches || []).map((row) => {
+      const fixture = resultFromRow(fields, row);
+      return [Number(fixture.id), fixture];
+    })
+  );
+
+  for (const match of MATCHES) {
+    const fixture = fixturesById.get(Number(match.id));
+    if (!fixture) continue;
+
+    for (const side of ["home", "away"]) {
+      const team = typeof fixture[side] === "string" ? fixture[side].trim() : "";
+      if (team) match[side] = team;
+    }
+  }
+}
+
 function applyResultRows(data) {
   const fields = data.fields || [];
   for (const row of data.matches || []) {
@@ -190,7 +210,7 @@ function centerMarkup(match) {
 
   const statusLabel = RESULT_STATUS_LABELS[result.status] || String(result.status || "").toUpperCase();
   const titleParts = [statusLabel, result.note].filter(Boolean);
-  const title = titleParts.length ? ` title="${titleParts.join(' · ').replaceAll('"', '&quot;')}"` : "";
+  const title = titleParts.length ? ` title="${titleParts.join(" · ").replaceAll('"', '&quot;')}"` : "";
   return `<span class="result-pill"${title}>${resultLabel(result)}</span>`;
 }
 
@@ -246,6 +266,7 @@ Promise.all([
   fetch(`results-overrides.json?v=${Date.now()}`).then((response) => response.ok ? response.json() : null).catch(() => null)
 ])
   .then(([resultsData, overridesData]) => {
+    applyFixtureParticipants(resultsData);
     applyResultRows(resultsData);
     if (overridesData) applyResultRows(overridesData);
     render();
