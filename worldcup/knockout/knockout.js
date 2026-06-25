@@ -24,7 +24,7 @@
   }
 
   function roundNodes() {
-    return [...scroller?.querySelectorAll(".bracket-round") || []];
+    return scroller ? [...scroller.querySelectorAll(".bracket-round")] : [];
   }
 
   function pairStartFromScroll() {
@@ -430,7 +430,7 @@
     }).join("");
 
     const third = MATCHES.find((match) => match.id === 103);
-    thirdPlaceEl.innerHTML = third ? `<h2>Third-place play-off</h2>${matchCard(third, context, { final: true }, 9, 0)}</section>` : "";
+    thirdPlaceEl.innerHTML = third ? `<h2>Third-place play-off</h2>${matchCard(third, context, { final: true }, 9, 0)}` : "";
 
     requestAnimationFrame(() => {
       applyDynamicSpacing();
