@@ -44,12 +44,33 @@
     return null;
   }
 
-  function resolveTeamName(team, fixturesById) {
+  function resolveTeamName(team, fixturesById, seen = new Set()) {
     const referencedId = referencedMatchId(team);
     if (!referencedId) return team;
+    if (seen.has(referencedId)) return team;
 
+    seen.add(referencedId);
     const referenced = fixturesById.get(referencedId);
-    return referenced && referenced.winner ? referenced.winner : team;
+    if (!referenced) return team;
+
+    if (referenced.winner) return referenced.winner;
+
+    const home = typeof referenced.home === "string"
+      ? resolveTeamName(referenced.home.trim(), fixturesById, seen)
+      : "";
+    const away = typeof referenced.away === "string"
+      ? resolveTeamName(referenced.away.trim(), fixturesById, seen)
+      : "";
+
+    if (home && away && home !== referenced.home && away !== referenced.away) {
+      return `Winner of ${home} / ${away}`;
+    }
+
+    if (home && away && !referencedMatchId(home) && !referencedMatchId(away)) {
+      return `Winner of ${home} / ${away}`;
+    }
+
+    return team;
   }
 
   async function applyQualifiedParticipants() {
