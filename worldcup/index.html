@@ -1,137 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta
-      name="description"
-      content="A quick local-time World Cup schedule app for checking upcoming games."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Pelaxix" />
-    <meta property="og:title" content="Pelaxix World Cup Schedule" />
-    <meta property="og:description" content="Upcoming World Cup games shown in your local time." />
-    <meta property="og:image" content="https://pelaxix.com/worldcup/worldcup-social-card.png?v=1" />
-    <meta property="og:image:secure_url" content="https://pelaxix.com/worldcup/worldcup-social-card.png?v=1" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Pelaxix World Cup Schedule preview showing upcoming games in local time." />
-    <meta property="og:url" content="https://pelaxix.com/worldcup/" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Pelaxix World Cup Schedule" />
-    <meta name="twitter:description" content="Upcoming World Cup games shown in your local time." />
-    <meta name="twitter:image" content="https://pelaxix.com/worldcup/worldcup-social-card.png?v=1" />
-    <meta name="twitter:image:alt" content="Pelaxix World Cup Schedule preview showing upcoming games in local time." />
-    <meta name="application-name" content="Schedule" />
-    <meta name="apple-mobile-web-app-title" content="Schedule" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="World Cup 2026 project finalized." />
     <meta name="theme-color" content="#070812" />
     <title>Pelaxix World Cup</title>
-    <link rel="icon" href="/worldcup/worldcup-icon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/worldcup/worldcup-icon.png" />
-    <script>
-      if (window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches) {
-        document.documentElement.classList.add("standalone-app");
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        background: #070812;
+        color: #f8fafc;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="worldcup.css?v=5" />
-    <link rel="stylesheet" href="worldcup-tweaks.css?v=7" />
-    <link rel="stylesheet" href="/project-nav.css" />
+      h1 {
+        max-width: 980px;
+        margin: 0;
+        text-align: center;
+        font-size: clamp(2.2rem, 7vw, 6.5rem);
+        line-height: 0.98;
+        letter-spacing: -0.07em;
+        font-weight: 900;
+      }
+    </style>
   </head>
   <body>
-    <div class="app-shell">
-      <header class="site-header">
-        <a class="logo" href="/" aria-label="Pelaxix home">
-          <span class="logo-mark">P</span>
-          <span>Pelaxix</span>
-        </a>
-      </header>
-
-      <main>
-        <section class="hero compact-title">
-          <p class="eyebrow">World Cup 2026 Schedule</p>
-        </section>
-
-        <section class="controls" aria-label="Schedule filters">
-          <label class="search-box">
-            <span>Select team</span>
-            <select id="teamSearch" autocomplete="off">
-              <option value="">All teams</option>
-              <option value="Algeria">🇩🇿 Algeria</option>
-              <option value="Argentina">🇦🇷 Argentina</option>
-              <option value="Australia">🇦🇺 Australia</option>
-              <option value="Austria">🇦🇹 Austria</option>
-              <option value="Belgium">🇧🇪 Belgium</option>
-              <option value="Bosnia and Herzegovina">🇧🇦 Bosnia and Herzegovina</option>
-              <option value="Brazil">🇧🇷 Brazil</option>
-              <option value="Cabo Verde">🇨🇻 Cabo Verde</option>
-              <option value="Canada">🇨🇦 Canada</option>
-              <option value="Colombia">🇨🇴 Colombia</option>
-              <option value="Congo DR">🇨🇩 Congo DR</option>
-              <option value="Croatia">🇭🇷 Croatia</option>
-              <option value="Curaçao">🇨🇼 Curaçao</option>
-              <option value="Czechia">🇨🇿 Czechia</option>
-              <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
-              <option value="Ecuador">🇪🇨 Ecuador</option>
-              <option value="Egypt">🇪🇬 Egypt</option>
-              <option value="England">&#x1F3F4;&#xE0067;&#xE0062;&#xE0065;&#xE006E;&#xE0067;&#xE007F; England</option>
-              <option value="France">🇫🇷 France</option>
-              <option value="Germany">🇩🇪 Germany</option>
-              <option value="Ghana">🇬🇭 Ghana</option>
-              <option value="Haiti">🇭🇹 Haiti</option>
-              <option value="IR Iran">🇮🇷 IR Iran</option>
-              <option value="Iraq">🇮🇶 Iraq</option>
-              <option value="Japan">🇯🇵 Japan</option>
-              <option value="Jordan">🇯🇴 Jordan</option>
-              <option value="Mexico">🇲🇽 Mexico</option>
-              <option value="Morocco">🇲🇦 Morocco</option>
-              <option value="Netherlands">🇳🇱 Netherlands</option>
-              <option value="New Zealand">🇳🇿 New Zealand</option>
-              <option value="Norway">🇳🇴 Norway</option>
-              <option value="Panama">🇵🇦 Panama</option>
-              <option value="Paraguay">🇵🇾 Paraguay</option>
-              <option value="Portugal">🇵🇹 Portugal</option>
-              <option value="Qatar">🇶🇦 Qatar</option>
-              <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
-              <option value="Scotland">&#x1F3F4;&#xE0067;&#xE0062;&#xE0073;&#xE0063;&#xE0074;&#xE007F; Scotland</option>
-              <option value="Senegal">🇸🇳 Senegal</option>
-              <option value="South Africa">🇿🇦 South Africa</option>
-              <option value="South Korea">🇰🇷 South Korea</option>
-              <option value="Spain">🇪🇸 Spain</option>
-              <option value="Sweden">🇸🇪 Sweden</option>
-              <option value="Switzerland">🇨🇭 Switzerland</option>
-              <option value="Tunisia">🇹🇳 Tunisia</option>
-              <option value="Türkiye">🇹🇷 Türkiye</option>
-              <option value="United States">🇺🇸 United States</option>
-              <option value="Uruguay">🇺🇾 Uruguay</option>
-              <option value="Uzbekistan">🇺🇿 Uzbekistan</option>
-            </select>
-          </label>
-          <button id="showAllButton" class="ghost-button" type="button">Reset selection</button>
-        </section>
-
-        <section id="schedule" class="schedule" aria-label="Upcoming World Cup games"></section>
-        <p id="emptyState" class="empty-state" hidden>No games found for that selection.</p>
-
-        <section class="timezone-card" aria-live="polite">
-          <span>Times shown in</span>
-          <strong id="timezoneLabel">Detecting...</strong>
-        </section>
-      </main>
-    </div>
-
-    <script src="worldcup.js?v=5"></script>
-    <script src="fixture-participants.js?v=1"></script>
-    <script src="worldcup-date-format.js?v=1"></script>
-    <script src="worldcup-ui.js?v=12"></script>
+    <h1>el futbol ya me da asco otra vez, nos vemos la próxima vez que el mundial sea en México</h1>
   </body>
 </html>
