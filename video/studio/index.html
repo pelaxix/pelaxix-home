@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Process video files locally in your browser with Pelaxix Video Studio." />
+    <title>Video Studio | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="../video.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/mediabunny@1.50.8/dist/bundles/mediabunny.min.cjs"></script>
+    <script defer src="studio.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home"><span class="logo-mark">P</span><span>Pelaxix</span></a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/pdf/">PDF Tools</a>
+              <a href="/qr/">QR Tools</a>
+              <a href="/video/">Video Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <a class="back-link" href="/video/">← All video tools</a>
+          <p class="eyebrow">Browser-only processing</p>
+          <h1 id="page-title">Video Studio</h1>
+          <p class="hero-copy" id="page-description">Choose a tool, select a file, and export a new copy without uploading it.</p>
+        </section>
+
+        <section class="studio-layout">
+          <div class="file-panel">
+            <h2>1. Choose video</h2>
+            <div class="drop-zone" id="drop-zone">
+              <div>
+                <h3 id="drop-title">Drop a video here</h3>
+                <p class="helper-text" id="drop-help">MP4, MOV, WebM, MKV, and other formats supported by your browser.</p>
+                <label class="button primary" for="file-input">Choose file</label>
+                <input class="file-input" id="file-input" type="file" accept="video/*,.mkv,.mov,.m4v,.ts" />
+              </div>
+            </div>
+            <video class="preview" id="preview" controls playsinline></video>
+            <ul class="file-list" id="file-list"></ul>
+            <div class="metadata-grid" id="metadata-grid"></div>
+          </div>
+
+          <div class="studio-panel" id="settings-panel">
+            <h2>2. Choose settings</h2>
+            <div class="field-grid">
+              <div class="field full">
+                <label for="operation">Tool</label>
+                <select id="operation">
+                  <option value="compress">Compress video</option>
+                  <option value="resize">Resize video</option>
+                  <option value="trim">Trim video</option>
+                  <option value="convert">Convert video</option>
+                  <option value="rotate">Rotate video</option>
+                  <option value="crop">Crop video</option>
+                  <option value="fps">Change frame rate</option>
+                  <option value="mute">Mute video</option>
+                  <option value="audio">Extract audio</option>
+                  <option value="metadata">Remove metadata</option>
+                  <option value="thumbnail">Video thumbnail</option>
+                  <option value="merge">Merge videos (beta)</option>
+                </select>
+              </div>
+
+              <div class="option-group output-options" data-options="compress resize trim convert rotate crop fps mute metadata">
+                <div class="field">
+                  <label for="format">Output format</label>
+                  <select id="format"><option value="mp4">MP4</option><option value="webm">WebM</option></select>
+                </div>
+                <div class="field">
+                  <label for="quality">Quality</label>
+                  <select id="quality"><option value="high">High</option><option value="medium" selected>Balanced</option><option value="low">Small file</option></select>
+                </div>
+              </div>
+
+              <div class="option-group" data-options="compress">
+                <div class="field full">
+                  <label for="compress-height">Maximum height</label>
+                  <select id="compress-height"><option value="">Keep original</option><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option><option value="360">360p</option></select>
+                </div>
+              </div>
+
+              <div class="option-group" data-options="resize">
+                <div class="field"><label for="width">Width</label><input id="width" type="number" min="2" step="2" placeholder="1280" /></div>
+                <div class="field"><label for="height">Height</label><input id="height" type="number" min="2" step="2" placeholder="720" /></div>
+                <div class="field full"><label for="fit">Fit</label><select id="fit"><option value="contain">Contain, add bars if needed</option><option value="cover">Cover, crop edges</option><option value="fill">Stretch to fill</option></select></div>
+              </div>
+
+              <div class="option-group" data-options="trim">
+                <div class="field"><label for="trim-start">Start time, seconds</label><input id="trim-start" type="number" min="0" step="0.01" value="0" /></div>
+                <div class="field"><label for="trim-end">End time, seconds</label><input id="trim-end" type="number" min="0" step="0.01" placeholder="End of video" /></div>
+              </div>
+
+              <div class="option-group" data-options="rotate">
+                <div class="field full"><label for="rotation">Rotate clockwise</label><select id="rotation"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></div>
+              </div>
+
+              <div class="option-group" data-options="crop">
+                <div class="field"><label for="crop-left">Left</label><input id="crop-left" type="number" min="0" step="1" value="0" /></div>
+                <div class="field"><label for="crop-top">Top</label><input id="crop-top" type="number" min="0" step="1" value="0" /></div>
+                <div class="field"><label for="crop-width">Crop width</label><input id="crop-width" type="number" min="2" step="2" placeholder="Required" /></div>
+                <div class="field"><label for="crop-height">Crop height</label><input id="crop-height" type="number" min="2" step="2" placeholder="Required" /></div>
+              </div>
+
+              <div class="option-group" data-options="fps">
+                <div class="field full"><label for="fps">Frame rate</label><select id="fps"><option value="24">24 fps</option><option value="25">25 fps</option><option value="30" selected>30 fps</option><option value="60">60 fps</option></select></div>
+              </div>
+
+              <div class="option-group" data-options="thumbnail">
+                <div class="field"><label for="thumbnail-time">Timestamp, seconds</label><input id="thumbnail-time" type="number" min="0" step="0.01" value="0" /></div>
+                <div class="field"><label for="thumbnail-format">Image format</label><select id="thumbnail-format"><option value="png">PNG</option><option value="jpeg">JPG</option></select></div>
+                <div class="field full"><label for="thumbnail-width">Maximum width</label><input id="thumbnail-width" type="number" min="64" step="1" value="1280" /></div>
+              </div>
+
+              <div class="option-group" data-options="merge">
+                <div class="field"><label for="merge-resolution">Output size</label><select id="merge-resolution"><option value="1920x1080">1080p</option><option value="1280x720" selected>720p</option><option value="854x480">480p</option></select></div>
+                <div class="field"><label for="merge-fps">Frame rate</label><select id="merge-fps"><option value="24">24 fps</option><option value="30" selected>30 fps</option><option value="60">60 fps</option></select></div>
+              </div>
+            </div>
+
+            <p class="merge-note" id="merge-note">Merge exports by playing every clip through a local canvas. The job takes roughly as long as the combined video duration and currently exports WebM in most desktop browsers.</p>
+            <div class="button-row">
+              <button class="button primary" id="process-button" type="button" disabled>Process video</button>
+              <button class="button danger" id="cancel-button" type="button" disabled>Cancel</button>
+              <button class="button secondary" id="clear-button" type="button">Clear</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="progress-panel" aria-live="polite">
+          <h2>3. Export</h2>
+          <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
+          <p class="status-message" id="status">Choose a video to begin.</p>
+          <a class="button primary download-link" id="download-link" href="#">Download result</a>
+        </section>
+      </main>
+    </div>
+    <canvas id="merge-canvas" hidden></canvas>
+  </body>
+</html>
