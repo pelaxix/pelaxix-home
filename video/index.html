@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Browser-based video tools for converting, compressing, trimming, resizing, and editing videos without uploading files." />
+    <title>Video Tools | Pelaxix</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/project-nav.css" />
+    <link rel="stylesheet" href="video.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="logo" href="/" aria-label="Pelaxix home">
+          <span class="logo-mark">P</span>
+          <span>Pelaxix</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <details class="nav-menu">
+            <summary>Projects</summary>
+            <div class="nav-dropdown">
+              <a href="/worldcup/">World Cup 2026</a>
+              <a href="/warbirds/">Hamilton Warbird Watch</a>
+              <a href="/go/">GO Tracker</a>
+              <a href="/fishingmap/">Fishing Map</a>
+              <a href="/fishcast/">FishCast</a>
+              <a href="/bbq/">BBQ Log</a>
+              <a href="/movies/">Movie Shelf</a>
+              <a href="/ip/">Network Check</a>
+              <a href="/pdf/">PDF Tools</a>
+              <a href="/qr/">QR Tools</a>
+              <a href="/video/">Video Tools</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Local media lab</p>
+          <h1>Video Tools</h1>
+          <p class="hero-copy">Edit everyday video files directly in your browser, with no account and no upload step.</p>
+        </section>
+
+        <section class="privacy-banner">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Your videos stay on your device.</h2>
+          <p>Files are opened and processed locally by your browser. Pelaxix does not receive or store your videos.</p>
+        </section>
+
+        <section class="tool-grid" aria-label="Video tools">
+          <a class="tool-card" href="/video/studio/?tool=compress"><span>Popular</span><h3>Compress Video</h3><p>Reduce file size with adjustable quality and resolution.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=resize"><span>Ready</span><h3>Resize Video</h3><p>Set a new width and height with contain, cover, or stretch fitting.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=trim"><span>Ready</span><h3>Trim Video</h3><p>Keep only the section between your chosen start and end times.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=convert"><span>Ready</span><h3>Convert Video</h3><p>Convert common video files to MP4 or WebM when your browser supports the codecs.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=rotate"><span>Ready</span><h3>Rotate Video</h3><p>Rotate a clip 90, 180, or 270 degrees.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=crop"><span>Ready</span><h3>Crop Video</h3><p>Cut out a rectangular section using pixel coordinates.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=fps"><span>Ready</span><h3>Change Frame Rate</h3><p>Export at 24, 25, 30, or 60 frames per second.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=mute"><span>Ready</span><h3>Mute Video</h3><p>Remove the audio track while keeping the video.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=audio"><span>Ready</span><h3>Extract Audio</h3><p>Save the audio track from a video as a WAV file.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=metadata"><span>Ready</span><h3>Remove Metadata</h3><p>Create a clean copy without common title, artist, date, or cover-art tags.</p></a>
+          <a class="tool-card" href="/video/studio/?tool=thumbnail"><span>Ready</span><h3>Video Thumbnail</h3><p>Grab a frame at any timestamp and download it as PNG or JPG.</p></a>
+          <a class="tool-card beta" href="/video/studio/?tool=merge"><span>Beta</span><h3>Merge Videos</h3><p>Join clips locally in your browser. Export runs in real time and works best on desktop.</p></a>
+        </section>
+
+        <section class="limits-panel">
+          <h2>Built for modern browsers</h2>
+          <p>Codec support depends on your browser and device. Short phone clips work best. Large 4K videos may use significant memory, especially on mobile.</p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
