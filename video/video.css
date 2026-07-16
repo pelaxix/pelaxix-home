@@ -106,7 +106,8 @@ h3 { margin-bottom: 10px; color: var(--text-strong); font-size: 1.25rem; }
 .status-message.success { color: var(--accent-strong); }
 .download-link { display: none; margin-top: 16px; }
 .download-link.visible { display: inline-flex; }
-.processing-lock { pointer-events: none; opacity: 0.72; }
+.processing-lock { opacity: 0.72; }
+.processing-lock .field-grid, .processing-lock #process-button, .processing-lock #clear-button { pointer-events: none; }
 
 @media (max-width: 920px) {
   .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
