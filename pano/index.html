@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0c0d11" />
+  <title>Pano Lab · pelaxix</title>
+  <meta name="description" content="A lightweight browser-based 360° virtual tour proof of concept." />
+  <link rel="icon" href="../favicon.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-row">
+        <a class="home-link" href="../" aria-label="Back to pelaxix.com">PX</a>
+        <div>
+          <div class="brand">Pano Lab</div>
+          <div class="subtitle">360° virtual tour proof of concept</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="pill">Local POC</span>
+        <button id="fullscreenBtn" class="button ghost" type="button">Fullscreen</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="sidebar">
+        <div class="sidebar-section intro">
+          <h1>Build a tour</h1>
+          <p>Upload equirectangular 360° JPGs, then connect rooms with hotspots.</p>
+          <label class="button primary upload-button">
+            <span>+ Add panoramas</span>
+            <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
+          </label>
+        </div>
+
+        <div class="sidebar-section scenes-section">
+          <div class="section-heading">
+            <span>Scenes</span>
+            <span id="sceneCount" class="count">0</span>
+          </div>
+          <div id="sceneList" class="scene-list"></div>
+        </div>
+
+        <div class="sidebar-section hotspots-section">
+          <div class="section-heading">
+            <span>Hotspots</span>
+            <span id="hotspotCount" class="count">0</span>
+          </div>
+          <div class="hotspot-actions">
+            <button id="addLinkBtn" class="button compact" type="button" disabled>Link scene</button>
+            <button id="addInfoBtn" class="button compact" type="button" disabled>Add info</button>
+          </div>
+          <div id="hotspotList" class="hotspot-list"></div>
+        </div>
+
+        <div class="sidebar-footer">
+          <button id="resetBtn" class="text-button danger" type="button">Clear local tour</button>
+          <p>Images stay in this browser. Nothing is uploaded to a server in this POC.</p>
+        </div>
+      </aside>
+
+      <section class="viewer-panel">
+        <div id="viewer" class="viewer" aria-label="360 panorama viewer"></div>
+
+        <div id="emptyState" class="empty-state">
+          <div class="orb" aria-hidden="true"></div>
+          <h2>Your 360° canvas is empty</h2>
+          <p>Add one or more 2:1 equirectangular panoramas to start building a walkthrough.</p>
+          <label class="button primary upload-button large">
+            <span>Choose panorama files</span>
+            <input id="emptyFileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
+          </label>
+        </div>
+
+        <div id="placementHint" class="placement-hint" hidden>
+          <span class="pulse-dot"></span>
+          <span id="placementText">Click anywhere in the panorama</span>
+          <button id="cancelPlacementBtn" type="button">Cancel</button>
+        </div>
+
+        <div id="sceneHud" class="scene-hud" hidden>
+          <div>
+            <strong id="hudSceneName"></strong>
+            <span id="hudSceneMeta"></span>
+          </div>
+          <button id="renameSceneBtn" class="hud-button" type="button">Rename</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="hotspotDialog" class="dialog">
+    <form id="hotspotForm" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">New hotspot</span>
+          <h2 id="dialogTitle">Connect this scene</h2>
+        </div>
+        <button id="dialogClose" class="icon-button" type="button" aria-label="Close">×</button>
+      </div>
+      <input id="hotspotType" type="hidden" />
+      <label class="field" id="targetField">
+        <span>Destination scene</span>
+        <select id="targetScene"></select>
+      </label>
+      <label class="field">
+        <span>Label</span>
+        <input id="hotspotLabel" type="text" maxlength="80" placeholder="e.g. Kitchen" />
+      </label>
+      <div class="coordinates">
+        <span>Pitch <strong id="pitchValue">0°</strong></span>
+        <span>Yaw <strong id="yawValue">0°</strong></span>
+      </div>
+      <div class="dialog-actions">
+        <button id="dialogCancel" class="button ghost" type="button">Cancel</button>
+        <button class="button primary" type="submit">Add hotspot</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
