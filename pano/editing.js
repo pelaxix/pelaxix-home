@@ -3,6 +3,7 @@
 
   const STORAGE_KEY = 'pelaxix-pano-project-v1';
   let editingHotspotId = null;
+  let repositionState = null;
 
   function readProject() {
     try {
@@ -29,6 +30,15 @@
     return ((value + 180) % 360 + 360) % 360 - 180;
   }
 
+  function parseAngle(text) {
+    const value = parseFloat(String(text || '').replace(/[^\d.-]/g, ''));
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function uid(prefix = 'id') {
+    return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  }
+
   function renameScene(sceneId) {
     const project = readProject();
     const scene = project?.scenes.find(item => item.id === sceneId);
@@ -39,8 +49,6 @@
     if (!nextName || nextName === oldName) return;
 
     scene.name = nextName;
-
-    // Keep labels that were automatically inherited from the destination name in sync.
     project.scenes.forEach(sourceScene => {
       (sourceScene.hotSpots || []).forEach(hotspot => {
         if (hotspot.type === 'scene' && hotspot.targetSceneId === sceneId && hotspot.text === oldName) {
@@ -50,6 +58,62 @@
     });
 
     writeProject(project);
+    location.reload();
+  }
+
+  function ensureCreateDescriptionField() {
+    const dialog = document.querySelector('#hotspotDialog');
+    const labelField = dialog?.querySelector('#hotspotLabel')?.closest('.field');
+    if (!dialog || !labelField) return;
+
+    let field = dialog.querySelector('#infoDescriptionField');
+    if (!field) {
+      field = document.createElement('label');
+      field.id = 'infoDescriptionField';
+      field.className = 'field';
+      field.innerHTML = `
+        <span>Description</span>
+        <textarea id="hotspotDescription" rows="4" maxlength="600" placeholder="e.g. This is a WWII-era clock that came with the house."></textarea>
+      `;
+      labelField.insertAdjacentElement('afterend', field);
+    }
+
+    const sync = () => {
+      if (!dialog.open) return;
+      const isInfo = dialog.querySelector('#hotspotType')?.value === 'info';
+      field.hidden = !isInfo;
+      if (isInfo) dialog.querySelector('#hotspotDescription').value = '';
+    };
+
+    const observer = new MutationObserver(sync);
+    observer.observe(dialog, { attributes: true, attributeFilter: ['open'] });
+  }
+
+  function saveNewInfoHotspot(event) {
+    const dialog = document.querySelector('#hotspotDialog');
+    const type = dialog?.querySelector('#hotspotType')?.value;
+    if (!dialog?.open || type !== 'info') return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const project = readProject();
+    const scene = currentScene(project);
+    if (!project || !scene) return;
+
+    scene.hotSpots = Array.isArray(scene.hotSpots) ? scene.hotSpots : [];
+    scene.hotSpots.push({
+      id: uid('hotspot'),
+      type: 'info',
+      pitch: parseAngle(document.querySelector('#pitchValue')?.textContent),
+      yaw: parseAngle(document.querySelector('#yawValue')?.textContent),
+      text: dialog.querySelector('#hotspotLabel')?.value.trim() || 'Info',
+      description: dialog.querySelector('#hotspotDescription')?.value.trim() || '',
+      targetSceneId: null,
+    });
+
+    writeProject(project);
+    try { dialog.close(); } catch {}
     location.reload();
   }
 
@@ -79,24 +143,21 @@
           <input id="editHotspotLabel" type="text" maxlength="80" />
         </label>
 
-        <div class="edit-coordinate-grid">
-          <label class="field">
-            <span>Pitch</span>
-            <div class="number-with-unit">
-              <input id="editPitch" type="number" min="-90" max="90" step="0.1" required />
-              <span>°</span>
-            </div>
-          </label>
-          <label class="field">
-            <span>Yaw</span>
-            <div class="number-with-unit">
-              <input id="editYaw" type="number" min="-180" max="180" step="0.1" required />
-              <span>°</span>
-            </div>
-          </label>
+        <label class="field" id="editDescriptionField" hidden>
+          <span>Description</span>
+          <textarea id="editHotspotDescription" rows="4" maxlength="600" placeholder="Add the detail shown when someone hovers over this marker."></textarea>
+        </label>
+
+        <div class="edit-position-card">
+          <div>
+            <strong>Hotspot position</strong>
+            <span id="editPositionReadout">Pitch 0° · Yaw 0°</span>
+          </div>
+          <button id="editRepositionBtn" class="button ghost compact" type="button">Reposition on panorama</button>
         </div>
 
-        <p class="edit-help">Pitch moves the hotspot up/down. Yaw moves it left/right around the panorama.</p>
+        <input id="editPitch" type="hidden" />
+        <input id="editYaw" type="hidden" />
 
         <div class="dialog-actions">
           <button id="editHotspotCancel" class="button ghost" type="button">Cancel</button>
@@ -108,19 +169,72 @@
 
     const style = document.createElement('style');
     style.textContent = `
-      .edit-coordinate-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-      .number-with-unit { position:relative; }
-      .number-with-unit input { padding-right:30px; }
-      .number-with-unit > span { position:absolute; right:11px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:12px; pointer-events:none; }
-      .edit-help { margin:-5px 0 0; color:var(--muted); font-size:11px; line-height:1.45; }
+      #hotspotDialog textarea,
+      #editHotspotDialog textarea {
+        width:100%;
+        resize:vertical;
+        min-height:88px;
+        max-height:220px;
+        border:1px solid var(--line);
+        border-radius:10px;
+        color:var(--text);
+        background:#0e0f13;
+        padding:10px 11px;
+        outline:none;
+        font:inherit;
+        line-height:1.45;
+      }
+      #hotspotDialog textarea:focus,
+      #editHotspotDialog textarea:focus {
+        border-color:rgba(216,255,98,.55);
+        box-shadow:0 0 0 3px rgba(216,255,98,.07);
+      }
+      .edit-position-card {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:14px;
+        padding:12px;
+        border:1px solid var(--line);
+        border-radius:12px;
+        background:rgba(255,255,255,.025);
+      }
+      .edit-position-card strong,
+      .edit-position-card span { display:block; }
+      .edit-position-card strong { font-size:12px; }
+      .edit-position-card span { margin-top:3px; color:var(--muted); font-size:10px; }
       .hotspot-controls { display:flex; gap:3px; }
       .mini-button.edit-control { font-size:14px; }
-      @media (max-width:520px) { .edit-coordinate-grid { grid-template-columns:1fr; } }
+      .reposition-hint {
+        position:absolute;
+        top:18px;
+        left:50%;
+        transform:translateX(-50%);
+        z-index:30;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px 12px;
+        border:1px solid rgba(216,255,98,.28);
+        border-radius:12px;
+        background:rgba(11,12,15,.94);
+        color:var(--text);
+        box-shadow:0 14px 40px rgba(0,0,0,.35);
+        backdrop-filter:blur(14px);
+        font-size:12px;
+      }
+      .reposition-hint .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(216,255,98,.10); }
+      .reposition-hint button { border:0; background:none; color:var(--accent); cursor:pointer; font-weight:700; padding:0; }
+      body.repositioning-hotspot #viewer { cursor:crosshair !important; }
+      @media (max-width:560px) {
+        .edit-position-card { align-items:stretch; flex-direction:column; }
+      }
     `;
     document.head.append(style);
 
     dialog.querySelector('#editHotspotClose').addEventListener('click', closeEditDialog);
     dialog.querySelector('#editHotspotCancel').addEventListener('click', closeEditDialog);
+    dialog.querySelector('#editRepositionBtn').addEventListener('click', beginReposition);
     dialog.querySelector('#editHotspotForm').addEventListener('submit', saveHotspotChanges);
   }
 
@@ -143,16 +257,21 @@
     const dialog = document.querySelector('#editHotspotDialog');
     const targetField = dialog.querySelector('#editTargetField');
     const targetSelect = dialog.querySelector('#editTargetScene');
+    const descriptionField = dialog.querySelector('#editDescriptionField');
+    const descriptionInput = dialog.querySelector('#editHotspotDescription');
     const labelInput = dialog.querySelector('#editHotspotLabel');
     const pitchInput = dialog.querySelector('#editPitch');
     const yawInput = dialog.querySelector('#editYaw');
 
     labelInput.value = hotspot.text || '';
+    descriptionInput.value = hotspot.description || '';
     pitchInput.value = Number(hotspot.pitch).toFixed(1);
     yawInput.value = Number(hotspot.yaw).toFixed(1);
+    updatePositionReadout(dialog, hotspot.pitch, hotspot.yaw);
 
     if (hotspot.type === 'scene') {
       targetField.hidden = false;
+      descriptionField.hidden = true;
       targetSelect.innerHTML = '';
       project.scenes.filter(item => item.id !== scene.id).forEach(item => {
         const option = document.createElement('option');
@@ -163,11 +282,100 @@
       });
     } else {
       targetField.hidden = true;
+      descriptionField.hidden = false;
       targetSelect.innerHTML = '';
     }
 
     dialog.showModal();
     setTimeout(() => labelInput.focus(), 0);
+  }
+
+  function updatePositionReadout(dialog, pitch, yaw) {
+    const readout = dialog.querySelector('#editPositionReadout');
+    if (readout) readout.textContent = `Pitch ${Number(pitch).toFixed(1)}° · Yaw ${Number(yaw).toFixed(1)}°`;
+  }
+
+  function persistEditFieldsBeforeMove() {
+    const project = readProject();
+    const scene = currentScene(project);
+    const hotspot = scene?.hotSpots?.find(item => item.id === editingHotspotId);
+    const dialog = document.querySelector('#editHotspotDialog');
+    if (!project || !scene || !hotspot || !dialog) return null;
+
+    hotspot.text = dialog.querySelector('#editHotspotLabel').value.trim() || (hotspot.type === 'scene' ? 'Open scene' : 'Info');
+    if (hotspot.type === 'info') {
+      hotspot.description = dialog.querySelector('#editHotspotDescription').value.trim();
+    } else {
+      const targetSceneId = dialog.querySelector('#editTargetScene').value;
+      if (targetSceneId) hotspot.targetSceneId = targetSceneId;
+    }
+
+    writeProject(project);
+    return { hotspotId: hotspot.id, sceneId: scene.id };
+  }
+
+  function beginReposition() {
+    const savedState = persistEditFieldsBeforeMove();
+    if (!savedState) return;
+
+    repositionState = savedState;
+    editingHotspotId = null;
+
+    const dialog = document.querySelector('#editHotspotDialog');
+    if (dialog?.open) dialog.close();
+
+    let hint = document.querySelector('#repositionHint');
+    if (!hint) {
+      hint = document.createElement('div');
+      hint.id = 'repositionHint';
+      hint.className = 'reposition-hint';
+      hint.innerHTML = '<span class="dot"></span><span>Click the new hotspot position</span><button type="button">Cancel</button>';
+      document.querySelector('.viewer-panel')?.append(hint);
+      hint.querySelector('button').addEventListener('click', cancelReposition);
+    }
+
+    hint.hidden = false;
+    document.body.classList.add('repositioning-hotspot');
+    document.querySelector('#viewer')?.addEventListener('click', applyReposition, true);
+  }
+
+  function cancelReposition() {
+    document.querySelector('#viewer')?.removeEventListener('click', applyReposition, true);
+    document.querySelector('#repositionHint')?.setAttribute('hidden', '');
+    document.body.classList.remove('repositioning-hotspot');
+    repositionState = null;
+  }
+
+  function applyReposition(event) {
+    if (!repositionState) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const viewer = window.__pelaxixMainPanoViewer;
+    if (!viewer?.mouseEventToCoords) {
+      cancelReposition();
+      window.alert('The panorama viewer is not ready yet. Try again in a moment.');
+      return;
+    }
+
+    let coords;
+    try {
+      coords = viewer.mouseEventToCoords(event);
+    } catch {
+      cancelReposition();
+      return;
+    }
+
+    const project = readProject();
+    const scene = project?.scenes.find(item => item.id === repositionState.sceneId);
+    const hotspot = scene?.hotSpots?.find(item => item.id === repositionState.hotspotId);
+    if (!project || !scene || !hotspot) return cancelReposition();
+
+    hotspot.pitch = clamp(coords[0], -90, 90);
+    hotspot.yaw = normalizeYaw(coords[1]);
+    writeProject(project);
+    cancelReposition();
+    location.reload();
   }
 
   function saveHotspotChanges(event) {
@@ -190,6 +398,8 @@
     if (hotspot.type === 'scene') {
       const targetSceneId = dialog.querySelector('#editTargetScene').value;
       if (targetSceneId) hotspot.targetSceneId = targetSceneId;
+    } else {
+      hotspot.description = dialog.querySelector('#editHotspotDescription').value.trim();
     }
 
     writeProject(project);
@@ -235,8 +445,12 @@
 
       if (meta) {
         const target = project.scenes.find(item => item.id === hotspot.targetSceneId);
-        const destination = hotspot.type === 'scene' ? `→ ${target?.name || 'Missing scene'}` : 'Info marker';
-        meta.textContent = `${destination} · P ${Number(hotspot.pitch).toFixed(1)}° · Y ${Number(hotspot.yaw).toFixed(1)}°`;
+        if (hotspot.type === 'scene') {
+          meta.textContent = `→ ${target?.name || 'Missing scene'}`;
+        } else {
+          const detail = hotspot.description?.trim();
+          meta.textContent = detail ? `Info · ${detail.length > 58 ? `${detail.slice(0, 58)}…` : detail}` : 'Info marker';
+        }
       }
 
       const controls = document.createElement('div');
@@ -264,7 +478,9 @@
     enhanceHotspots(project);
   }
 
-  // app.js redraws the sidebar after scene changes and edits, so re-apply the controls when needed.
+  ensureCreateDescriptionField();
+  document.querySelector('#hotspotForm')?.addEventListener('submit', saveNewInfoHotspot, true);
+
   const observer = new MutationObserver(() => enhanceUI());
   observer.observe(document.querySelector('#sceneList'), { childList: true });
   observer.observe(document.querySelector('#hotspotList'), { childList: true });
