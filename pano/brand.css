@@ -1,0 +1,387 @@
+/* Grupo FG visual identity layer for Pano Lab. */
+:root {
+  --bg: #061827;
+  --panel: #0a2134;
+  --panel-2: #102a40;
+  --line: rgba(207, 158, 55, 0.26);
+  --text: #f7f3eb;
+  --muted: #b7b1a5;
+  --accent: #cfa037;
+  --accent-2: #e7c76f;
+  --danger: #d97868;
+  --ivory: #f7f3ea;
+  --navy: #071b2d;
+  --navy-2: #0c2940;
+  --gold: #cfa037;
+  --gold-soft: #e0bd66;
+  --shadow: 0 22px 70px rgba(2, 11, 20, 0.42);
+}
+
+html,
+body {
+  background: var(--navy);
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(207, 160, 55, 0.08), transparent 28%),
+    var(--navy);
+}
+
+.topbar {
+  min-height: 76px;
+  padding: 0 22px;
+  background: rgba(247, 243, 234, 0.98) !important;
+  border-bottom: 3px solid var(--gold) !important;
+  box-shadow: 0 8px 28px rgba(3, 14, 24, 0.18);
+  color: var(--navy) !important;
+}
+
+.brand-row { gap: 14px; }
+
+.home-link.fg-home-link {
+  width: 58px;
+  height: 56px;
+  padding: 2px 8px 2px 0;
+  border-radius: 0;
+  border-right: 1px solid rgba(7, 27, 45, 0.14);
+  background: transparent !important;
+  box-shadow: none;
+}
+
+.home-link.fg-home-link img {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.brand {
+  color: var(--navy);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: #9d7424 !important;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.top-actions .pill,
+.pano-tour-status {
+  border-color: rgba(7, 27, 45, 0.13) !important;
+  background: rgba(7, 27, 45, 0.055) !important;
+  color: #53606b !important;
+}
+
+.pano-top-button,
+#fullscreenBtn {
+  border-color: rgba(7, 27, 45, 0.16) !important;
+  background: transparent !important;
+  color: var(--navy) !important;
+}
+
+.pano-top-button:hover,
+#fullscreenBtn:hover,
+.pano-top-button.active {
+  border-color: rgba(207, 160, 55, 0.72) !important;
+  background: rgba(207, 160, 55, 0.10) !important;
+  color: #8a641d !important;
+}
+
+.sidebar {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.018), transparent 24%),
+    var(--navy) !important;
+  border-right: 1px solid rgba(207, 160, 55, 0.30) !important;
+  box-shadow: 12px 0 36px rgba(2, 12, 21, 0.16);
+}
+
+.sidebar-section + .sidebar-section,
+.sidebar-footer { border-color: rgba(207, 160, 55, 0.20) !important; }
+
+.intro h1 {
+  position: relative;
+  padding-bottom: 10px;
+  color: var(--ivory);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.intro h1::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 56px;
+  height: 2px;
+  background: var(--gold);
+}
+
+.intro p,
+.sidebar-footer p,
+.empty-list,
+.pano-shortcut-hint { color: #aaa99f !important; }
+
+.section-heading,
+.tour-name-wrap span {
+  color: var(--gold-soft) !important;
+  letter-spacing: 0.13em !important;
+}
+
+.count {
+  background: rgba(207, 160, 55, 0.14) !important;
+  color: #efd58a !important;
+  border: 1px solid rgba(207, 160, 55, 0.18);
+}
+
+.tour-name-input {
+  border-color: rgba(207, 160, 55, 0.32) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: var(--ivory) !important;
+}
+
+.tour-name-input:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(207, 160, 55, 0.10) !important;
+}
+
+.button.primary,
+.upload-button.button.primary {
+  border-color: #d7aa47 !important;
+  background: linear-gradient(180deg, #ddb34f, #c9952d) !important;
+  color: #071b2d !important;
+  box-shadow: 0 7px 20px rgba(207, 160, 55, 0.16);
+}
+
+.button.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #e6c267, #d29e34) !important;
+}
+
+.button.ghost,
+.button.compact {
+  border-color: rgba(207, 160, 55, 0.28) !important;
+  background: rgba(255,255,255,0.025) !important;
+  color: #e8e0d0 !important;
+}
+
+.button.ghost:hover:not(:disabled),
+.button.compact:hover:not(:disabled) {
+  border-color: rgba(207, 160, 55, 0.58) !important;
+  background: rgba(207, 160, 55, 0.08) !important;
+}
+
+.scene-card {
+  border-color: rgba(255,255,255,0.055) !important;
+  background: rgba(255,255,255,0.025) !important;
+}
+
+.scene-card:hover {
+  border-color: rgba(207, 160, 55, 0.28) !important;
+  background: rgba(207, 160, 55, 0.045) !important;
+}
+
+.scene-card.active {
+  border-color: rgba(207, 160, 55, 0.58) !important;
+  background: linear-gradient(90deg, rgba(207,160,55,.11), rgba(255,255,255,.025)) !important;
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+
+.scene-name { color: #faf6ed; }
+
+.scene-meta,
+.mini-button { color: #a9a79f !important; }
+
+.mini-button:hover,
+.hud-button:hover {
+  color: var(--gold-soft) !important;
+  background: rgba(207, 160, 55, 0.09) !important;
+}
+
+.mini-button.start { color: var(--gold-soft) !important; }
+
+.pano-scene-thumb {
+  border-color: rgba(207, 160, 55, 0.22) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+}
+
+.hotspot-card { background: rgba(255,255,255,.022) !important; }
+.hotspot-card:hover { background: rgba(255,255,255,.04) !important; }
+
+.viewer-panel { background: #071725 !important; }
+
+.viewer-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(207, 160, 55, 0.08);
+  z-index: 2;
+}
+
+.scene-hud,
+.placement-hint,
+.reposition-hint {
+  border-color: rgba(207, 160, 55, 0.34) !important;
+  background: rgba(7, 27, 45, 0.88) !important;
+}
+
+.scene-hud strong {
+  color: #fff8ea;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.hud-button {
+  border: 1px solid rgba(207,160,55,.22) !important;
+  background: rgba(207,160,55,.06) !important;
+  color: #d9c69d !important;
+}
+
+.empty-state {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(207,160,55,.08), transparent 30%),
+    linear-gradient(180deg, rgba(7,27,45,.82), rgba(7,27,45,.96));
+}
+
+.orb {
+  width: 150px !important;
+  height: 122px !important;
+  border-radius: 18px !important;
+  background: #f7f3ea url('./grupo-fg-mark.svg') center/contain no-repeat !important;
+  border: 1px solid rgba(207,160,55,.28);
+  box-shadow: 0 18px 55px rgba(0,0,0,.24) !important;
+}
+
+.empty-state h2 {
+  color: #fff8eb;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+}
+
+.empty-state p { color: #bbb6ab !important; }
+
+.dialog {
+  border: 1px solid rgba(207,160,55,.45) !important;
+  background: var(--ivory) !important;
+  color: var(--navy) !important;
+  box-shadow: 0 28px 90px rgba(0,0,0,.42) !important;
+}
+
+.dialog::backdrop {
+  background: rgba(3, 15, 26, .70) !important;
+  backdrop-filter: blur(8px);
+}
+
+.dialog-heading h2 {
+  color: var(--navy) !important;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+}
+
+.eyebrow { color: #a97d25 !important; }
+
+.icon-button {
+  background: rgba(7,27,45,.07) !important;
+  color: #65717a !important;
+}
+
+.field,
+.landing-preview-heading,
+.edit-position-card strong { color: var(--navy) !important; }
+
+.field input,
+.field select,
+.dialog textarea,
+#hotspotDialog textarea,
+#editHotspotDialog textarea {
+  border-color: rgba(7,27,45,.18) !important;
+  background: #fffdf8 !important;
+  color: var(--navy) !important;
+}
+
+.field input:focus,
+.field select:focus,
+.dialog textarea:focus,
+#hotspotDialog textarea:focus,
+#editHotspotDialog textarea:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(207,160,55,.12) !important;
+}
+
+.coordinates span,
+.edit-position-card {
+  border-color: rgba(7,27,45,.12) !important;
+  background: rgba(7,27,45,.045) !important;
+  color: #6c7479 !important;
+}
+
+.coordinates strong,
+.edit-position-card strong { color: var(--navy) !important; }
+
+.edit-position-card span,
+.landing-preview-help,
+.edit-help,
+.pano-source-help,
+.helper-text { color: #747b7d !important; }
+
+.landing-preview,
+.target-preview {
+  border-color: rgba(207,160,55,.35) !important;
+  background: #0b2033 !important;
+}
+
+.landing-preview-chip,
+.landing-chip {
+  border-color: rgba(207,160,55,.34) !important;
+  color: #9c7429 !important;
+}
+
+.dialog .button.ghost {
+  border-color: rgba(7,27,45,.18) !important;
+  background: rgba(7,27,45,.04) !important;
+  color: var(--navy) !important;
+}
+
+.dialog .button.primary {
+  border-color: #bf8d29 !important;
+  background: linear-gradient(180deg, #ddb34f, #c9952d) !important;
+  color: #071b2d !important;
+}
+
+#viewer .pnlm-controls-container .pnlm-controls,
+#viewer .pnlm-control {
+  border-color: rgba(207,160,55,.25) !important;
+  background-color: rgba(247,243,234,.94) !important;
+  box-shadow: 0 5px 18px rgba(0,0,0,.20) !important;
+}
+
+.toast {
+  border: 1px solid rgba(207,160,55,.52);
+  background: #f7f3ea !important;
+  color: var(--navy) !important;
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    min-height: 64px;
+    padding: 0 12px;
+  }
+  .home-link.fg-home-link {
+    width: 48px;
+    height: 48px;
+  }
+  .home-link.fg-home-link img {
+    width: 40px;
+    height: 40px;
+  }
+  .brand { font-size: 15px; }
+}
