@@ -1,10 +1,14 @@
 (() => {
   'use strict';
 
+  const STORAGE_KEY = 'pelaxix-pano-project-v1';
+
   injectStyles();
   fixCreateDialog();
   fixEditDialog();
   observeDialogs();
+  observeHotspotList();
+  enhanceHotspotList();
 
   function injectStyles() {
     const style = document.createElement('style');
@@ -79,6 +83,46 @@
         box-shadow: 0 10px 28px rgba(0,0,0,.36), 0 0 0 4px rgba(168,255,204,.12) !important;
       }
 
+      /* Mirror the panorama marker language in the hotspot list. */
+      #hotspotList .hotspot-card.pano-typed-hotspot {
+        grid-template-columns: 28px minmax(0,1fr) auto;
+      }
+
+      #hotspotList .pano-hotspot-kind {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        align-self: center;
+        flex: 0 0 28px;
+        background: rgba(10,12,15,.86);
+        box-shadow: 0 5px 14px rgba(0,0,0,.24);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        pointer-events: none;
+      }
+
+      #hotspotList .pano-hotspot-kind.scene {
+        border: 1px solid rgba(216,255,98,.62);
+        color: #ddff79;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        font-size: 17px;
+        font-weight: 750;
+        line-height: 1;
+        padding-bottom: 2px;
+      }
+
+      #hotspotList .pano-hotspot-kind.info {
+        border: 1px solid rgba(168,255,204,.58);
+        color: #b8ffd7;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1;
+        padding-bottom: 1px;
+      }
+
       /* Make the hover labels feel like part of Pano Lab too. */
       #viewer .pnlm-tooltip span {
         border-radius: 9px !important;
@@ -102,6 +146,54 @@
       }
     `;
     document.head.append(style);
+  }
+
+  function readProject() {
+    try {
+      const project = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return project && Array.isArray(project.scenes) ? project : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function currentScene(project) {
+    return project?.scenes.find(scene => scene.id === project.currentSceneId) || null;
+  }
+
+  function enhanceHotspotList() {
+    const list = document.querySelector('#hotspotList');
+    const project = readProject();
+    const scene = currentScene(project);
+    if (!list || !scene || !Array.isArray(scene.hotSpots)) return;
+
+    const cards = [...list.children].filter(item => item.classList.contains('hotspot-card'));
+    cards.forEach((card, index) => {
+      const hotspot = scene.hotSpots[index];
+      if (!hotspot) return;
+
+      let badge = card.querySelector('.pano-hotspot-kind');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'pano-hotspot-kind';
+        badge.setAttribute('aria-hidden', 'true');
+        card.prepend(badge);
+      }
+
+      const isScene = hotspot.type === 'scene';
+      badge.classList.toggle('scene', isScene);
+      badge.classList.toggle('info', !isScene);
+      badge.textContent = isScene ? '↑' : 'i';
+      card.classList.add('pano-typed-hotspot');
+    });
+  }
+
+  function observeHotspotList() {
+    const list = document.querySelector('#hotspotList');
+    if (!list) return;
+
+    const observer = new MutationObserver(() => enhanceHotspotList());
+    observer.observe(list, { childList: true, subtree: true });
   }
 
   function fixCreateDialog() {
