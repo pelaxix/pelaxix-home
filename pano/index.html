@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0c0d11" />
-  <title>Pano Lab · pelaxix</title>
-  <meta name="description" content="A lightweight browser-based 360° virtual tour proof of concept." />
+  <meta name="theme-color" content="#071b2d" />
+  <title>Grupo FG · Tour Builder</title>
+  <meta name="description" content="Grupo FG 360° virtual property tour builder." />
   <link rel="icon" href="../favicon.svg" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css" />
   <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./brand.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script defer src="./tooltip.js"></script>
@@ -23,14 +24,16 @@
   <main class="app-shell">
     <header class="topbar">
       <div class="brand-row">
-        <a class="home-link" href="../" aria-label="Back to pelaxix.com">PX</a>
+        <a class="home-link fg-home-link" href="../" aria-label="Back to pelaxix.com">
+          <img src="./grupo-fg-mark.svg" alt="Grupo FG" />
+        </a>
         <div>
-          <div class="brand">Pano Lab</div>
-          <div class="subtitle">360° virtual tour proof of concept</div>
+          <div class="brand">Grupo FG</div>
+          <div class="subtitle">Inmobiliario · 360° Tour Builder</div>
         </div>
       </div>
       <div class="top-actions">
-        <span class="pill">Local POC</span>
+        <span class="pill">Local Builder</span>
         <button id="fullscreenBtn" class="button ghost" type="button">Fullscreen</button>
       </div>
     </header>
@@ -38,8 +41,8 @@
     <section class="workspace">
       <aside class="sidebar">
         <div class="sidebar-section intro">
-          <h1>Build a tour</h1>
-          <p>Upload equirectangular 360° JPGs, then connect rooms with hotspots.</p>
+          <h1>Build a property tour</h1>
+          <p>Upload 360° panoramas and connect spaces with interactive hotspots.</p>
           <label class="button primary upload-button">
             <span>+ Add panoramas</span>
             <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
@@ -77,8 +80,8 @@
 
         <div id="emptyState" class="empty-state">
           <div class="orb" aria-hidden="true"></div>
-          <h2>Your 360° canvas is empty</h2>
-          <p>Add one or more 2:1 equirectangular panoramas to start building a walkthrough.</p>
+          <h2>Build your first property tour</h2>
+          <p>Add one or more 2:1 equirectangular panoramas to create an interactive walkthrough.</p>
           <label class="button primary upload-button large">
             <span>Choose panorama files</span>
             <input id="emptyFileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
