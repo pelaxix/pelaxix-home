@@ -21,34 +21,35 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         cursor: pointer;
-        transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, filter .15s ease;
+        transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, filter .15s ease, transform .15s ease;
       }
 
+      /* Scene link: same glassy family as the info marker, but lime + upward navigation arrow. */
       #viewer .pnlm-hotspot-base.pnlm-scene {
-        width: 40px !important;
-        height: 40px !important;
-        margin: -20px 0 0 -20px !important;
-        border: 1px solid rgba(216,255,98,.9) !important;
+        width: 36px !important;
+        height: 36px !important;
+        margin: -18px 0 0 -18px !important;
+        border: 1px solid rgba(216,255,98,.62) !important;
         border-radius: 999px !important;
-        background: rgba(216,255,98,.92) !important;
-        color: #0c0d11 !important;
-        box-shadow: 0 8px 26px rgba(0,0,0,.32), 0 0 0 4px rgba(216,255,98,.10) !important;
+        background: rgba(10,12,15,.86) !important;
+        color: #ddff79 !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,.30), 0 0 0 3px rgba(216,255,98,.08) !important;
       }
 
       #viewer .pnlm-hotspot-base.pnlm-scene::before {
-        content: '→';
+        content: '↑';
         display: block;
         font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-        font-size: 23px;
-        font-weight: 800;
+        font-size: 21px;
+        font-weight: 700;
         line-height: 1;
         margin-top: -2px;
       }
 
       #viewer .pnlm-hotspot-base.pnlm-scene:hover {
-        background: #e5ff91 !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,.38), 0 0 0 5px rgba(216,255,98,.16) !important;
-        filter: brightness(1.03);
+        background: rgba(27,31,18,.96) !important;
+        border-color: rgba(216,255,98,.95) !important;
+        box-shadow: 0 10px 28px rgba(0,0,0,.36), 0 0 0 4px rgba(216,255,98,.12) !important;
       }
 
       #viewer .pnlm-hotspot-base.pnlm-info {
