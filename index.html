@@ -1,142 +1,78 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Pelaxix is a vibecode lab for small web experiments, tools, and projects built by testing ideas in public."
-    />
-    <title>Pelaxix</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400,500,700,800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="/project-nav.css" />
-  </head>
-  <body>
-    <div class="page-shell">
-      <header class="site-header">
-        <a class="logo" href="/" aria-label="Pelaxix home">
-          <span class="logo-mark">P</span>
-          <span>Pelaxix</span>
-        </a>
-        <nav class="nav-links" aria-label="Main navigation">
-          <details class="nav-menu">
-            <summary>Projects</summary>
-            <div class="nav-dropdown">
-              <a href="/worldcup/">World Cup 2026</a>
-              <a href="/warbirds/">Hamilton Warbird Watch</a>
-              <a href="/go/">GO Tracker</a>
-              <a href="/fishingmap/">Fishing Map</a>
-              <a href="/fishcast/">FishCast</a>
-              <a href="/bbq/">BBQ Log</a>
-              <a href="/movies/">Movie Shelf</a>
-              <a href="/ip/">Network Check</a>
-              <a href="/pdf/">PDF Tools</a>
-              <a href="/qr/">QR Tools</a>
-              <a href="/video/">Video Tools</a>
-              <a href="/location/">Location Snap</a>
-              <a href="/NiagaraP/">Niagara Parking</a>
-              <a href="/yucafantasy/">Yucafantasy</a>
-            </div>
-          </details>
-        </nav>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pelaxix is Noé's tiny corner of the internet: useful tools, local obsessions, experiments and things built because they sounded fun." />
+  <meta name="theme-color" content="#f6efe3" />
+  <title>Pelaxix — useful things & questionable experiments</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Pelaxix home"><span class="brand-mark">P</span><span>pelaxix</span><span class="blink">_</span></a>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a href="#featured">featured</a><a href="#everything">everything</a>
+        <a class="github-link" href="https://github.com/pelaxix" target="_blank" rel="noreferrer">github ↗</a>
+      </nav>
+    </header>
 
-      <main>
-        <section class="hero">
-          <h1>Pelaxix's vibecode lab.</h1>
-          <p class="hero-copy">
-            A place to test small ideas, break things gently, and turn random experiments into useful little tools.
-          </p>
-        </section>
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker"><span class="status-dot"></span> broadcasting from Hamilton, Ontario</p>
+          <h1>I make little things<br><em>because I can.</em></h1>
+          <p class="lede">Useful tools, local obsessions, over-engineered hobbies and random ideas that somehow became websites. No startup. No roadmap. Just vibes and code.</p>
+          <div class="hero-actions"><a class="button primary" href="#everything">Explore the lab ↓</a><button class="button ghost" id="random-project" type="button">Surprise me ↗</button></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="terminal-card"><div class="terminal-top"><i></i><i></i><i></i></div><code><span>~</span> whoami<br><b>pelaxix</b><br><br><span>~</span> ls ./brain<br><b>fishing/ tools/ planes/<br>food/ maps/ why-not/</b><br><br><span>~</span> status<br><b class="terminal-green">still building █</b></code></div>
+        </div>
+      </section>
 
-        <section id="projects" class="section-grid">
-          <div class="section-intro">
-            <p class="eyebrow">Projects</p>
-            <h2>Starting small, on purpose.</h2>
-          </div>
+      <section class="marquee" aria-label="Pelaxix themes"><div>BUILD IT · BREAK IT · FIX IT · FISH SOMETIMES · OVERTHINK IT · SHIP IT ANYWAY ·&nbsp; BUILD IT · BREAK IT · FIX IT · FISH SOMETIMES · OVERTHINK IT · SHIP IT ANYWAY ·</div></section>
 
-          <div class="card-grid">
-            <a class="card" href="/worldcup/">
-              <h3>World Cup Schedule</h3>
-              <p>See every 2026 World Cup game in your local time, follow groups, and track the knockout bracket.</p>
-            </a>
+      <section class="featured section" id="featured">
+        <div class="section-heading"><div><p class="label">CURRENT OBSESSIONS</p><h2>The fun stuff.</h2></div><p>Some projects get a little more out of hand than others.</p></div>
+        <div class="feature-grid">
+          <a class="feature-card panorama" href="/pano/"><div class="feature-icon">360°</div><div class="feature-content"><span class="pill">EXPERIMENT</span><h3>Pano</h3><p>Build and link interactive 360° virtual tours right in the browser.</p><span class="open">Walk around →</span></div></a>
+          <a class="feature-card fish" href="/fishcast/"><div class="feature-icon">◉</div><div class="feature-content"><span class="pill">OUTDOORS</span><h3>FishCast</h3><p>Weather, water, target species and lure recommendations for deciding whether I should be fishing right now.</p><span class="open">Check the bite →</span></div></a>
+          <a class="feature-card warbird" href="/warbirds/"><div class="feature-icon">✈</div><div class="feature-content"><span class="pill">HAMILTON</span><h3>Warbird Watch</h3><p>Live ADS-B watching for historic aircraft flying around Hamilton's Canadian Warplane Heritage Museum.</p><span class="open">Watch the skies →</span></div></a>
+        </div>
+      </section>
 
-            <a class="card" href="/warbirds/">
-              <h3>Hamilton Warbird Watch</h3>
-              <p>Watch live ADS-B activity for historic aircraft around Hamilton and the Canadian Warplane Heritage Museum.</p>
-            </a>
+      <section class="section" id="everything">
+        <div class="section-heading projects-heading"><div><p class="label">THE WHOLE DRAWER</p><h2>Pick a rabbit hole.</h2></div><div class="filters" role="group" aria-label="Filter projects"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="local">Local</button><button class="filter" data-filter="outdoors">Outdoors</button><button class="filter" data-filter="tools">Tools</button><button class="filter" data-filter="fun">Fun</button></div></div>
+        <div class="project-grid">
+          <a class="project-card" data-category="fun" href="/worldcup/"><span class="emoji">⚽</span><div><span class="tag">SPORT</span><h3>World Cup 2026</h3><p>Every match in local time, groups and knockout bracket.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="local" href="/go/"><span class="emoji">🚆</span><div><span class="tag">COMMUTE</span><h3>GO Tracker</h3><p>Morning West Harbour → Union commute tracking.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="outdoors local" href="/fishingmap/"><span class="emoji">🎣</span><div><span class="tag">OUTDOORS</span><h3>Fishing Map</h3><p>Spots, species, access notes and fishing intel.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="outdoors local" href="/NiagaraP/"><span class="emoji">🅿️</span><div><span class="tag">NIAGARA</span><h3>Niagara Parking</h3><p>Niagara Parks lots and boat launches on one map.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="fun" href="/bbq/"><span class="emoji">🔥</span><div><span class="tag">FOOD</span><h3>BBQ Log</h3><p>Cooks, temperatures, ratings and lessons learned.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="fun" href="/movies/"><span class="emoji">🎬</span><div><span class="tag">MOVIES</span><h3>Movie Shelf</h3><p>A tiny shelf fed by recent Letterboxd activity.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="tools" href="/pdf/"><span class="emoji">📄</span><div><span class="tag">LOCAL TOOL</span><h3>PDF Tools</h3><p>Merge, split, rotate, reorder and clean PDFs locally.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="tools" href="/qr/"><span class="emoji">▦</span><div><span class="tag">LOCAL TOOL</span><h3>QR Tools</h3><p>Create, scan and batch useful QR codes.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="tools" href="/video/"><span class="emoji">🎞️</span><div><span class="tag">LOCAL TOOL</span><h3>Video Tools</h3><p>Compress, resize, trim and convert video in-browser.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="tools" href="/ip/"><span class="emoji">🌐</span><div><span class="tag">NETWORK</span><h3>Network Check</h3><p>Public IP, approximate location and device details.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="tools local" href="/location/"><span class="emoji">📍</span><div><span class="tag">UTILITY</span><h3>Location Snap</h3><p>Grab GPS coordinates and remember where you parked.</p></div><span class="arrow">↗</span></a>
+          <a class="project-card" data-category="fun" href="/yucafantasy/"><span class="emoji">🏎️</span><div><span class="tag">F1</span><h3>Yucafantasy</h3><p>Grand Prix posters and fantasy deadline countdowns.</p></div><span class="arrow">↗</span></a>
+        </div>
+      </section>
 
-            <a class="card" href="/go/">
-              <h3>GO Commute Tracker</h3>
-              <p>Track the morning West Harbour GO to Union Station target departure and official GO info.</p>
-            </a>
+      <section class="manifesto">
+        <div class="manifesto-mark">P</div><div><p class="label">WHAT IS THIS PLACE?</p><h2>A digital junk drawer,<br>but the good kind.</h2><p>Pelaxix is where I put things I wanted to exist. Some solve an actual problem. Some support a hobby. Some are proof that a dumb idea can become a working website before I lose interest.</p><p class="signature">— Noé / Pelaxix</p></div>
+      </section>
+    </main>
 
-            <a class="card" href="/fishingmap/">
-              <h3>Fishing Map</h3>
-              <p>Map fishing spots, species, access notes, and reminders with OpenStreetMap.</p>
-            </a>
-
-            <a class="card" href="/fishcast/">
-              <h3>FishCast</h3>
-              <p>Check fishing conditions, target species, and lure picks based on weather and location.</p>
-            </a>
-
-            <a class="card" href="/bbq/">
-              <h3>BBQ Grill Log</h3>
-              <p>Track cooks, temps, notes, ratings, and what to change next time.</p>
-            </a>
-
-            <a class="card" href="/movies/">
-              <h3>Movie Shelf</h3>
-              <p>Pull recent Letterboxd activity into a small personal movie shelf.</p>
-            </a>
-
-            <a class="card" href="/ip/">
-              <h3>Network Check</h3>
-              <p>Show your public IP, approximate location, network, browser, and device details.</p>
-            </a>
-
-            <a class="card" href="/pdf/">
-              <h3>PDF Tools</h3>
-              <p>Merge, split, rotate, reorder, convert, and clean PDFs locally.</p>
-            </a>
-
-            <a class="card" href="/qr/">
-              <h3>QR Tools</h3>
-              <p>Create and scan useful QR codes locally in your browser.</p>
-            </a>
-
-            <a class="card" href="/video/">
-              <h3>Video Tools</h3>
-              <p>Compress, resize, trim, convert, and edit videos locally in your browser.</p>
-            </a>
-
-            <a class="card" href="/location/">
-              <h3>Location Snap</h3>
-              <p>Get your GPS location, copy it fast, and save a parking spot locally.</p>
-            </a>
-
-            <a class="card" href="/NiagaraP/">
-              <h3>Niagara Parking</h3>
-              <p>Find Niagara Parks parking lots and boat launches on a simple map with directions.</p>
-            </a>
-
-            <a class="card" href="/yucafantasy/">
-              <h3>Yucafantasy</h3>
-              <p>Pick a Grand Prix, see the poster, and track the fantasy deadline countdown.</p>
-            </a>
-          </div>
-        </section>
-      </main>
-    </div>
-
-    <script src="script.js"></script>
-  </body>
+    <footer><a class="brand footer-brand" href="/"><span class="brand-mark">P</span><span>pelaxix</span></a><p>Made in Hamilton with curiosity, unnecessary effort & probably too many browser tabs.</p><span>© <span id="year"></span></span></footer>
+  </div>
+  <script src="script.js"></script>
+</body>
 </html>
